@@ -1,0 +1,131 @@
+﻿@using MyMenuClient.Controllers;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MyMenuClient</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link rel="icon" type="image/x-icon" href="/MyMenuClient/images/LogoMyMenu.png" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/MyMenuClient.styles.css" asp-append-version="true" />*@
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+</head>
+<body>
+    
+        <nav class="navbar navbar-default" >
+            <div class="container-fluid navbar-padding">
+                <div class="container mt-2 mb-1 navbar-menu-order">
+                    <div class="">
+                    <a class="rounded-circle position-relative" id="btnAddtoCart"><img src="~/images/CartButton.png" class="ml-4 size-bell" /> <span class="notification" id="quantity"></span></a>
+                    </div>
+                </div>
+            </div>
+        <div class="navbar-menu-center ">
+            <h1 class="h1-size font-weight-bold navbar-text-head ">@ViewBag.MerchantName</h1>
+            @if (!string.IsNullOrEmpty(ViewBag.FoodTableName))
+            {
+                @*แสดงชื่อโต๊ะ*@
+                <h2 class="h2-size font-weight-400">@ViewBag.FoodTableName</h2>
+            }
+            else
+            {
+                @*แสดงชื่อคนสั่งกลับบ้าน*@
+                <div class="navbar-menu-text-name">
+                    <h2 class="h2-size font-weight-400 navbar-text-name">@ViewBag.CustomerName</h2>
+                    <h2 class="h2-size font-weight-400 navbar-menu-padding ">, </h2>
+                    <h2 class="h2-size font-weight-400 ">@HomeController.PhoneNumberFormat(@ViewBag.Customerphone)</h2>
+                </div>
+            }
+
+            </div>
+        </nav>
+
+    <form hidden id="Basket" asp-action="Basket" method="post">
+        <input name="json" id="json" value="" />
+    </form>
+    
+    <div class="container mt-main">
+        <div class="row">
+            @RenderBody()
+        </div>
+    
+    </div>
+
+
+
+        <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    
+@*    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script>
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+        $(document).ready(function () {
+
+            var listitemchoose = localStorage.getItem("order");
+            //console.log(listitemchoose);
+            if (listitemchoose == null) {
+                listitemchoose = "[]";
+            }
+            var model = JSON.parse(listitemchoose);
+            if (model == null) {
+                model = [];
+            }
+            var quantity = 0;
+            $.each(model, function (i, value) {
+                //console.log(value.itemQuantity);
+                var value = parseFloat(value.itemQuantity, 10);
+                if (!isNaN(value)) {
+                    quantity += value;
+                }
+            });
+            $("#quantity").text(quantity);
+
+            $("#btnAddtoCart").on("click", function () {
+                var listitemchoose = localStorage.getItem("order");
+                if (listitemchoose == null) {
+                    listitemchoose = "[]";
+                }
+                var model = JSON.parse(listitemchoose);
+                if (model == null) {
+                    model = [];
+                }
+                //var baseUrl = '@Url.Action("Basket", "Home")';
+                //window.location = baseUrl + '?json=' + listitemchoose;
+
+                $("#json").val(listitemchoose);
+                $("#Basket").submit();
+
+            });
+        });
+    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
+

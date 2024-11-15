@@ -1,0 +1,461 @@
+﻿﻿@using MyMenu.JAM;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "CategoryEdit";
+}
+@model CategoryModel
+<body id="CategoryEdit">
+    <div class="container">
+        <form id="editCategory" onkeyup="CategoryEditTables()">
+        <div class="form-row">
+            <div class="col-md-12  mb-2">
+                <div class="row ">
+                    <div class="menu-header-flex">
+                        <div class="header-group">
+                            <a asp-controller="ManageMenu" asp-action="Category"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                                <h2 class="font-weight-bold menu-header">@Localizer["แก้ไขหมวดหมู่"]</h2>
+                        </div>
+                        <div class="">
+                                <button type="button" class="btn btn-delete-subcategory font-weight-bold " data-toggle="modal" data-target="#EditModalCategoryDelete"><i class="fa fa-trash-o"></i> @Localizer["ลบหมวดหมู่1"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                        <div class="col-md-12 " hidden>
+                                            <div class="d-flex flex-row-reverse">
+                                                <div class="p-2">
+                                                <a class="btn btn-delete-subcategory font-weight-bold " data-toggle="modal" data-target="#EditModalCategoryDelete"><i class="fa fa-trash-o"></i> @Localizer["ลบหมวดหมู่"]</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="col-md-12 mb-2 mt-2">
+                                            <div class="form-group">
+                                            <label class="font-weight-bold" for="EditCategoryName">@Localizer["ชื่อหมวดหมู่"]</label>
+                                                <div class="input-group input-text">
+                                                <input type="text" class="form-control text-count" 
+                                                       data-categoryid="@Model.CategoryID"
+                                                       data-merchantid="@Model.MerchantID"
+                                                       data-operationtype="@Model.OperationType"
+                                                       id="EditCategoryName" maxlength="250" placeholder="@Localizer["ชื่อหมวดหมู่"]"
+                                                       onchange="CategoryEditTablesthis(this)" value="@Model.CategoryName">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="card border">
+                                            <div class="card-body">
+                                                <div class="form-row">
+                                                    <div class="col-md-12">
+                                                        <label class="font-weight-bold">@Localizer["หมวดหมู่ย่อย"]<small class="color-list-number font-weight-bold ml-2">@Localizer["เพิ่มได้สูงสุด 10 รายการ"]</small></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <table id="TablesSubCategory">
+                                                            @for (var i = 1; i < Model.Subcategorymodel.Count + 1; i++)
+                                                            {
+                                                                <tr id="@("row" + i.ToString())" class="size-tr-tables">
+                                                                    <td class="size-tables-name">
+                                                                        <div class="input-text pr-3">
+                                                                            <input type="text"
+                                                                                    data-subcategoryid="@Model.Subcategorymodel[i-1].SubCategoryID"
+                                                                                    data-categoryid="@Model.Subcategorymodel[i-1].CategoryID"
+                                                                                    data-datecreated="@Model.Subcategorymodel[i-1].DateCreated"
+                                                                                    data-datemodified="@Model.Subcategorymodel[i-1].DateModified"
+                                                                                    data-usernamemodified="@Model.Subcategorymodel[i-1].UserNameModified"
+                                                                                    data-operationtype="Default"
+                                                                                   class="form-control text-count examine reset-name" onchange="CategoryEditTablesthis(this)" id="TableName_@i" name="TableName_@i" maxlength="250" placeholder="@Localizer["ชื่อหมวดหมู่ย่อย"]" value="@Model.Subcategorymodel[i-1].SubCategoryName">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="size-tables-delete" id="@("country_row" + i.ToString())">
+                                                                        <button type="button" data-subcategoryid="@Model.Subcategorymodel[i-1].SubCategoryID" class="form-control btn-delete reset-delete" id="TableDelete_@i" name="TableDelete_@i" onclick="delete_row('@i','@Model.Subcategorymodel[i-1].SubCategoryID')"><i class="fa fa-trash-o"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-12 mt-3">
+                                                        <button type="button" class="btn-add-subcategory font-weight-bold ml-1" onclick="AddSubCategory();"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการย่อย"]</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12  mt-4">
+                                        <div class="form-group">
+                                            <p class="text-h2-header">@Localizer["การแสดงผล"]</p>
+                                            <div class="row mt-3">
+                                                <div class="col-6">
+                                                    <p class="font-weight-bold">@Localizer["แสดงหมวดหมู่เฉพาะพนักงาน"]</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="hidden" name="[0].ShowEmployeesOnly" id="ShowEmployeesOnly" />
+                                                    <input type="hidden"  id="oldShowEmployeesOnly"  value="@Model.ShowEmployeesOnly"/>
+                                                    <div class=" input-group-prepend  d-flex justify-content-start">
+                                                        <label class="switch">
+                                                            <input class="examine"
+                                                                data-categoryid="@Model.CategoryID"
+                                                                data-merchantid="@Model.MerchantID"
+                                                                data-operationtype="@Model.OperationType" 
+                                                                onchange="CategoryEditTablesthis(this)" 
+                                                                type="checkbox" 
+                                                                id="CheckboxShowonlyemp" 
+                                                                @(Model.ShowEmployeesOnly == 1 ? "checked" : "")>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="col-md-12  mb-2 pr-0 mt-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <button type="submit" class="btn-save" id="SaveCategory" disabled="disabled">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </form>
+
+        @*EditModalCategoryDelete*@
+        <div class="modal fade " id="EditModalCategoryDelete" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการลบหมวดหมู่"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-delete" onclick="fnDeleteCategory()">@Localizer["ลบ"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">|@Localizer["ยกเลิก"]</button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal Post not Success Category*@
+    <div class="modal fade" id="ModalPostnotSuccessCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบหมวดหมู่ได้ เนื่องจากมีการใช้งานอยู่"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @* Modal Post not Success Subcategoty *@
+    <div class="modal fade" id="ModalPostnotSuccessSubcategoty" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบหมวดหมู่ย่อยได้ เนื่องจากมีการใช้งานอยู่"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+   @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert">@Localizer["ไม่สามารถแก้ไขหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin">@Localizer["หมวดหมู่"] <samp class="color-sub-help">@Localizer["สามารถมีหมวดหมู่ย่อยได้สูงสุด 10 รายการ"] </samp></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+<script>
+    var _role;
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+        $("#editCategory").on("submit", function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+            let Subcategorymodel = [];
+            $('#TablesSubCategory tr').each(function (index, item) {
+                var tr = $(this);
+                
+                var categoryid = $(this).find('.examine').data("categoryid");
+                var subcategoryid = $(this).find('.examine').data("subcategoryid");
+                var subcategoryname = $(this).find('.examine').val();
+                var datecreated = $(this).find('.examine').data("datecreated");
+                var datemodified = $(this).find('.examine').data("datemodified");
+                var usernamemodified = $(this).find('.examine').data("usernamemodified");
+                var operationtype = $(this).find('.examine').data("operationtype");
+
+                var assoFile = {
+                    categoryid: categoryid,
+                    subcategoryid: subcategoryid,
+                    subcategoryname: subcategoryname,
+                    usernamemodified: usernamemodified,
+                    operationtype: operationtype
+                };
+                Subcategorymodel.push(assoFile)
+
+            });
+            var subcategorymodellist = {
+                subcategorymodel: Subcategorymodel
+            }
+
+            var cateedit =  $("#EditCategoryName").data("operationtype");
+            var switchedit = $("#CheckboxShowonlyemp").data("operationtype");
+            var operationTypeUpdate = "Default";
+
+            if (cateedit == "Update" || switchedit == "Update" ) {
+                operationTypeUpdate = "Update";
+            }
+
+            var categorymodel = 
+            {
+                subcategorymodel: Subcategorymodel,
+                categoryid: $("#EditCategoryName").data("categoryid"),
+                merchantid: $("#EditCategoryName").data("merchantid"),
+                categoryname: $("#EditCategoryName").val(),
+                OperationType: operationTypeUpdate,
+                ShowEmployeesOnly: $("#ShowEmployeesOnly").val(),
+            }
+            console.log(categorymodel);
+            $.ajax({
+                url: "@Url.Action("CategoryEditSave", "ManageMenu")",
+                data: categorymodel,
+                type: 'POST',
+                success: function (message) {
+                    window.location.href = "@Url.Action("Category", "ManageMenu")";
+                }, error: function (message) {
+                    //console.log(message.responseText);
+                    if (message.responseText.indexOf("23503") >= 0) {
+                        $('#ModalCategoryDelete').modal().hide();
+                        $('#ModalPostnotSuccessSubcategoty').modal('show');
+                    } else if (message.responseText == "Dublicate CategoryName") {
+                        $('#ModalPostnotSuccessError').modal('show');
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                    else {
+                        $('#ModalCategoryDelete').modal().hide();
+                        $('#ModalPostnotSuccessError').modal('show');
+                    }
+                }
+            });
+        });
+        //CategoryEditTables();
+        
+        if (_role == "editor" ) {
+            $("#deletecat").addClass("block-a");
+        }
+    });
+
+    //showOnlyEmployee
+    $("#CheckboxShowonlyemp").change(function () {
+        updateFormData();
+        CategoryEditTables();
+    });
+
+    // ฟังก์ชันสำหรับอัปเดตค่าในฟอร์ม
+    function updateFormData(id) {
+        var setshow = 0;
+        var checkshowOnlyEemp = $('#CheckboxShowonlyemp').is(":checked");
+        if (checkshowOnlyEemp) {
+            setshow = 1;
+        } else {
+            setshow = 0;
+        }
+        $('#ShowEmployeesOnly').val(setshow);
+    }
+
+    function CategoryEditTablesthis(a) {
+        var tr = $(a).data('operationtype');
+        var tr2 = $(a).data('operationtype', "Update");
+        var switchcheck = $(a).data('operationtype', "Update");
+    };
+
+    function CategoryEditTables() {
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext1 = document.querySelectorAll(".examine");
+        inputtext1.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+
+            if (x.value == "on" || x.value == "off")  {
+                var oldcheck = $('#oldShowEmployeesOnly').val();
+                var newcheck = $('#ShowEmployeesOnly').val();
+                if (oldcheck != newcheck) {
+                    document.getElementById('SaveCategory').disabled = false;
+                } else {
+                    document.getElementById('SaveCategory').disabled = true;
+                }
+            }
+        });
+    }
+
+    function AddSubCategory() {
+        var tables = document.getElementById("TablesSubCategory");
+        var tablessubcategory_id = (tables.rows.length);
+        if (tablessubcategory_id <10){
+            var rowid = tablessubcategory_id + 1;
+            var row = tables.insertRow(tablessubcategory_id).outerHTML =
+                "<tr  class='size-tr-tables' id='row" + rowid + "'>" +
+                "<td  class='size-tables-name'>" +
+                "<div class='input-text pr-3'>" +
+                "<input type='text' class='form-control text-count examine reset-name' data-operationtype='Create' id='TableName_" + rowid + "' name='TableName_" + rowid + "' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่"].Value)) + " " + rowid + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-delete'>" +
+                "<button  type='button' class='form-control btn-delete reset-delete' id='TableDelete_" + rowid + "' name='TableDelete_" + rowid + "'onclick='delete_row(&apos;" + rowid + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+
+            if (rowid == 10) {
+                var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold ml-1');
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].style.opacity = '0.5';
+                    elements[i].style.pointerEvents = "none";
+                    elements[i].style.cursor = "default";
+                }
+            }
+        }else{
+            return false;
+        }
+        
+        document.getElementById('SaveCategory').disabled = true;
+    }
+
+    function delete_row(no,id) {
+        
+        if (id != null) {
+            $('#row' + no).hide();
+            $('#TableName_' + no).data('operationtype', 'Delete');
+        }
+        else
+        {
+            var data = $('#TableCategory').DataTable().row(no - 1).data();
+            var dataString = $('#editCategory').serialize();
+            document.getElementById("row" + no + "").outerHTML = "";
+
+            reset_id(no);
+        }
+
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext2 = document.querySelectorAll(".examine");
+        inputtext2.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+        });
+       
+    }
+
+    function reset_id(no) {
+        var tables = document.getElementById("TablesSubCategory");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            rows[i].setAttribute("id", "row" + (i + 1) + "");
+        }
+
+        if (rows.length <= 10) {
+            var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold ml-1');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.opacity = '1';
+                elements[i].style.pointerEvents = "auto";
+                elements[i].style.cursor = "pointer";
+            }
+        }
+
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableName_" + (i + 1) + "");
+            names[i].setAttribute("name", "TableName_" + (i + 1) + "");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่"].Value)) + " "  + (i + 1) + "");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            if (deletes[i].getAttribute("data-subcategoryid")==null)
+            {
+                deletes[i] = i;
+                deletes[i].setAttribute("id", "TableDelete_" + (i + 1) + "");
+                deletes[i].setAttribute("name", "TableDelete_" + (i + 1) + "");
+                deletes[i].setAttribute("onclick", "delete_row('" + (i + 1) + "');");
+            }
+            
+        }
+
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function fnDeleteCategory() {
+        var categoryId = @Model.CategoryID;
+        console.log(categoryId);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteCategory", "ManageMenu")",
+            data: {
+                id: categoryId,
+            },
+            success: function (message) {
+                window.location.href = "@Url.Action("Category", "ManageMenu")";
+            }, error: function (message) {
+                //alert(message.responseText);
+                $('#EditModalCategoryDelete').modal().hide();
+                $('#ModalPostnotSuccessCategory').modal('show');
+            }
+        });
+    }
+
+</script>

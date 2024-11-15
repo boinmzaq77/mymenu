@@ -1,0 +1,153 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="QRCodeGenerateAdd">
+<div class="container">
+    <div class="form-row">
+        <div class="col-md-12  mb-2">
+            <div class="row ">
+                <div class="col-md-auto">
+                        <h2 class="font-weight-bold menu-header">@Localizer["สร้าง QR Code"]</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container">
+                        <form>
+                            <div class="form-row">
+                                <div class="col-md-12">   
+                                    <div class="form-group">
+                                            <label class="font-weight-bold" for="TypeOrder">@Localizer["ประเภทการสั่ง"]</label>
+                                            <select class="custom-select mr-sm-2" id="TypeOrder" onclick="TypesOrder();">
+                                                <option selected hidden value="">@Localizer["เลือกประเภทการสั่ง"]</option>
+                                                <option value="1">@Localizer["ทานที่ร้าน"]</option>
+                                                <option value="2">@Localizer["สั่งกลับบ้าน"]</option>
+                                            </select>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12 "> 
+                                    <div class="form-group ">
+                                            <label class="font-weight-bold" for="Tables">@Localizer["โต๊ะ"]</label>
+                                            <select class="custom-select mr-sm-2 mb-3 color-option" id="Tables">
+                                                <option selected hidden value="">@Localizer["เลือกโต๊ะ"]</option>
+                                                <option value="1">A1</option>
+                                                <option value="2">A2</option>
+                                                <option value="3">A3</option>
+                                                <option value="4">A4</option>
+                                            </select>
+                                    </div>
+                                    <hr />
+                                </div>
+                                <div class="col-md-12 mb-3"> 
+                                    <div class="col-md">
+                                            <label class="font-weight-bold" for="imgQRCord">@Localizer["รูป QR Code"]</label>
+                                    </div>
+
+                                    <div class="col-md">
+                                        <div class="mb-2 Menu-img">
+                                                <img  src="/mymenumerchant/images/LogoShop.png" class="img-fluid" id="qrcodeimg"/><br />
+                                                <input type="file" id="qrcodeinput" accept=".jpg, .jpeg, .png" onchange="loadQRcodeFile(event)" hidden/>
+                                                <label for="qrcodeinput" class="btn-image-QRcord "><i class="fa fa-image"></i> @Localizer["เพิ่มรูป QR Code"]</label>
+                                            </div>
+                                            
+                                            <small class="small-product">@Localizer["หมายเหตุ: 500x500 px , และขนาดไฟล์ไม่เกิน 800 KB"]</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"> 
+                                    <div class="col-md-auto">
+                                            <button type="button" class="btn btn-imgsave mb-2">@Localizer["บันทึกรูป"]</button>
+                                            <button type="button" class="btn btn-imgshow mb-2" data-toggle="modal" data-target="#ModalQRCodeShow"><i class="fa fa-eye"></i> @Localizer["ตัวอย่างรูป"]</button>
+                                            <button type="button" class="btn btn-imgdelete mb-2" data-toggle="modal" data-target="#ModalQRCodeDelete"><i class="fa fa-trash-o"></i> @Localizer["ลบ"]</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                         </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12  mb-2">
+            <div class="d-flex justify-content-end">
+                <div class="p-2">
+                        <a type="button" class="btn-cancel" asp-controller="QRCodeGenerate" asp-action="Index"> @Localizer["ยกเลิก"] </a>
+                </div>
+                <div class="p-2">
+                        <button type="submit" class="btn-save" id="SaveQRCord" disabled="disabled">@Localizer["สร้าง QR Code"]</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- ModalQRCodeDelete -->
+    <div class="modal fade " id="ModalQRCodeDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการลบ QR Code"]</h5>
+                    <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-delete" onclick="DeleteQRcord();">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- ModalQRCodeShow -->
+    <div class="modal fade " id="ModalQRCodeShow" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+
+                    <div class="d-flex justify-content-center">
+                            <img src="/mymenumerchant/images/LogoShop.png" class="img-fluid mb-5 my-5" id="qrcodeimgshow" style="width:300px; height:300px;" />
+                    </div>
+                    <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    var loadQRcodeFile = function(event) {
+        var QRcode = document.getElementById('qrcodeimg');
+        QRcode.src = URL.createObjectURL(event.target.files[0]);
+        QRcode.onload = function() {
+            URL.revokeObjectURL(QRcode.src) 
+        }
+        var QRcodeShow = document.getElementById('qrcodeimgshow');
+        QRcodeShow.src = URL.createObjectURL(event.target.files[0]);
+        QRcodeShow.onload = function() {
+            URL.revokeObjectURL(QRcodeShow.src) 
+        }
+
+    }
+    function DeleteQRcord() { 
+        document.getElementById('qrcodeimg').outerHTML = "<img  src='/mymenumerchant/images/LogoShop.png' class='img-fluid' id='qrcodeimg'/>";
+        document.getElementById('qrcodeimgshow').outerHTML = "<img src='/mymenumerchant/images/LogoShop.png' class='img-fluid mb-5 my-5' id='qrcodeimgshow' style='width:300px; height:300px;'/>";
+        $('#ModalQRCodeDelete').modal('hide');
+    }
+
+    function TypesOrder() {
+        var Types = document.getElementById('TypeOrder').value; 
+        var Tables = document.getElementById("Tables");
+        if (Types == 1) {
+            Tables.disabled = false;
+        } else {
+            Tables.disabled = true;
+            Tables.value = "";
+        }
+    }
+
+
+
+</script>

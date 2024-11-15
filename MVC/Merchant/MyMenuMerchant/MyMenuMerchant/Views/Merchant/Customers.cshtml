@@ -1,0 +1,147 @@
+﻿@{
+    ViewData["Title"] = "Customers";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="Customers">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-12  mb23">
+                <div class="row ">
+                    <div class="col-md-auto">
+                        <a asp-controller="Merchant" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                    </div>
+                    <div class="col-md-auto">
+                        <h2 class="font-weight-bold menu-header">@Localizer["พนักงาน"]</h2>
+                    </div>
+                    <div class="col-md-auto ">
+                        <ul class="breadcrumb ">
+                        <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Merchant" asp-action="Index"> @Localizer["จัดการร้านค้า"]</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">@Localizer["หนักงาน"]</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-auto ml-auto ">
+                        <a class="breadcrumb button-add text-center" asp-controller="Merchant" asp-action="CustomersAdd">+ @Localizer["เพิ่มสาขาพนักงาน"]</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-2 search">
+                <input class="form-control input-lg" type="text" placeholder="&#xf002; @Localizer["ค้นหา"]" style="height: 45px; font-family:Arial, FontAwesome">
+            </div>
+            <div class="col-md-12 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold mb-4 font-size">@Localizer["พนักงาน"]<small class="size-small font-weight-bold ms-2"> @Localizer["จำนวนทั้งหมด"] 2</small></label>
+                                <div class="col-md-12 mb-2">
+                                <div class="table-responsive">
+                                        <table class="table" id="TableCustomer">
+                                    <tr>
+                                        <th scope="col">ลำดับ</th>
+                                                <th scope="col" class="size-th-name">@Localizer["Username"]</th>
+                                                <th scope="col" class="size-th-number">@Localizer["ชื่อ-สกุล"]</th>
+                                                <th scope="col" class="size-th-number">@Localizer["ตำแหน่ง"]</th>
+                                                <th scope="col" class="size-th-category">@Localizer["สาขา"]</th>
+                                        <th scope="col" class="size-th-edit"></th>
+                                    </tr>
+                                    @*<tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>happyowner</td>
+                                        <td>Happy Owner</td>
+                                        <td>Owner</td>
+                                        <td>ทั้งหมด</td>
+                                                    <td><a asp-controller="Merchant" asp-action="CustomersEdit"><img class="img-detail" src="/mymenumerchant/images/Detail.png" /></a></td>
+                                                <tr>
+                                        <td>2</td>
+                                        <td>happyowner</td>
+                                        <td>Happy Owner</td>
+                                        <td>Owner</td>
+                                        <td>ทั้งหมด</td>
+                                                    <td><a asp-controller="Merchant" asp-action="CustomersEdit"><img class="img-detail" src="/mymenumerchant/images/Detail.png" /></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>happyowner</td>
+                                        <td>Happy Owner</td>
+                                        <td>Owner</td>
+                                        <td>ทั้งหมด</td>
+                                                    <td><a asp-controller="Merchant" asp-action="CustomersEdit"><img class="img-detail" src="/mymenumerchant/images/Detail.png" /></a></td>
+                                    </tr>
+                                    </tbody>*@
+                                </table>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- ModalExtraDelete -->
+        <div class="modal fade " id="ModalExtraDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการลบ Customer"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-delete">@Localizer["ลบ"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+
+        var table = $('#TableCustomer').DataTable({
+            ajax: {
+                url: "@Url.Action("GetDatableCustomer", "Merchant")",
+                dataSrc: ''
+
+            },
+            stateSave: true,
+            columns: [
+                { data: 'id' },
+                { data: 'userName' },
+                { data: 'nameEmployee' },
+                { data: 'role' },
+                { data: 'branchname' },
+                { data: 'id' }
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text1 = "<p>" + meta.row + meta.settings._iDisplayStart + 1; + "</p>";
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+            }, {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                    var text6 = "<a asp-controller='Merchant' asp-action='CustomersEdit'><img class='img - detail' src='/mymenumerchant/images/Detail.png' /></a>"
+                    return text6;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-0'>@Localizer["ยังไม่มีสาขา"]</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+        });
+        var tables = $('#TableBranchs').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+    });
+</script>

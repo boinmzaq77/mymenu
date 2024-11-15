@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<body id="POSMachice">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["เครื่อง POS"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["เครื่อง POS"]</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="col-md-12 mb-2">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="name">@Localizer["ชื่อเครื่อง"]</label>
+                                        <input type="text" class="form-control" id="name" placeholder="@Localizer["ชื่อเครื่อง"]">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="posid">@Localizer["เลขรหัสประจำเครื่อง"]</label>
+                                        <input type="text" class="form-control" id="posid" placeholder="@Localizer["เลขรหัสประจำเครื่อง"]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-12  mb-2">
+                <div class="d-flex justify-content-end">
+
+                    <div>
+                        <button type="button" onclick="Savepos()" class="btn-save" id="SaveProfile">@Localizer["บันทึก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    function Savepos(){
+       
+        localStorage.setItem("NAMEPOS", $("#name").val());
+        localStorage.setItem("POSID", $("#posid").val());
+        window.location.href = "@Url.Action("Index", "BranchManagement")";
+        //e.preventDefault();
+    }
+    $(document).ready(function () {
+
+        var name = localStorage.getItem("NAMEPOS");
+        var posid = localStorage.getItem("POSID");
+
+        $("#name").val(name);
+        $("#posid").val(posid);
+    });
+
+
+</script>

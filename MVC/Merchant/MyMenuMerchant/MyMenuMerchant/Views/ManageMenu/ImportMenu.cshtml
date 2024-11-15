@@ -1,0 +1,866 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<body id="ImportMenu">
+    <div class="container mb-table-import">
+        <div class="form-row">
+            <div class="col-md-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group mb-2">
+                        <a asp-controller="ManageMenu" asp-action="Menu"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["นำเข้าข้อมูล"]</h2>
+                        <a class="breadcrumb btn-importmenu text-center layout-add mb-2" id="btnFileImport" onclick="btnDownloadFileImport()"><img class="img-icon-add" src="/mymenumerchant/images/DownloadW.png" /> @Localizer["ดาวน์โหลดตัวอย่างไฟล์นำเข้า"]</a>
+                    </div>
+                </div>
+            </div>
+
+            @* ปุ่มเทสบนเว็บ *@
+            @* <input type="file" id="csvInput" accept=".csv"> *@
+
+            <div class="col-md-12 ">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold mb-0 font-size">@Localizer["รายการนำเข้า"]  <span class="size-small font-weight-bold ms-2" id="count"> @Localizer["จำนวนทั้งหมด"] 0</span> </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 ">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableImportMenu" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name text-left no-warp">@Localizer["ชื่อเมนู"]</th>
+                                                <th scope="col" class="size-th-number text-right no-warp">@Localizer["ราคาปกติ"]</th>
+                                                <th scope="col" class="size-th-number text-right no-warp">@Localizer["ราคาขาย"]</th>
+                                                <th scope="col" class="size-th-category text-left no-warp">@Localizer["รายละเอียดเมนู"]</th>
+                                                <th scope="col" class="size-th-category text-left no-warp">@Localizer["กลุ่มสินค้า"]</th>
+                                                <th scope="col" class="size-th-category text-left no-warp">@Localizer["กลุ่มสินค้าย่อย"]</th>
+                                                <th scope="col" class="size-th-category text-left no-warp">@Localizer["ตัวเลือก (Option)"]</th>
+                                                <th scope="col" class="size-th-category text-left no-warp ">@Localizer["ตัวเลือกเสริม (Extra)"]</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-group-import py-1 pb-2">
+                        <div class="flex-text-Row-Imprt" id="txtshowimport">
+                            <div class="flex-info-text" id="ImportSuccess" hidden>
+                                <img class="size-Img-Import mr-3" src="/mymenumerchant/images/success.png" />
+                                <p class="mb-0 mr-1">@Localizer["ข้อมูลนำเข้าสำเร็จ"] :</p>
+                                <p class="mb-0 " id="importchecksuccess">0</p>
+                            </div>
+                            <div class="flex-info-text" id="ImportWaitingUplload">
+                                <img class="size-Img-Import mr-3" src="/mymenumerchant/images/WaitingUpload.png" />
+                                <p class="mb-0 mr-1 font-weight-bold">@Localizer["ข้อมูลที่สามารถนำเข้าได้"] :</p>
+                                <p class="mb-0 color-text-ImportUpload font-weight-bold" id="importcheckpass">0</p>
+                            </div>
+                            <div class="flex-info-text mb-2 ">
+                                <img class="size-Img-Import mr-3" src="/mymenumerchant/images/Failed.png" />
+                                <p class="mb-0 mr-1 font-weight-bold">@Localizer["ข้อมูลไม่ตรงกับในระบบ"] :</p>
+                                <p class="mb-0 color-text-ImportError font-weight-bold" id="importcheckerror">0</p>
+                            </div>
+                        </div>
+                        <div class="flex-btn-Row-Imprt ">
+                            <button type="button" class="btn  button-upload" id="btnNewupload" onclick="btnNewUploadMenu()">
+                                <img class="img-icon-add ml-1" src="/mymenumerchant/images/UploadG.png">
+                                @Localizer["อัปโหลดไฟล์ข้อมูลใหม่"]
+                            </button>
+                            <button type="button" class="btn button-import ml-1" id="btnimport" onclick="btnimportMenu()">
+                                @Localizer["นำเข้าข้อมูล"]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media h-50 flex-info-col">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin mb-0">@Localizer["การนำเข้าข้อมูล"] <samp class="color-sub-help">@Localizer["จะต้องอัปโหลดไฟล์ .csv และข้อมูลกลุ่มสินค้า, ตัวเลือก, ตัวเลือกเสริม จะต้องตรงกับข้อมูลที่มีในระบบด้วย จึงจะสามารถอัปโหลดข้อมูลสินค้าได้"]</samp> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @*ModalChackListItem*@
+    <div class="modal fade " id="ModalChackListItem" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text mt-3 mb-4">
+                        <div class="row text-center ">
+                            <div class="col-12">
+                                <div class="flex-text-modal mt-4 mb-3">
+                                    <h5 class="mb-0">@Localizer["นำเข้าข้อมูลสำเร็จ"] : <span id="insertpass"> 0 </span> </h5>
+                                    <h5 class="mb-0" style="padding-left: 5px">@Localizer["รายการ"]</h5>
+                                </div>
+                                <div class="flex-text-modal mb-4 mt-0">
+                                    <h5 class="mb-0">@Localizer["ไม่สำเร็จ"] : <span id="insertfail"> 0 </span> </h5>
+                                    <h5 class="mb-0" style="padding-left: 5px">@Localizer["รายการ"]</h5>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="font-weight-bold btn btn-ok-list-item" data-dismiss="modal" onclick="showlistimport()">@Localizer["ตกลง"]</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @* Modal Post not Success *@
+    <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mt-5"></h5>
+                            <h5 class="text-center mb-5 mt-0 " id="namePutnotSuccess">@Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var filename = '';
+
+    var objImportConfig = {};
+    var arrayCheckSucccess = [];
+    var countimportpass = 0;
+    var countimporterror = 0;
+    var arrpassimport = [];
+    var countpass = 0;
+    var counterror = 0;
+
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+
+        //initial datatable
+        var table = $('#TableImportMenu').DataTable({
+            data: [], // กำหนดข้อมูลเป็น array เปล่า
+            processing: true, // สามารถประมวลผลข้อมูลได้
+            serverSide: false, // ปิดการใช้งานการประมวลผลทางเซิร์ฟเวอร์
+            stateSave: false, // ปิดการบันทึกสถานะของตาราง
+            info: false, // ไม่แสดงข้อมูลที่บรรทัดของข้อมูล
+            lengthMenu: false, // ปิดตัวเลือกของการแสดงจำนวนข้อมูลต่อหน้า
+            pagingType: 'simple', // ตั้งค่าการแสดงหน้าเป็นแบบง่ายๆ
+            order: [], // ไม่มีการเรียงลำดับเริ่มต้น
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีรายการนำเข้าข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value)) + "</p><br/><br/><br/><br/>",
+            },
+            searching: false,
+            paging: false,
+            ordering: false,
+            visible: false,
+            targets: 0,
+            columnDefs: [
+                { targets: '_all', orderable: false } // ปิดการเรียงลำดับทุกคอลัมน์
+            ],
+            columns: [
+                { data: 'itemName', },
+                { data: 'itemName' },
+                { data: 'price' },
+                { data: 'sellingPrice' },
+                { data: 'itemsdetail' },
+                { data: 'category' },
+                { data: 'subcategory' },
+                { data: 'option' },
+                { data: 'extra' },
+            ],
+        });
+
+        //ปุ่มเทสบนเว็บ
+        // document.getElementById('csvInput').addEventListener('change', handleFileSelect);
+
+        //ImportConfig เพื่อตรวจสอบข้อมูลแล้วแสดงที่ table
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetMenusImportConfig", "ManageMenu")",
+            success: function (message) {
+                objImportConfig = JSON.parse(message);
+                //console.log(objImportConfig);
+            }, error: function (message) {
+                console.log(message);
+            }
+        });
+    });
+
+    //ฟังก์ชันเทสบนเว็บ
+    // function handleFileSelect(event) {
+    //     const fileInput = event.target;
+    //     const file = fileInput.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = function (e) {
+    //             const csvContent = e.target.result;
+
+    //             if ($.fn.DataTable.isDataTable('#TableImportMenu')) {
+    //                 $('#TableImportMenu').DataTable().destroy();
+    //             }
+    //             //console.log(csvContent);
+    //             ReadFileCSV(csvContent);
+    //         };
+    //         reader.readAsText(file);
+    //     }
+    // }
+
+    function ReadFileCSV(data) {
+        var arrayimportHeader = [];
+        var arrayimportData = [];
+
+        var lines = data.split('|'); //code real
+
+        //var lines = data.split('\n'); //ฟังก์ชันเทสบนเว็บ
+
+        lines = lines.filter(item => item);
+
+        $.each(lines, function (i, linesdata) {
+            if (i == 0) {
+                arrayimportHeader.push(linesdata);
+            } else {
+                arrayimportData.push(linesdata);
+            }
+        });
+
+        //array Header id,itemname, price,sellingprice, itemdetail, category, sub category , option,extra
+        var arraymapHeader = [];
+        var arraymapData = [];
+        var arrayHeader = arrayimportHeader[0].split(',');
+
+        //split option 1-10 , split extra 1-10
+        for (var i = arrayHeader.length - 1; i >= 0; i--) {
+            var value = arrayHeader[i];
+            if (value.toLowerCase().includes('option') || value.toLowerCase().includes('extra')) {
+                arrayHeader.splice(i, 1);
+            }
+        }
+        arrayHeader.push('Option');
+        arrayHeader.push('Extra');
+        var objHeader = { arrayHeader };
+
+        var arrayData = [];
+        var arrayMenu = [];
+
+        for (var i = 0; i < arrayimportData.length; i++) {
+            arrayMenu.push(arrayimportData[i].split(','));
+        }
+
+        //เรียงข้อมูล option ,extra มากกว่า 1 ใส่ , คั่น
+        for (var i = 0; i < arrayMenu.length; i++) {
+            var txtoption = "";
+            var txtextra = "";
+            var arraySortMenu = [];
+
+            for (var j = 0; j < arrayMenu[i].length; j++) {
+                if (j >= 6 && j <= 15) {
+                    if (!jQuery.isEmptyObject(arrayMenu[i][j])) {
+                        txtoption += arrayMenu[i][j] + ",";
+                    }
+                }
+                else if (j >= 16 && j <= 25) {
+                    if (!jQuery.isEmptyObject(arrayMenu[i][j])) {
+                        txtextra += arrayMenu[i][j] + ",";
+                    }
+                } else {
+                    arraySortMenu.push(arrayMenu[i][j]);
+                }
+
+                if ((j >= 6 && j <= 15) && (j == 15 || j == arrayMenu[i].length - 1)) {
+                    txtoption = txtoption.slice(0, -1);
+                    arraySortMenu.push(txtoption);
+                    txtoption = "";
+                }
+                if ((j >= 16 && j <= 25) && (j == 25 || j == arrayMenu[i].length - 1)) {
+                    txtextra = txtextra.slice(0, -1);
+                    arraySortMenu.push(txtextra);
+                    txtextra = "";
+                }
+            }
+            arrayData.push(arraySortMenu);
+        }
+
+        //map header กับ ข้อมูล
+        var arrItemname = [];
+        var arrayGenMenu = [];
+
+        for (var i = 0; i < arrayData.length; i++) {
+            var object = {};
+            var txtoption = "";
+            for (var j = 0; j < arrayHeader.length; j++) {
+                const key = arrayHeader[j].replace(/\s/g, '').toLowerCase();
+                object[key] = arrayData[i][j];
+                if (key == "itemname") {
+                    arrItemname.push(arrayData[i][j]);
+                }
+            }
+            arrayGenMenu.push(object);
+        }
+        arrayHeader.unshift('number');
+        arrayHeader.unshift('');
+
+        //แสดงข้อมูลข้อมูลที่ดึงมากจาก Import .csv
+        var table = $('#TableImportMenu').DataTable({
+            data: arrayGenMenu,
+            processing: false,
+            serverSide: false,
+            stateSave: false,
+            columns: arrayHeader.map(function (header) {
+                return { data: header.replace(/\s/g, '').toLowerCase() };
+            }),
+            columnDefs: [{ //index
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var idPrefix = "row_" + meta.row;
+                    var text0 = '';
+                    text0 += "<p class='p-padding-table text-right'><img class='size-Img-Import mt-1' id='" + idPrefix + "'src='' /></p> "
+                    return text0;
+                },
+            },  { //index
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var idPrefix = "row_" + meta.row;
+                    var text0 = '';
+                    text0 += "<p class='p-padding-table text-right'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [2], //itemname //itemname กรณีที่ชื่อตรงกับชื่อเมนูอื่นก็แดง
+                render: function (data, type, full, meta) {
+                     var text1 = "";
+                     if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-left'>" + '-' + "</p>";
+                        arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                    } else {
+                        text1 += "<p class='p-padding-table text-left'>" + data + "</p>";
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [3, 4], //price, sellingprice
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-right'>" + '-' + "</p>";
+                        arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                    } else {
+                        text1 = "<p class='p-padding-table text-right'>" + data + "</p>";
+                        arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "pass" });
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [5], //item details
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-left'>" + '-' + "</p>";
+                    } else {
+                        text1 = "<p class='p-padding-table text-left'>" + data + "</p>";
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [6],//category //ตัวเล็กใหญ่ วรรคหน้า หลัง กลาง ถ้าไม่ตรง ให้เป็นตัวใหม่แทน 31/05/2567
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-left'>" + '-' + "</p>";
+                        arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                    } else {
+                        //var found = false;
+                        for (var i = 0; i < objImportConfig.categories.length; i++) {
+                            if (data === objImportConfig.categories[i].categoryName) {
+                                //found = true;
+                                break;
+                            }
+                        }
+
+                        // if (found) {
+                        //     text1 = "<p class='p-padding-table text-left'>" + data + "</p>";
+                        //     arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "pass" });
+                        // } else {
+                        //     text1 = "<p class='p-padding-table  text-left import-fail'>" + data + "</p>";
+                        //     arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                        // }
+
+                        text1 = "<p class='p-padding-table text-left'>" + data + "</p>";
+
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [7], //subcategiory //ตัวเล็กใหญ่ วรรคหน้า หลัง กลาง ถ้าไม่ตรง ให้เป็นตัวใหม่แทน 31/05/2567
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-left'>" + '-' + "</p>";
+                    } else {
+                        //var found = false;
+                        for (var i = 0; i < objImportConfig.categories.length; i++) {
+                            if (data === objImportConfig.subCategories[i].subCategoryName) {
+                                //found = true;
+                                break;
+                            }
+                        }
+
+                        // if (found) {
+                        //     text1 = "<p class='p-padding-table text-left'>" + data + "</p>";
+                        //     arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "pass" });
+                        // } else {
+                        //     text1 = "<p class='p-padding-table text-left  import-fail'>" + data + "</p>";
+                        //     arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                        // }
+
+                        text1 = "<p class='p-padding-table text-left'>" + data + "</p>";
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [8], //option //ตัวเล็กใหญ่ วรรคหน้า หลัง กลาง ถ้าไม่ตรงจับเป็นผิด เคสกรอกข้อมูลไม่ตรง หรือซ้ำกับ Option ก่อนหน้า
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    var arrOptionmatch = [];
+                    var arrOptioncheckPass = [];
+
+                    if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-left'>" + '-' + "</p>";
+                    } else {
+                        var found = false;
+                        for (var i = 0; i < objImportConfig.options.length; i++) {
+                            if (data.includes(',')) { //option มากกว่า 1
+                                var arrOption = data.split(',');
+                                for (var j = 0; j < arrOption.length; j++) {
+                                    if (arrOption[j] === objImportConfig.options[i].optionName) {
+                                        found = true;
+                                        arrOptionmatch.push(objImportConfig.options[i].optionName);
+                                    }
+                                }
+                            } else { //option = 1
+                                if (data === objImportConfig.options[i].optionName) {
+                                    found = true;
+                                    arrOptionmatch.push(objImportConfig.options[i].optionName);
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (found) {
+                            let uniqueArr = [...new Set(arrOptionmatch)];
+                            text1 = "<p class='p-padding-table text-left'>";
+                            var arrOption = data.split(','); //Option ที่กรอกเข้ามา
+                            var tempvalue = "";
+
+                            for (var i = 0; i < arrOption.length; i++) {
+                                var found = false;
+                                for (var j = 0; j < uniqueArr.length; j++) {
+                                    if (arrOption[i] === uniqueArr[j]) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    if (arrOption[i] === tempvalue) {
+                                        // ตรวจสอบว่าเป็นข้อมูลตัวสุดท้ายหรือไม่
+                                        if (i === arrOption.length - 1) {
+                                            text1 += "<span class='import-fail'>" + arrOption[i] + "</span>";
+                                            arrOptioncheckPass.push("fail");
+                                        } else {
+                                            text1 += "<span class='import-fail'>" + arrOption[i] + ", " + "</span>";
+                                            arrOptioncheckPass.push("fail");
+                                        }
+                                    } else {
+                                        // ตรวจสอบว่าเป็นข้อมูลตัวสุดท้ายหรือไม่
+                                        if (i === arrOption.length - 1) {
+                                            text1 += arrOption[i];
+                                            arrOptioncheckPass.push("pass");
+                                        } else {
+                                            text1 += arrOption[i] + ", ";
+                                            arrOptioncheckPass.push("pass");
+                                        }
+                                        tempvalue = arrOption[i];
+                                    }
+                                } else {
+                                    // ตรวจสอบว่าเป็นข้อมูลตัวสุดท้ายหรือไม่
+                                    if (i === arrOption.length - 1) {
+                                        text1 += "<span class='import-fail'>" + arrOption[i] + "</span>";
+                                        arrOptioncheckPass.push("fail");
+                                    } else {
+                                        text1 += "<span class='import-fail'>" + arrOption[i] + ", " + "</span>";
+                                        arrOptioncheckPass.push("fail");
+                                    }
+                                }
+                            }
+                            text1 += "</p>";
+                            arrOptionmatch = [];
+
+                        } else {
+                            text1 = "<p class='p-padding-table text-left  import-fail'>" + data + "</p>"; //option ไม่ตรงกับฐานข้อมูล
+                            arrOptioncheckPass.push("fail");
+                        }
+
+                        var checkfail = arrOptioncheckPass.find(x => "fail");
+                        if (checkfail == "fail") {
+                            arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                        } else {
+                            arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "pass" });
+                        }
+                        arrOptioncheckPass = [];
+
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [9],//extra //ตัวเล็กใหญ่ วรรคหน้า หลัง กลาง ถ้าไม่ตรงจับเป็นผิด เคสกรอกข้อมูลไม่ตรง หรือซ้ำกับ Extra ก่อนหน้า
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    var arrExtramatch = [];
+                    var arrExtracheckPass = [];
+
+                    if (data == null || data == undefined || (data == '')) {
+                        text1 = "<p class='p-padding-table text-left'>" + '-' + "</p>";
+                    } else {
+                        var found = false;
+                        for (var i = 0; i < objImportConfig.extraitems.length; i++) {
+                            if (data.includes(',')) {
+                                var arrExtra = data.split(',');
+                                for (var j = 0; j < arrExtra.length; j++) {
+                                    if (arrExtra[j] === objImportConfig.extraitems[i].extraName) {
+                                        found = true;
+                                        arrExtramatch.push(objImportConfig.extraitems[i].extraName);
+                                    }
+                                }
+                            } else {
+                                if (data === objImportConfig.extraitems[i].extraName) {
+                                    found = true;
+                                    arrExtramatch.push(objImportConfig.extraitems[i].extraName);
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (found) {
+                            let uniqueArr = [...new Set(arrExtramatch)];
+                            text1 = "<p class='p-padding-table text-left'>";
+                            var arrExtra = data.split(',');
+                            var tempvalue = "";
+
+                            for (var i = 0; i < arrExtra.length; i++) {
+                                var found = false;
+                                for (var j = 0; j < uniqueArr.length; j++) {
+                                    if (arrExtra[i] === uniqueArr[j]) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    if (arrExtra[i] === tempvalue) {
+                                        if (i === arrExtra.length - 1) {
+                                            text1 += "<span class='import-fail'>" + arrExtra[i] + "</span>";
+                                            arrExtracheckPass.push("fail");
+                                        } else {
+                                            text1 += "<span class='import-fail'>" + arrExtra[i] + ", " + "</span>";
+                                            arrExtracheckPass.push("fail");
+                                        }
+                                    } else {
+                                        if (i === arrExtra.length - 1) {
+                                            text1 += arrExtra[i];
+                                            arrExtracheckPass.push("pass");
+                                        } else {
+                                            text1 += arrExtra[i] + ", ";
+                                            arrExtracheckPass.push("pass");
+                                        }
+                                        tempvalue = arrExtra[i];
+                                    }
+                                } else {
+                                    if (i === arrExtra.length - 1) {
+                                        text1 += "<span class='import-fail'>" + arrExtra[i] + "</span>";
+                                        arrExtracheckPass.push("fail");
+                                    } else {
+                                        text1 += "<span class='import-fail'>" + arrExtra[i] + ", " + "</span>";
+                                        arrExtracheckPass.push("fail");
+                                    }
+                                }
+                            }
+                            text1 += "</p>";
+                            arrExtramatch = [];
+                        } else {
+                            text1 = "<p class='p-padding-table text-left  import-fail'>" + data + "</p>"; //option ไม่ตรงกับฐานข้อมูล
+                            arrExtracheckPass.push("fail");
+                        }
+
+                        var checkfail = arrExtracheckPass.find(x => "fail");
+                        if (checkfail == "fail") {
+                            arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "fail" });
+                        } else {
+                            arrayCheckSucccess.push({ index: meta.row, indexcol: meta.col, data: data, checkpass: "pass" });
+                        }
+                        arrExtracheckPass = [];
+                    }
+                    return text1;
+                },
+            },],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีรายการนำเข้าข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value)) + "</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            visible: false,
+            targets: 0,
+            "initComplete": function (settings, json) {
+                var table = $('#TableImportMenu').DataTable();
+                var importcount = table.data().count();
+                $('#count').text(@Html.Raw(Json.Serialize(Localizer["จำนวนทั้งหมด"].Value)) + ' ' + importcount);
+            },
+        });
+
+        var grouped = arrayCheckSucccess.reduce((acc, obj) => {
+            const key = obj.index;
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(obj);
+            return acc;
+        }, {});
+
+        var removeduplicatevalue = [];
+        $.each(grouped, function (i, item) {
+            const arr1 = getUniqueListBy(item, 'indexcol')
+            removeduplicatevalue.push({ index: i, value: arr1 });
+        });
+
+        arrpassimport = [];
+
+        for (var i = 0; i < removeduplicatevalue.length; i++) {
+            var foundfail = false;
+            for (var j = 0; j < removeduplicatevalue[i].value.length; j++) {
+                if ("fail" === removeduplicatevalue[i].value[j].checkpass) {
+                    foundfail = true;
+                    break;
+                }
+            }
+
+            if (foundfail) {
+                var id = "#row_" + i;
+                $(id).attr("src", "/mymenumerchant/images/Failed.png");
+                counterror++;
+            } else {
+                var id = "#row_" + i;
+                $(id).attr("src", "/mymenumerchant/images/WaitingUpload.png");
+                countpass++;
+                arrpassimport.push(i);
+            }
+        }
+        $('#importcheckpass').text(countpass);
+        $('#importcheckerror').text(counterror);
+    }
+
+    function getUniqueListBy(arr, key) {
+        return [...new Map(arr.map(item => [item[key], item])).values()]
+    }
+
+    
+    function btnimportMenu() {
+        var table = $('#TableImportMenu').DataTable();
+        var table_length = table.data().count();
+        if (table_length == 0 || arrpassimport.length == 0) {
+            return false;
+        }
+
+        var listItemsImport = [];
+        for (var i = 0; i < arrpassimport.length; i++) {
+            var rowData = table.row(arrpassimport[i]).data();
+            //console.log(rowData);
+
+            var listoption = [];
+            var listextra = [];
+            var _categoryid = 0;
+            var _subcategoryid = null;
+            var _categoryName = null;
+            var _subCategoryName = null;
+
+            //category
+            if (!jQuery.isEmptyObject(rowData.category)) {
+                var getCategoryDetail = objImportConfig.categories.find(x => x.categoryName == rowData.category);
+                if (!jQuery.isEmptyObject(getCategoryDetail)) {
+                    _categoryid = getCategoryDetail.categoryID;
+                    _categoryName = getCategoryDetail.categoryName;
+                } else {
+                    _categoryid = 0;
+                    _categoryName = rowData.category;
+                }
+            }
+
+            //subcategory
+            if (!jQuery.isEmptyObject(rowData.subcategory)) {
+                var getsubCategoryDetail = objImportConfig.subCategories.find(x => x.subCategoryName == rowData.subcategory && x.categoryID == _categoryid);
+                if (!jQuery.isEmptyObject(getsubCategoryDetail)) {
+                    _subcategoryid = getsubCategoryDetail.subCategoryID;
+                    _subCategoryName = getsubCategoryDetail.subCategoryName;
+                } else {
+                    _subcategoryid = 0;
+                    _subCategoryName = rowData.subcategory;
+                }
+            }
+
+            //option
+            if (!jQuery.isEmptyObject(rowData.option)) {
+                var dataoption = rowData.option.split(',');
+                $.each(dataoption, function (i, value) {
+                    const optionID = objImportConfig.options.find(x => x.optionName == value).optionID;
+                    listoption.push(optionID);
+                });
+            }
+
+            //extra
+            if (!jQuery.isEmptyObject(rowData.extra)) {
+                var dataextra = rowData.extra.split(',');
+                $.each(dataextra, function (i, value) {
+                    const extraID = objImportConfig.extraitems.find(x => x.extraName == value).extraID;
+                    listextra.push(extraID);
+                });
+            }
+
+            var ItemsImportModel = {
+                itemname: rowData.itemname,
+                itemdetail: rowData.itemdetails,
+                categoryid: _categoryid,
+                categoryname: _categoryName,
+                subcategoryid: _subcategoryid,
+                subcategoryname: _subCategoryName,
+                price: rowData.price,
+                sellingprice: rowData.saleprice,
+                index: arrpassimport[i],
+                status: 0,
+                extraIDs: listextra,
+                optionIDs: listoption,
+            };
+            listItemsImport.push(ItemsImportModel);
+        }
+
+        //เรียก modal และไม่แสดงผลข้อมูล
+        $('#ModalChackListItem').modal('show');
+        $('#txtshowimport').css('opacity', '0');
+        $('#btnimport').attr('hidden', true);
+
+        countimportpass = 0;
+        countimporterror = 0;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ItemsImport", "ManageMenu")",
+            data: {
+                itemModels: listItemsImport,
+            },
+            success: function (message) {
+                var data = JSON.parse(message.result);
+                //console.log(data.length);
+
+                $.each(data, function (i, value) {
+                    console.log(value);
+                    if (value.status == 1) {
+                        var id = "#row_" + value.index;
+                        $(id).attr("src", "/mymenumerchant/images/Success.png");
+                        countimportpass++;
+                    } else if (value.status == 2) {
+                        var id = "#row_" + value.index;
+                        $(id).attr("src", "/mymenumerchant/images/Failed.png");
+                        countimporterror++;
+
+                        //เปลี่ยนสี itemname ที่ Insert ไม่ได้
+                        if (value.error == "Dublicate ItemName") {
+                            var rowData = table.row(value.index).data();
+                            if (rowData) {
+                                var itemname = rowData['itemname'];
+                                if (itemname) {
+                                    var cellNode = table.cell({ row: value.index, column: 2 }).node();
+                                    $(cellNode).html("<p class='p-padding-table text-left'><span class='import-fail text-left'>" + itemname + "</span></p>");
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $('#insertpass').text(countimportpass);
+                $('#insertfail').text(countimporterror + counterror);
+                $('#importcheckerror').text(countimporterror + counterror);
+            }, error: function (message) {
+                if ("Dublicate ItemName" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else if ("Max Item 1000" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                } else {
+                    $('#ModalPostnotSuccess').modal('show');
+                }
+            }
+        });
+    }
+
+    function showlistimport() {
+        $('#txtshowimport').css('opacity', '1');
+        $('#ImportSuccess').attr('hidden', false);
+        $('#ImportWaitingUplload').attr('hidden', true);
+        $('#importchecksuccess').text(countimportpass);
+        $('#importcheckerror').text(countimporterror + counterror);
+    }
+
+    function btnNewUploadMenu() {
+        $('#btnimport').attr('hidden', false);
+        $('#txtshowimport').css('opacity', '1');
+        $('#ImportSuccess').attr('hidden', true);
+        $('#ImportWaitingUplload').attr('hidden', false);
+        $('#importcheckpass').text(0);
+        $('#importcheckerror').text(0);
+
+        countpass = 0;
+        counterror = 0;
+        countimportpass = 0;
+        countimporterror = 0;
+
+        if ($.fn.DataTable.isDataTable('#TableImportMenu')) {
+            $('#TableImportMenu').DataTable().destroy();
+        }
+        btnimportfile();
+    }
+
+    function GettxtImportMenu(csvContent) {
+        if ($.fn.DataTable.isDataTable('#TableImportMenu')) {
+            $('#TableImportMenu').DataTable().destroy();
+        }
+        //ReadFileCSV(csvContent);
+    }
+
+</script>

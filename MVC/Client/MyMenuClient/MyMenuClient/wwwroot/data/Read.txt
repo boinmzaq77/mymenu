@@ -1,0 +1,3 @@
+menulisthead
+surveymenu  0 คือไม่มีหมวดหมู่ 
+	     	1 คือมีหมวดหมู่

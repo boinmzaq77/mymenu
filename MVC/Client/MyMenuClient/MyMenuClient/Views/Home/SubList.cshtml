@@ -1,0 +1,443 @@
+﻿@{
+    Layout = null;
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenuClient.Controllers
+@model MyMenu.JAM.GetItemInfoModel
+@inject IViewLocalizer Localizer
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MyMenuClient</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="icon" type="image/x-icon" href="/MyMenuClient/images/LogoMyMenu.png" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/MyMenuClient.styles.css" asp-append-version="true" />*@
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid navbar-padding nav-width">
+            <div class="container mt-2 mb-1 navbar-menu-order">
+                <div class="">
+                    <a class="rounded-circle" id="closeSubList" onclick="CloseSubList()"><p class="ml-4 size-times">&times;</p></a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-menu-center">
+            @if (!string.IsNullOrEmpty(ViewBag.FoodTableName))
+            {
+                @*แสดงชื่อโต๊ะ*@
+                <h1 class="h1-size font-weight-bold navbar-text-head ">@Localizer["เลือกสินค้า"]</h1>
+                <h2 class="h2-size font-weight-400">@ViewBag.FoodTableName</h2>
+            }
+            else
+            {
+                @*แสดงชื่อคนสั่งกลับบ้าน*@
+                <h1 class="h1-size font-weight-bold navbar-text-head ">@Localizer["เลือกสินค้า"]</h1>
+                <div class="navbar-menu-text-name">
+                    <h2 class="h2-size font-weight-400 navbar-text-name">@ViewBag.CustomerName</h2>
+                    <h2 class="h2-size font-weight-400 navbar-menu-padding ">, </h2>
+                    <h2 class="h2-size font-weight-400 ">@HomeController.PhoneNumberFormat(@ViewBag.Customerphone)</h2>
+                </div>
+            }
+
+        </div>
+    </nav>
+
+    <form id="btnAddtoCart">
+        <div class="container ">
+            <div class="row">
+                <div class="col-12 mb-main mt-main">
+                    <div class="card shadow-sm border-0">
+                        @if (string.IsNullOrEmpty(Model.ItemImage))
+                        {
+                            @* <img class="card-img-top size-shop-sob" src="~/images/ItemDefault.png"> *@
+                            <div class="size-shop-sob" style="background-image:url('/images/ItemDefault.png')"></div>
+                        }
+                        else
+                        {
+                            <div class="size-shop-sob" style="background-image:url('@Model.ItemImage')"></div>
+                            @* <img class="card-img-top size-shop-sob" src=@Model.ItemImage>*@
+                        }
+
+                        <div class="card-body card-sublist-t">
+                            <div class="row">
+                                <div class="col-8">
+                                    <input type="text" id="categoryid" value="@Model.CategoryID" hidden />
+                                    <input type="text" id="subcategoryid" value="@Model.SubCategoryID" hidden />
+                                    <input type="text" id="itemid" name="itemID" value="@Model.ItemID" hidden />
+                                    <h5 class="card-title font-weight-bold font-size-15">@Model.ItemName</h5>
+                                    <input type="text" id="itemname" name="ItemName" value="@Model.ItemName" hidden />
+                                    <p class="card-text sub-text-color font-size-13">@Model.ItemDescriptione</p>
+                                </div>
+                                <div class="col-4 text-right text-center">
+                                    <p class="card-text font-weight-bold text-right sub-price font-size-16"><span id="itemsellingPrice">@HomeController.ConvertToCurrencyPrice(Model.SellingPrice)</span>
+                                        @if (Model.SellingPrice < Model.Price)
+                                        {
+                                            <span id="itemPriceline-through"> @HomeController.ConvertToCurrencyPrice(Model.Price)</span>
+                                            <input type="text" id="price" name="Price" value="@Model.Price" hidden />
+                                        }
+                                    </p>
+                                    <input type="text" id="sellingprice" name="SellingPrice" value="@Model.SellingPrice" hidden />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                @foreach (var option in Model.lstOptionDetail)
+                {
+                    <div class="col-12 mb-main option-boxs">
+                        <div class="card card-body shadow-sm lists-group-menu border-0">
+                            <div class="row">
+                                <div class="col-12 mb-main">
+                                    <label for="staticEmail" class=" col-form-label font-weight-bold font-size-15">@option.OptionName <small class="color-small-sublist font-size-15">@Localizer["เลือกได้"] 1</small></label>
+                                </div>
+                                @*@{
+                            var isfirst = true;
+                            }*@
+                                @foreach (var optionDetail in option.OptionDetail.Where(x => x.OptionID == @option.OptionID))
+                                {
+                                    <div class="container">
+                                        <div class="col-12 ">
+                                            <div class="row" id="rowoptionDetail">
+                                                <div class="col-8 form-check mb-main custom-control custom-radio option-input  ">
+                                                    <div class="col-12">
+                                                        @*@if (isfirst)
+                                                {
+                                                isfirst = false;
+                                                <input class="form-check-input radiooption" name="test GroupOptionDetailNO @optionDetail.OptionID" type="radio" id="Option" data-optionid="@option.OptionID" data-name="@optionDetail.OptionDetailName" data-price="@optionDetail.Price" data-optiondetailno="@optionDetail.OptionDetailNO"
+                                                value="OptionID=@optionDetail.OptionID&OptionDetailNO=@optionDetail.OptionDetailNO&OptionDetailName=@optionDetail.OptionDetailName&Price=@optionDetail.Price" checked="checked">
+                                                }
+                                                else
+                                                {*@
+                                                        <input class="form-check-input radiooption" name="test GroupOptionDetailNO @optionDetail.OptionID" type="radio" id="Option" data-optionid="@option.OptionID" data-name="@optionDetail.OptionDetailName" data-price="@optionDetail.Price" data-optiondetailno="@optionDetail.OptionDetailNO"
+                                                               value="OptionID=@optionDetail.OptionID&OptionDetailNO=@optionDetail.OptionDetailNO&OptionDetailName=@optionDetail.OptionDetailName&Price=@optionDetail.Price">
+                                                        @*}*@
+
+                                                        <div class="form-check-label">
+                                                            @optionDetail.OptionDetailName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 text-right">
+                                                    @HomeController.ConvertToCurrency(optionDetail.Price)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @foreach (var extra in Model.lstExtraDetail)
+                {
+                    <div class="col-12 mb-main option-boxs-extra">
+                        <div class="card card-body shadow-sm lists-group-menu border-0">
+                            <div class="row ">
+                                <div class="col-12 mb-main">
+                                    <label for="staticEmail" class=" col-form-label font-weight-bold font-size-15">@extra.ExtraName <small class="color-small-sublist font-size-15">@Localizer["เลือกได้สูงสุด"] @extra.MaxselectExtra</small></label>
+                                    <input type="text" id="MaxselectExtra @extra.ExtraID" value="@extra.MaxselectExtra" hidden />
+                                </div>
+                                @foreach (var extraDetail in extra.extraDetails.Where(x => x.ExtraID == @extra.ExtraID))
+                                {
+                                    <div class="container">
+                                        <div class="col-12 ">
+                                            <div class="row" id="rowextraDetail" data-extraid="@extra.ExtraID" data-maxselect="@extra.MaxselectExtra">
+                                                <div class="col-8 form-check mb-main custom-control custom-radio extra-input">
+                                                    <div class="col-12">
+                                                        <input class="form-check-input checkboxextra" name="GroupExtraDetailNO @extraDetail.ExtraID" type="checkbox" id="Extra" data-extraid="@extra.ExtraID" data-extradetailname="@extraDetail.ExtraDetailName" data-extradetailno="@extraDetail.ExtraDetailNO" data-price="@extraDetail.Price"
+                                                               value="ExtraID=@extraDetail.ExtraID&ExtraDetailNO=@extraDetail.ExtraDetailNO&ExtraDetailName=@extraDetail.ExtraDetailName&Price=@extraDetail.Price">
+                                                        <div class="form-check-label" name="ExtraDetailName">
+                                                            @extraDetail.ExtraDetailName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 text-right" name="Price">
+                                                    @HomeController.ConvertToCurrency(@extraDetail.Price)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-12 mb-main ">
+                    <div class="card card-body shadow-sm lists-group-menu border-0">
+                        <div class="row mb-main">
+                            <div class="col-12">
+                                <label for="staticEmail" class=" col-form-label font-weight-bold font-size-15">@Localizer["หมายเหตุ"]</label>
+                            </div>
+                            <div class="col-12">
+                                <textarea id="comment" class="form-control" rows="4" name="Comment" maxlength="100"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12  mb-5">
+                    <div class="card card-body shadow-sm lists-group-menu border-0">
+                        <div class="row mb-main">
+                            <div class="col-12 mb-main">
+                                <label for="staticEmail" class=" col-form-label font-weight-bold font-size-15">@Localizer["จำนวนสินค้า"]</label>
+                            </div>
+                            <div class="col-12">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-4 text-right">
+                                            <img src="~/images/AmountDel.png" class="amount-size" alt="buttonpng" border="0" id="NumberProductDelete" onclick="DeleteNumberProduct();" />
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <p class=" size-product-number" id="numberproduct">1</p>
+
+                                        </div>
+                                        <div class="col-4 text-light">
+                                            <img src="~/images/AmountAdd.png" alt="buttonpng" border="0" class="amount-size" id="NumberProductExpand" onclick="ExpandNumberProduct();" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-5">
+                </div>
+                <footer class="fixed-bottom footer-color">
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn mb-3 btn-add-basket btn-lg btn-block font-weighi-300 font-size-14" id="SaveSublist">@Localizer["เพิ่มลงตระกร้า"]</button>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            var numberAll = document.getElementById("numberproduct").innerHTML;
+            if (numberAll == "1") { //จาง 50%
+                var image = document.getElementById("NumberProductDelete");
+                image.style.opacity = 0.5;
+            }
+
+            ClickSubLists();
+            $("#btnAddtoCart").on("submit", function (e) {
+                e.preventDefault();
+                let listextra = [];
+                let listoption = [];
+
+                $('input.checkboxextra').each(function (i) {
+                    if ($(this).is(':checked')) {
+                        var ItemInfoModel =
+                        {
+                            extraid: $(this).data("extraid"),
+                            extradetailname: $(this).data("extradetailname"),
+                            extradetailno: $(this).data("extradetailno"),
+                            price: $(this).data("price"),
+                        }
+                        listextra.push(ItemInfoModel);
+                    }
+                })
+                $('input.radiooption').each(function (i) {
+                    if ($(this).is(':checked')) {
+                        var ItemInfoModel =
+                        {
+                            optionid: $(this).data("optionid"),
+                            optiondetailname: $(this).data("name"),
+                            optiondetailno: $(this).data("optiondetailno"),
+                            price: $(this).data("price")
+                        }
+                        listoption.push(ItemInfoModel);
+                    }
+                })
+
+                var Itemchoose =
+                {
+                    itemid: $("#itemid").val(),
+                    itemname: $("#itemname").val(),
+                    price: $("#price").val(),
+                    sellingprice: $("#sellingprice").val(),
+                    comment: $("#comment").val(),
+                    itemquantity: $("#numberproduct").text(),
+                    itemoption: listoption,
+                    itemextras: listextra,
+                }
+                //console.log(Itemchoose);
+                var listitemchoose = JSON.parse(localStorage.getItem("order"));
+                // console.log(listitemchoose);
+                if (listitemchoose == null) {
+                    listitemchoose = [];
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CheckSameOrderSelect", "Home")",
+                    data: {
+                        lstorder: listitemchoose,
+                        chooseorder: Itemchoose,
+                    },
+                    success: function (message) {
+                        console.log(message);
+                        listitemchoose = message;
+                        localStorage.setItem("order", JSON.stringify(listitemchoose));
+                        window.location.href = '@Url.Action("Index", "Home")?focuscategoryID=' + @ViewBag.FocusCategoryId + '&focussubcategoryID=' + @ViewBag.FocusSubCategoryId;
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+                });
+            });
+        });
+
+        var sumnumber;
+        function DeleteNumberProduct() {
+            var number = document.getElementById("numberproduct");
+            var numberAll = document.getElementById("numberproduct").innerHTML;
+            var image = document.getElementById("NumberProductDelete");
+            sumnumber = parseInt(numberAll) - 1;
+
+            if (numberAll == 1) {
+                image.style.opacity = 0.5;
+                return;
+            }
+            if (sumnumber == 0 || sumnumber == 1) {
+                image.style.opacity = 0.5;
+                number.innerHTML = sumnumber
+                return;
+            }
+            else {
+                number.innerHTML = sumnumber
+                image.style.opacity = 1;
+            }
+        }
+
+        function ExpandNumberProduct() {
+            var number = document.getElementById("numberproduct");
+            var numberAll = document.getElementById("numberproduct").innerHTML;
+            sumnumber = parseInt(numberAll) + 1;
+            if (sumnumber < 0) {
+                number.innerHTML = 0;
+            } else {
+                number.innerHTML = sumnumber
+                var image = document.getElementById("NumberProductDelete");
+                image.style.opacity = 1;
+            }
+        }
+
+        $('div#rowoptionDetail.row').click(function () {
+            $(this).find("input[id='Option']").prop('checked', true);
+            ClickSubLists();
+        });
+
+        var checkbox;
+        var check;
+        $('div#rowextraDetail.row').click(function () {
+            var data = $(this);
+            var extraNo = $(this).data("extraid");
+            var limit = $(this).data("maxselect");
+            check = $(this).find("input[id='Extra']:checked").val();
+            check = !check;
+            $(this).find("input[id='Extra']").prop("checked", check);
+            var groupname = "GroupExtraDetailNO " + extraNo;
+            if ($('input[name="' + groupname + '"]:checked').length > limit) {
+                $(this).find("input[id='Extra']").prop('checked', false);
+            }
+            ClickSubLists();
+        });
+
+        //Extra Click
+        $("input[id='Extra']").click(function (e) {
+            var data = $(this);
+            var extraNo = data[0].name.replace("GroupExtraDetailNO ", "");
+            var Maxselect = 'MaxselectExtra ' + extraNo;
+            var aaa = $('input[id="' + Maxselect);
+            var limit = aaa[0].value;
+            var groupname = "GroupExtraDetailNO " + extraNo;
+            if ($('input[name="' + groupname + '"]:checked').length > limit) {
+                $(this).prop('checked', false);
+            }
+            e.stopPropagation();
+            ClickSubLists();
+        });
+
+        function ClickSubLists() {
+            var Boxsoptions = document.getElementsByClassName("option-boxs");
+            var Save = document.getElementById("SaveSublist");
+
+            if (Boxsoptions.length > 0) {
+                var optionCheck = $("input[id='Option']:checked");
+                if (Boxsoptions.length == optionCheck.length) {
+                    Save.disabled = false;
+                } else {
+                    Save.disabled = true;
+                }
+            }
+
+            var quanitity = $('#quantity').val();
+            if (quanitity === "") {
+                $('#quantity').val(1);
+            }
+            else {
+                $('#quantity').val(sumnumber);
+            }
+        }
+
+
+        //button Save
+        //const form = $("#btnAddtoCart");
+        //form.on("submit", submitform);
+
+        //function submitform(event) {
+        //    //event.preventDefault();
+        //    const form = $("#btnAddtoCart");
+        //    const formData = form.serialize();
+
+        //    console.log(formData);
+        //    $.post("/Home/SaveSubList", formData).done(function (data) {
+        //        console.log("Response from server:", data);
+        //    })
+        //    .fail(function (error) {
+        //        console.error("Error:", error);
+        //    });
+        //}
+
+        function CloseSubList() {
+            window.location.href = '@Url.Action("Index", "Home")?focuscategoryID=' + @ViewBag.FocusCategoryId + '&focussubcategoryID=' + @ViewBag.FocusSubCategoryId;
+        }
+
+    </script>
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
+@await Html.PartialAsync("_Script")
+

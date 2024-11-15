@@ -1,0 +1,284 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "AllNotification";
+}
+<body id="AllNotification">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  ">
+                <div class="row ">
+                    <div class="col-12 header-group mb-2">
+                        <a onclick="history.back()"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["การแจ้งเตือนทั้งหมด"]</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-5">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold mb-0 font-size">@Localizer["การแจ้งเตือนทั้งหมด"] <span class="size-small font-weight-bold ms-2" id="count"> @Localizer["จำนวนทั้งหมด"] 0</span><span class="size-small font-weight-bold"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-0">
+                                <div class="table-responsive">
+                                    <table id="TableAllNoti" class="TableInfo-bg ">
+                                        <thead>
+                                            <tr style="display:none;">
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br />
+    <br />
+
+</body>
+
+
+<script>
+    var listshownewnotify = []; //status = 'N','O' N = newNoti , O = oldNoti
+
+    $(document).ready(function () {
+        listshownewnotify = [];
+        var aaa = JSON.parse(localStorage.getItem("listnewnotify"));
+        if(aaa != null){
+            listshownewnotify.push(...aaa);
+            console.log(listshownewnotify);
+        }
+
+        var table = $('#TableAllNoti').DataTable({
+            ajax: {
+                url: "@Url.Action("GetNoti", "Home")",
+                dataSrc: ''
+            },
+            columns: [
+                { data: { merchantID: 'merchantID', comments: 'comments', foodTableName: 'foodTableName', notificationType: 'notificationType', dateCreated: 'dateCreated', total: 'total', openOrderID: 'openOrderID' } },
+                { data: 'dateCreated' }
+            ],
+
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    //console.log(full)
+                    var setdata = '';
+                    setdata += '<div onclick="OnTablesonly(' + data.total + ',&apos;' + data.openOrderID + '&apos;' + ',&apos;' + data.dateCreated + '&apos;);" class="dropdown-item  p-3 bell-order-flex table-striped-order newnotify';
+                    var noti = listshownewnotify.find(x => x.dateCreated == data.dateCreated && x.openOrderID == data.openOrderID);
+                    if (noti != null && noti.status == 'O') {
+                        setdata = setdata.replace('newnotify', '');;
+                    }
+                    setdata += '">';
+                    setdata += '<div>';
+                    setdata += '<div class="text-order-flex">';
+                    setdata += '<p class="text-color-head-order mb-0">@Localizer["โต๊ะ"]</p>';
+                    setdata += '<p class="text-color-sub-order mb-0 mr-3">' + '&nbsp; ' + data.foodTableName + '</p>';
+                    if (data.notificationType == "C") {
+                        setdata += '<p class="text-color-head-order mb-0"> @Localizer["เรียกพนักงาน"]</p>';
+                    } else {
+                        setdata += '<p class="text-color-head-order mb-0"> @Localizer["เรียกคิดเงิน"]</p>';
+                    }
+
+                    setdata += '</div>';
+                    setdata += '<div class="text-order-flex">';
+                    if (data.notificationType == "C") {
+                        if (data.comments == "") {
+                            setdata += '<p class="text-head-order text-line mb-0 mr-1">@Localizer["เรียกพนักงาน"]</p>';
+                        } else {
+                            setdata += '<p class="text-head-order text-line mb-0 mr-1">' + data.comments + '</p>';
+                        }
+
+                    } else {
+                        setdata += '<p class="text-head-order mb-0 mr-1">@Localizer["ยอดชำระ"]</p>';
+                        setdata += '<p class="text-color-sub-order mb-0">' + data.total.toFixed(2) + '</p>';
+                    }
+
+                    setdata += '</div>';
+                    setdata += '</div>';
+                    setdata += '<div class="text-order-end text-sticky-order">';
+                    setdata += '<p class="text-color-grey mb-0">' + Formatetime(data.dateCreated) + '</p>';
+                    setdata += '<p class="text-color-grey mb-0 text-ads-0">' + SumHours(data.dateCreated) + '</p>';
+                    setdata += '</div></div>';
+                    return setdata;
+                }
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    //console.log(full)
+                    var xxx = '<p style="display:none">' + data + '</p>';
+                    return xxx;
+                }
+
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีรายการ"]</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+
+            },
+            "initComplete": function (settings, json) {
+                $('#count').text(@Html.Raw(Json.Serialize(@Localizer["จำนวนทั้งหมด"].Value))  + ' ' + table.data().count());
+                if (table.data().count() > 0) {
+                    var xxx = table.data()[0].ticksNumber;
+                    //console.log(xxx)
+                    $('#datelastnoti').val(xxx);
+                } else {
+                    $('#datelastnoti').val("");
+                }
+
+               
+
+                if (localStorage.getItem("countnoti") != table.data().count()) {
+                    //localStorage.setItem("countnoti", table.data().count());
+                    $('#NotiItemMenu').css('display', 'block');
+                } else {
+                    $('#NotiItemMenu').css('display', 'none');
+                }
+                //console.log("sss");
+                setInterval(GetNotiAuto, 5000);
+            },
+            "order": [[1, 'desc']],
+            searching: false,
+            paging: false,
+            info: false
+
+        });
+
+        function chackTimes(days, hours, minutes, seconds) {
+            var times = "";
+            if (days <= 0) {
+                times = "";
+            } else {
+                times = days + " @Localizer["วัน"]";
+                return times;
+            }
+
+            if (hours <= 0) {
+                times = "";
+            } else {
+                times = hours + " @Localizer["ชม."]";
+                return times;
+            }
+            if (minutes <= 0) {
+                times = "";
+            } else {
+                times = minutes + " @Localizer["นาที"]";
+                return times;
+            }
+            if (seconds <= 0) {
+                times = seconds + " @Localizer["วิ"]";
+            } else {
+                times = seconds + " @Localizer["วิ"]";
+                return times;
+            }
+            return times;
+        }
+
+        function Formatetime(isoTimeString) {
+            const date = new Date(isoTimeString);
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Asia/Bangkok',
+                hour12: false
+            };
+            const formattedDate = new Intl.DateTimeFormat('th-TH', options).format(date);
+            return formattedDate;
+        }
+
+        function SumHours(DateTime) {
+            var currentDate = new Date();
+            var givenDate = new Date(DateTime);
+            var timeDifference = givenDate.getTime() - currentDate.getTime();
+            var timeDifferenceInSeconds = Math.abs(timeDifference) / 1000;
+            var days = Math.floor(timeDifferenceInSeconds / (24 * 3600));
+            var hours = Math.floor((timeDifferenceInSeconds % (24 * 3600)) / 3600);
+            var minutes = Math.floor((timeDifferenceInSeconds % 3600) / 60);
+            var seconds = Math.floor(timeDifferenceInSeconds % 60);
+            var dataTime = chackTimes(days, hours, minutes, seconds)
+            return dataTime;
+        }
+        var aa = 0;
+        var xax = 1;
+        function GetNotiAuto() {
+            $.ajax({
+                type: "GET",
+                async: false,
+                data: {
+                    date: $('#datelastnoti').val()
+                },
+                url: "@Url.Action("GetNotiLoop", "Home")",
+                success: function (message) {
+                    if (message != undefined || message != null) {
+                        var model = JSON.parse(message);
+                        model.forEach((item) => {
+                            var table = $('#TableAllNoti').DataTable();
+                            table.row.add(item).draw(false);
+                            $('#datelastnoti').val(item.ticksNumber);
+                            xax = 0;
+                        });
+
+                        if (localStorage.getItem("countnoti") != table.data().count() && xax == 0) {
+                            xax += 1;
+                            const yourAudioOrVideoElement = document.getElementById('myAudio');
+                            try {
+                                if (yourAudioOrVideoElement.paused) {
+                                    yourAudioOrVideoElement.muted = false;
+                                    const playPromise = yourAudioOrVideoElement.play();
+                                    aa += 1;
+                                    //console.log(aa)
+                                    if (playPromise !== undefined) {
+                                        playPromise.then(_ => {
+
+                                        }).catch(error => {
+
+                                            //console.error('Autoplay was prevented: ', error);
+                                        });
+                                    }
+                                } else {
+                                    yourAudioOrVideoElement.pause();
+                                }
+                            } catch (error) {
+                                //console.error('Autoplay was prevented: ', error);
+                            }
+                            $('#NotiItemMenu').css('display', 'block');
+                        }
+                    }
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+            });
+        }
+    });
+
+
+    function OnChackInfoItemMenu() {
+        if ($('#NotiItemMenu').css('display') === 'block') {
+            $('#NotiItemMenu').css('display', 'none');
+        } else {
+            $('#NotiItemMenu').css('display', 'none');
+        }
+        var table = $('#TableAllNoti').DataTable();
+        localStorage.setItem("countnoti", table.data().count());
+        table.ajax.reload();
+    }
+
+</script>

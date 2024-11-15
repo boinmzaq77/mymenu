@@ -1,0 +1,339 @@
+﻿﻿@using MyMenu.ORM.Master;
+@using MyMenu.JAM;
+@model BranchManageModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<style>
+    .font-branchmanagement-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9 !important;
+    }
+
+    .bg-branchmanagement {
+        background: #ffffff url(/mymenumerchant/images/MenuBranchC.png) 0px 17px no-repeat;
+        background-size: 24px 24px;
+    }
+</style>
+<body id="BranchManagement">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-12  mb-4">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <h2 class="font-weight-bold menu-header">@Localizer["การจัดการสาขา"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item">@Localizer["การจัดการสาขา"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3 ">
+                <div class="card rounded-body border-0">
+                    <div class="card-body pt-3">
+                        <div class="container-ml">
+                            <div class="col-12">
+                                <div class="media">
+                                    <div class="align-self-center mr-3  box-border-radius">
+                                        <img class="size-icon-w" src="/mymenumerchant/images/Branch_Info.png">
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="text-groud-body position-initial">
+                                            <div class="layout-text-profile">
+                                                <p class="text-h2-header">@Localizer["ข้อมูลสาขา"]</p>
+                                            </div>
+                                           @*  ไม่ใช้แล้วว แก้ได้จากหน้าร้านค้า -> สาขา 23/01/2567*@
+                                           @*  <div class="layout-button-edit position-btn-edit">
+                                                <a class="btn button-size-edit" asp-controller="BranchManagement" asp-action="BranchEdit"><i class="fa fa-edit "></i>@Localizer["แก้ไข"] </a>
+                                            </div> *@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 pt-3">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-w-title text-top">
+                                                <p class="text-p-heder font-weight-bold">@Localizer["รหัสสาขา"]</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-p-list text-weight color-branch-p">@Model.BranchID</p>
+                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-w-title text-top pt-3">
+                                                <p class="text-p-heder font-weight-bold">@Localizer["ชื่อสาขา"]</p>
+                                            </td>
+                                            <td class="pt-3">
+                                                <p class="text-p-list text-weight color-branch-p">@Model.BranchName</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-w-title text-top pt-3">
+                                                <p class="text-p-heder font-weight-bold">@Localizer["เวลาเปิดทำการ"]</p>
+                                            </td>
+                                            <td class="pt-3">
+                                                <p class="text-p-list text-weight color-branch-p">@Model.OpeningHours</p>
+                                            </td>
+                                        </tr>
+                                        <tr >
+                                            <td class="text-w-title text-top pt-3">
+                                                <p class="text-p-heder font-weight-bold">@Localizer["ที่อยู่"]</p>
+                                            </td>
+                                            <td class="pt-3 pb-3">
+                                                <p class="text-p-list text-weight color-branch-p">@Model.Address1 @Model.Address2</p>
+                                        </tr>
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 pb-3 pt-2">
+                <h2 class="font-weight-bold menu-header">@Localizer["จัดการสาขา"]</h2>
+            </div>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="TableManagement">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_TableManage.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["จัดการโต๊ะ"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.FoodTableCount</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="QRCodeSetup">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_QR.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["QR Code สั่งอาหาร"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.QRCodeCount</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="MenuBranch">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_Menu.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["เมนูอาหารตามสาขา"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.MenuOnBranchCount</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+
+@*            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="MenuBranch">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_Menu.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">เมนูอาหารตามสาขา</p>
+                                <p class="text-p-list text-weight color-branch-p">1</p>
+                                <p type="button" class="float-right btn color-branch-p  btn-all text-btn text-p-btn">ดูทั้งหมด <i class="i-wd i-padding fa fa-angle-right"></i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>*@
+
+
+@*            <div class="col-sm-6 mb-2 " style="opacity: 0.5;">
+                <div class="card rounded-body border-0 mr-3">
+                    <div class="card-body disabled-menu">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_QR.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">myQR</p>
+                                <p class="text-p-list text-weight text-color-list">QR Code รับเงิน</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> *@
+            <a class="col-sm-6 mb-2 " asp-controller="BranchManagement" asp-action="MyQR" disabled>
+                @* style="pointer-events: none;opacity:0.5;" *@
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_QR.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">myQR</p>
+                                <p class="text-p-list text-weight text-color-list">@Localizer["QR Code รับเงิน"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="col-12 pb-3 pt-0">
+                <h2 class="font-weight-bold menu-header">@Localizer["ตั้งค่า"]</h2>
+            </div>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="BranchSetup">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_Setting.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["ตั้งค่าสาขา"]</p>
+                                <p class="text-p-list text-weight text-color-list">@Localizer["ประเภทการสั่งอาหาร, การแจ้งเตือน"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="Printers">
+                @*disabled style="pointer-events: none;opacity:0.5;"*@
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_Setting.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["จุดพิมพ์"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="PaymentReceipt">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/DashboardBill.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["ใบเสร็จรับเงิน"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="ServiceCharge">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/MerchantManage_TServiceCharge.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["ค่าบริการ (Service Charge)"]</p>
+                                @if(Model.ServicechargeRate == "0"){
+                                    <p class="text-p-list text-weight text-color-list">@Localizer["ไม่มีค่าบริการ"]</p>
+                                }
+                                else
+                                {
+                                    <p class="text-p-list text-weight text-color-list">@Model.ServicechargeRate%, @(Model.ServicechargeType == 'A' ? @Localizer["หลังหักส่วนลด"] : @Localizer["ก่อนหักส่วนลด"])</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="POSMachice" >@* disabled style="pointer-events: none;opacity:0.5;" *@
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Branch_POS.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["เครื่อง POS"]</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="CashDrawer">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/MerchantManage_CashDrawer.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["ลิ้นชักเก็บเงิน"]</p>
+                                @if (Model.Cashdrawer == 0 || (Model.Cashdrawer == null))
+                                {
+                                    <p class="text-p-list text-weight text-color-list">@Localizer["ปิดการใช้งาน"]</p>
+                                }
+                                else
+                                {
+                                    <p class="text-p-list text-weight text-color-list">@Localizer["เปิดการใช้งาน"]</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="BranchManagement" asp-action="AutoServe">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body">
+                        <div class="media menu-h">
+                            <div class="align-self-center mr-3  box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/MerchantManage_OptionServe.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold">@Localizer["Option การเสิร์ฟครบอัติโนมัติ"]</p>
+                                @if (Model.AutoServe == 0 || (Model.AutoServe == null))
+                                {
+                                    <p class="text-p-list text-weight text-color-list">@Localizer["ปิดการใช้งาน"]</p>
+                                }
+                                else
+                                {
+                                    <p class="text-p-list text-weight text-color-list">@Localizer["เปิดการใช้งาน"]</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            
+        </div>
+    </div>
+
+</body>
+
+
+<script>
+
+
+
+</script>
+

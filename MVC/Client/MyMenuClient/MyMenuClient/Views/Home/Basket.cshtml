@@ -1,0 +1,347 @@
+﻿@using MyMenuClient.Controllers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = null;
+}
+
+@model List<MyMenuClient.Models.ClinetOrderModel>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MyMenuClient</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="icon" type="image/x-icon" href="/MyMenuClient/images/LogoMyMenu.png" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/MyMenuClient.styles.css" asp-append-version="true" />*@
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-default mb-3">
+        <div class="container-fluid nav-width">
+            <div class="container mt-2 mb-1 navbar-padding">
+                <div class="layout-left">
+                    <a asp-controller="Home" asp-action="Index" class=" navbar-btn layout-i-bank">
+                        <i class="fa fa-angle-left back-green"></i>
+                    </a>
+                </div>
+
+                <div class="layout-right">
+                    <a class="rounded-circle " asp-controller="Home" asp-action="RecordOrder"><img src="~/images/BellButton_1.png" class="ml-4 size-bell" /></a>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-menu-center">
+            <h1 class="h1-size font-weight-bold  logo-ml">@Localizer["ตะกร้า"]</h1>
+            @if (!string.IsNullOrEmpty(@ViewBag.FoodTableName))
+            {
+                @*แสดงชื่อโต๊ะ*@
+                <h2 class="h2-size font-weight-400">@ViewBag.FoodTableName</h2>
+            }
+            else
+            {
+                @*แสดงชื่อคนสั่งกลับบ้าน*@
+                <div class="navbar-menu-text-name">
+                    <h2 class="h2-size font-weight-400 navbar-text-name">@ViewBag.CustomerName</h2>
+                    <h2 class="h2-size font-weight-400 navbar-menu-padding ">, </h2>
+                    <h2 class="h2-size font-weight-400 ">@HomeController.PhoneNumberFormat(@ViewBag.Customerphone)</h2>
+                </div>
+            }
+        </div>
+    </nav>
+
+    <div class="container ">
+        <div class="row">
+            <div class="col-12  order-body" id="NoSelectOrder">
+                @*class no-order-body คือ Not Show*@
+                <div class="text-center no-order-basket">
+                    <img class="size-img-cart-empty mb-3" src="~/images/CartEmpty.png" />
+                    <p class="p-no-order">ยังไม่ได้เลือกสินค้า</p>
+                </div>
+            </div>
+            <div class="col-12  no-order-body mb-order-body" id="BasketOrder">
+                @*class order-body คือ Show*@
+                @{
+                    int index = 0;
+                }
+                @foreach (var Order in Model)
+                {
+                    @foreach (var OrderDetail in Order.OrderDetailModel)
+                    {
+                        <div class="card card-body shadow-sm mb-2" id="cardItemclone">
+                            <div class="row mb-2">
+                                <div class="col-2 text-start">
+                                    <p class="font-weight-bold font-number color-head-sub-list font-size-15 font-weighi-500" id="itemQuantity">@HomeController.ConvertToInt(@OrderDetail.Quantity)x</p>
+                                    <input type="text" name="itemquantity" value="@OrderDetail.Quantity" hidden>
+                                </div>
+                                <div class="col-7 ">
+                                    <p class="font-weight-bold size-boxs color-head-sub-list font-size-15 font-weighi-500" id="itemName">@OrderDetail.itemName</p>
+                                    <p class="size-boxs color-sub-list-price font-size-15" id="itemPrice">
+                                        @if (@OrderDetail.Price < @OrderDetail.NormalPrice)
+                                        {
+                                            <span id="itemPriceline-through"> @HomeController.ConvertToCurrencyPrice(@OrderDetail.NormalPrice)</span>
+                                            <span id="itemsellingPrice"> @HomeController.ConvertToCurrencyPrice(@OrderDetail.Price)</span>
+
+                                        }
+                                        else
+                                        {
+                                            <span id="itemsellingPrice"> @HomeController.ConvertToCurrencyPrice(@OrderDetail.Price)</span>
+                                        }
+                                    </p>
+                                    @foreach (var OptionExtra in OrderDetail.OptionExtra)
+                                    {
+                                        @if (@OptionExtra.OptionID == 0)
+                                        {
+                                            <p class="size-boxs color-sub-list font-size-15" id="Option">@OptionExtra.OptionExtraDetailName <small class="font-size-15" id="OptionPrice"> @HomeController.ConvertToCurrency(@OptionExtra.Price)</small></p>
+                                        }
+                                        else
+                                        {
+                                            <p class="size-boxs color-sub-list font-size-15" id="Extra"> @OptionExtra.OptionExtraDetailName<small class="font-size-15" id="ExtraPrice"> @HomeController.ConvertToCurrency(@OptionExtra.Price)</small></p>
+                                        }
+                                    }
+                                    <p class="size-boxs color-sub-list font-size-15" id="Comment"> @OrderDetail.Comments</p>
+                                </div>
+                                <div class="col-3 text-end">
+                                    <p class="font-weight-bold color-head-sub-list font-size-15 font-weighi-700" id="sumPrice"> @HomeController.ConvertToCurrencyPrice(@OrderDetail.Amount)</p>
+                                    <input type="text" name="sumamount" value="@OrderDetail.Amount" hidden>
+                                </div>
+                                <div class="col-12 text-right ma-lists-edit">
+                                    <a type="button" class="btn-edit-basket font-size-14" data-itemid="@OrderDetail.ItemID" data-index="@index" id="btnEdit">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                        index++;
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <form hidden id="SubListEdit" asp-action="SubListEdit" method="post">
+        <input name="itemID" id="itemID" value="" />
+        <input name="jsonorderDetail" id="jsonorderDetail" value="" />
+        <input name="indexrow" id="indexrow" value="" />
+    </form>
+
+    <!--Modal Post not Success-->
+    <div class="modal fade" id="ModalOrder" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <p class="text-ordernotcomplete-color modal-m-text " id="txt1">สั่งอาหารไม่สำเร็จ</p>
+                            <p class="text-ordernotcomplete-color modal-m-text" id="txt2">กรุณาลองใหม่อีกครั้ง</p>
+                        </div>
+                    </div>
+                    <div class="col-12 p-0">
+                        <button type="button" class="btn-lg btn-block btn-order-notcomplete font-weight-400" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <footer class="bg-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mb-3 list-order no-order-body" id="listorder">
+                    @*class no-order-body คือ Not Show*@
+                    <div class="card basket-card shadow-sm">
+                        <div class="card-body basket-body">
+                            <div class="row ">
+                                <div class="col-6 text-start ">
+                                    <p class="m-1 size-list card-text text-bottom color-sum-list-basket font-size-14" id="CountlistOrder">
+                                        1 รายการ
+                                    </p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <p class="m-1 size-number color-sum-lis-pricet-basket" id="SumlistOrder">
+                                        50.00
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    @* <a class=" mb-3 btn-add-basket btn-lg btn-block font-size-14" ></a>*@
+                    <button type="submit" class=" mb-3 btn-add-basket btn-lg btn-block font-size-14" id="SubmitOrder" onclick="SubmitOrderAll();" disabled>@Localizer["สั่งอาหาร"]</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        var listorder = document.getElementsByClassName("list-order");
+        var noorder = document.getElementsByClassName("no-order-basket");
+        var order = document.getElementsByClassName("order-body");
+        var total = 0;
+        var quantity = 0;
+
+
+        $(document).ready(function () {
+
+            ChangeBasketOrder();
+
+            var listitemchoose = JSON.parse(localStorage.getItem("order"));
+
+            if (listitemchoose == null) {
+                return;
+            }
+            if (listitemchoose.length > 0) {
+                var aaa = $('#NoSelectOrder');
+                aaa.removeClass('order-body');
+                aaa.addClass('no-order-body');
+
+                var bbb = $('#BasketOrder');
+                bbb.removeClass('no-order-body');
+                bbb.addClass('order-body');
+
+                var ccc = $('#listorder');
+                ccc.removeClass('no-order-body');
+                ccc.addClass('order-body');
+
+            }
+            else {
+                var aaa = $('#NoSelectOrder');
+                aaa.removeClass('no-order-body');
+                aaa.addClass('order-body');
+
+                var ccc = $('#listorder');
+                ccc.removeClass('order-body');
+                ccc.addClass('no-order-body');
+            }
+
+            //sum ราคาทั้งหมด
+            $("input[name='sumamount']").each(function () {
+                var value = parseFloat($(this).val(), 10);
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            $('#SumlistOrder').text(roundToTwo(total));
+
+            //sum จำนวน
+            $("input[name='itemquantity']").each(function () {
+                var value = parseFloat($(this).val(), 10);
+                if (!isNaN(value)) {
+                    quantity += value;
+                }
+            });
+            $('#CountlistOrder').text(quantity + " " + @Html.Raw(Json.Serialize(@Localizer["รายการ"].Value)));
+        });
+
+
+
+        function ChangeBasketOrder() {
+            var listitemchoose = JSON.parse(localStorage.getItem("order"));
+            if (listitemchoose == null) {
+                var btn = $("#SubmitOrder");
+                btn.addClass('btn-no-basket');
+                btn.removeClass('btn-add-basket')
+                document.getElementById("SubmitOrder").disabled = true;
+                return;
+            }
+            if (listitemchoose.length > 0) {
+                document.getElementById("SubmitOrder").disabled = false;
+            } else {
+                document.getElementById("SubmitOrder").disabled = true;
+            }
+        }
+
+        function SubmitOrderAll() {
+            var dataString = localStorage.getItem("order");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("PostOrder", "Home")",
+                data: {
+                    value: dataString,
+                },
+                success: function (message) {
+                    localStorage.clear();
+                    location.replace("/mymenuclient/Home/OrderCartConfirmation");
+                }, error: function (message) {
+                    jQuery.noConflict();
+                    $('#ModalOrder').modal('show');
+                    if (message.responseText == 'OPENORDER Status Billing') {
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                        $('#txt2').text(@Html.Raw(Json.Serialize(@Localizer["เนื่องจากโต๊ะนี้มีการเรียกคิดเงินแล้ว"].Value)));
+                    } 
+                }
+            });
+        }
+
+        function roundToTwo(num) {
+            return format('th-TH', 'THB', num);
+        }
+
+        function format(locale, currency, number) {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency,
+                currencyDisplay: "code"
+            })
+                .format(number)
+                .replace(currency, "")
+                .trim();
+        }
+
+        var index = 0;
+        $('a#btnEdit*').click(function () {
+            var itemID = $(this).data("itemid");
+            index = $(this).data('index');
+
+            var listitemchoose = JSON.parse(localStorage.getItem("order"));
+
+            var Itemchoose =
+            {
+                itemid: listitemchoose[index].itemID,
+                itemname: listitemchoose[index].itemName,
+                sellingprice: listitemchoose[index].sellingPrice,
+                comment: listitemchoose[index].comment,
+                itemquantity: listitemchoose[index].itemQuantity,
+                itemtoppings: listitemchoose[index].itemOption,
+                itemextras: listitemchoose[index].itemExtras,
+            }
+
+            var jsonorderDetail = JSON.stringify(listitemchoose[index]);
+
+            $("#jsonorderDetail").val(jsonorderDetail);
+            $("#indexrow").val(index);
+            $("#itemID").val(itemID);
+            $("#SubListEdit").submit();
+
+        });
+
+        function closemodel() {
+            $('#ModalOrder').modal().hide();
+        }
+
+    </script>
+
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
+

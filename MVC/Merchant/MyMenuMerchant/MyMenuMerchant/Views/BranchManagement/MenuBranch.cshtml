@@ -1,0 +1,778 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<style>
+    #MenuBranch .Menu-img img {
+        width: 160px;
+        height: 160px;
+        color: #fff;
+        background: #6B6B6B;
+    }
+</style>
+<body id="MenuBranch">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["เมนูอาหารตามสาขา"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["เมนูอาหารตามสาขา"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-2 search">
+                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["ชื่อเมนู, ราคาปกติ, ราคาขาย"]" style="height: 45px;" autocomplete="off">
+            </div>
+            <div class="col-md-12 mb-4">
+                <div class="card box-card border-0 rounded">
+                    <div class="card-body ">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold font-size mb-0">@Localizer["รายการเมนูอาหาร"] <small class="size-small font-weight-bold ms-2"> @Localizer["จำนวนทั้งหมด"] <small class="size-small font-weight-bold ms-2" id="MenuCount"></small></small></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-0">
+                                <div class="table-responsive">
+                                    <table class="table" id="TablesItemOnBranch" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-number text-center">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ชื่อเมนู"]</th>
+                                                <th scope="col" class="size-th-price text-right">@Localizer["ราคาปกติ"]</th>
+                                                <th scope="col" class="size-th-price text-right">@Localizer["ราคาขาย"]</th>
+                                                <th scope="col" class="size-th-status text-center">@Localizer["เปิด-ปิด การขาย"]</th>
+                                                <th scope="col" class="size-th-edit"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    <br />
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media media-text">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin m-0">@Localizer["จัดการเมนูอาหารตามสาขา"] <samp class="color-sub-help">@Localizer["จะเป็นการสร้างเมนูอาหารที่ส่วนกลาง แต่ละสาขาจะสามารถเปิด-ปิดการขาย และสามารถกำหนดราคาปกติกับราคาขายได้เท่านั้น"] </samp></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade bd-example-modal-xl" id="ModalDetailsInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <div class="d-flex flex-row">
+                        <div class="p-2" onclick="clearTxt()"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="p-2"><h5 class="text-branch">@Localizer["แก้ไขราคา"]</h5></div>
+                    </div>
+                </div>
+                <form id="save" class="mb-0">
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-sm-12">
+                                    <div class="form-row">
+                                        <div class="col-sm-auto me-2 layout-img">
+                                            <div class="mb-2 Menu-img">
+                                                <img name=FileImage src="/mymenumerchant/images/ItemDefault.png" class="img-fluid" id="productimg" /><br />
+                                                @*<input type="file" id="productinput" accept=".jpg, .jpeg, .png" onchange="loadProductFile(event)" hidden />*@
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <div class="form-row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold" for="MenuName">@Localizer["ชื่อเมนู"]</label>
+                                                        <div class="input-group input-text">
+                                                            <p class="mb-0" id="Namemenu"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold" for="SubCategory">@Localizer["ราคาปกติ"]</label>
+                                                                <div class="input-group input-text">
+                                                                    <input type="text" class="form-control" name="ItemID" id="ItemID" hidden>
+                                                                    <input type="text" class="form-control" name="SalePriceMenuOld" id="SalePriceMenuOld" hidden>
+                                                                    <input type="text" class="form-control" name="PriceOld" id="PriceOld" hidden>
+                                                                    <input type="text" class="form-control text-count examine additem" name="Price" id="Price" maxlength="250" placeholder="฿ 00.00" step="0.01" oninput="itemDetailInput()">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label class="font-weight-bold" for="SalePriceMenu">@Localizer["ราคาขาย"]</label>
+                                                                <div class="input-group input-text">
+                                                                    <input type="text" class="form-control text-count examine additem" name="SellingPrice" id="SalePriceMenu" maxlength="250" placeholder="฿ 00.00" step="0.01" oninput="itemDetailInput()">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12  mb-2">
+                            <div class="d-flex justify-content-end">
+                                <div>
+                                    <button type="submit" class="btn-save" id="btnsaveedit" disabled>@Localizer["บันทึก"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="ModalMenuinfo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row">
+                        <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="p-2"><h5 class="text-branch">@Localizer["รายละเอียดเมนู"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-5 col-xl-3 col-lg-3 col-md-4 col-sm-5 mb-3">
+                                <img id="imgitem" class="img-info-menu" src="/mymenumerchant/images/BackGroundShop.png" onerror="this.src='/mymenumerchant/images/ItemDefault.png';" />
+                            </div>
+                            <div class="col-7 col-xl-9 col-lg-9 col-md-8 col-sm-7 mb-3">
+                                <div class="row">
+                                    <div class="col-12 padding-l-3">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-headmenu" for="nameitem">@Localizer["ชื่อเมนู :"]</label>
+                                            <p id="nameitem" class="color-text-list">อเมริกาโน่</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 padding-l-3">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-headmenu" for="priceitem">@Localizer["ราคาปกติ :"]</label>
+                                            <p id="priceitem" class="color-text-list">อเมริกาโน่</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 padding-l-3">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-headmenu" for="pricesell">@Localizer["ราคาขาย :"]</label>
+                                            <p id="pricesell" class="color-text-list">฿ 50.00</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                @*                                        <div class="col-8">
+                                <p class="text-end">เปิด/ปิด การขาย</p>
+                                </div>
+                                <div class="col-4">
+                                <div class="text-end">
+                                <label class="switch">
+                                <input type="checkbox" id="Status">
+                                <span class="slider round"></span>
+                                </label>
+                                </div>
+                                </div>*@
+
+                            </div>
+                            @*<div class="col-12">
+                            <p id="nameitem" class="font-weight-bold">อเมริกาโน่</p>
+                            </div>
+                            <div class="col-6">
+                            <div class="d-flex flex-row">
+                            <div class="p-2" ><p class="font-weight-bold" >ราคาปกติ</p></div>
+                            <div class="p-2" id="priceitem"> ฿ 50.00</div>
+                            </div>
+                            </div>
+                            <div class="col-6">
+                            <div class="d-flex flex-row">
+                            <div class="p-2"><p class="font-weight-bold">ราคาขาย</p></div>
+                            <div class="p-2" id="pricesell"> ฿ 50.00</div>
+                            </div>
+                            </div>
+                            <hr />*@
+
+                            <div class="col-12" id="detailitemhidden1">
+                                <div class="form-group">
+                                    <label class="font-weight-bold color-headmenu" for="detailitem">@Localizer["รายละเอียดเมนู :"]</label>
+                                    @*<p class="font-weight-bold color-text-list">อเมริกาโน่เย็น เป็นกาแฟผสมน้ำ ทางร้านจะไม่ใส่ไซรัปให้</p>*@
+                                    <p class="color-text-list" id="detailitem">อเมริกาโน่เย็น เป็นกาแฟผสมน้ำ ทางร้านจะไม่ใส่ไซรัปให้</p>
+                                </div>
+                            </div>
+                            <hr id="detailitemhidden2" />
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="font-weight-bold color-headmenu" for="detailitem">@Localizer["หมวดหมู่ :"]</label>
+                                    <p class="color-text-list" id="divcatagory"> กาแฟ <samp class="color-green">></samp> กาแฟย่อย</p>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div class="col-12 mb-3" id="Optionhidden1">
+                                <div class="d-flex flex-row">
+                                    <div class="p-1"><label class="font-weight-bold color-headmenu">@Localizer["Option (ตัวเลือก) :"]</label></div>
+                                </div>
+                                <div class="container" id="divoption">
+                                    <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ระดับความหวาน</p>
+                                    <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ไซส์</p>
+                                </div>
+                            </div>
+                            <hr id="Optionhidden2" />
+
+                            <div class="col-12 mb-3" id="Extrahidden1">
+                                <div class="d-flex flex-row">
+                                    <div class="p-1"><label class="font-weight-bold color-headmenu">@Localizer["Extra (ตัวเลือกเสริม) :"]</label></div>
+                                </div>
+                                <div class="container" id="divextra">
+                                    <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ท็อปปิ้ง เครื่องดื่ม</p>
+                                </div>
+                            </div>
+                            <hr id="Extrahidden2" />
+                            <div class="col-12 mb-5">
+                                <div class="d-flex flex-row">
+                                    <div class="p-1"><label class="font-weight-bold color-headmenu">@Localizer["สาขาที่เปิดขาย :"]</label></div>
+                                </div>
+                                <div class="container" id="divbranch">
+                                    <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> </p>
+                                </div>
+                            </div>
+                            @*                                <div class="col-md-12 ">
+                            <div class="d-flex justify-content-end">
+                            <div class="p-2">
+                            <a class="btn modal-btn-size-edit" id="btnedititem" asp-controller="ManageMenu" asp-action="MenuEdit" asp-route-id="dummyid"><i class="fa fa-edit"></i> แก้ไข</a>
+                            </div>
+                            <div class="p-2">
+                            <a class="btn modal-btn-size-delete" data-toggle="modal" data-target="#ModalMenuDelete"><i class="fa fa-trash-o"></i> ลบ</a>
+                            </div>
+                            </div>
+                            </div>*@
+                        </div>
+                    </div>
+
+                    @*                    <h5 class="text-center mb-5 my-5 ">ยืนยันการลบรายการ</h5>
+                    <div class=" d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="font-weight-bold btn ms-5 button-modal-delete">ลบ</button>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    var role;
+    
+    var count = 1;
+    var offset = 0;
+
+    $(document).ready(function () {
+        var $mytable = $("#TablesItemOnBranch");
+        var page = 1;
+        //initial number of rows
+        var max = 100; //max number of rows (just for demo)
+        var start = 0;
+        $(window).bind('scroll resize fetchmore', function () {
+            var viewportHeight = window.innerHeight;
+            var scrolltop = $(window).scrollTop();
+            var bottomOfTable = $mytable.offset().top + $mytable.outerHeight();
+
+            //console.log(viewportHeight, scrolltop, bottomOfTable);
+
+            if ($(window).scrollTop() + viewportHeight >= bottomOfTable) {
+                if (count == max && start == 1) {
+                    //console.log("Fetch more data!");'
+                    max += 100;
+                    load_more();
+                    $(window).trigger("fetchmore"); //keep triggering this event until we've filled the viewport
+                }
+            }
+        });
+        function load_more(e) {
+            //fetch more data here
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("GetMenubranchItemoffset", "BranchManagement")",
+                data: {
+                    offset: offset + 1
+                },
+                dataType: 'json',
+                success: function (message) {
+                    offset++;
+                    console.log(message.itemModel);
+                    count += message.length
+                    message.forEach((item) => {
+                        console.log(item)
+                        var table = $('#TablesItemOnBranch').DataTable();
+                        table.row.add({
+                            "itemID": item.itemName,
+                            "itemName": item.itemName,
+                            "price": item.price,
+                            "sellingPrice": item.sellingPrice,
+                            "status": item.status,
+                            "itemID": item.itemID,
+
+
+                        }
+                        ).draw(false);
+                        // $('#datelastnoti').val(item.ticksNumber);
+                        // xax = 0;
+
+                    });
+                    $('#MenuCount').text("@Localizer["จำนวนทั้งหมด"] " + table.rows().count());
+                    e.preventDefault();
+
+                    alert(message);
+
+                }, error: function (message) {
+                    //alert(message.responseText);
+                }
+
+            });
+            // for (var i = 0; i <= 1; i++) {
+
+            // }
+        }
+
+
+
+        role = "@ViewBag.role";
+        var table = $('#TablesItemOnBranch').DataTable({
+            ajax: {
+                url: "@Url.Action("GetItemOnBranch", "BranchManagement")",
+                dataSrc: ''
+            },
+            processing: false,
+            serverSide: false,
+            stateSave: false,
+            columns: [
+                { data: 'itemID', },
+                { data: 'itemName' },
+                { data: 'price' },
+                { data: 'sellingPrice' },
+                { data: 'status' },
+                { data: 'itemID' },
+
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-center'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+
+                    var text1 = "";
+                    text1 = "<p class='p-padding-table'>" + data + "</p>";
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text2 = "";
+                    text2 = "<p class='p-padding-table text-right'>" + roundToTwo(data) + "</p>";
+                    return text2;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var text3 = "";
+                    text3 = "<p class='p-padding-table text-right'>" + roundToTwo(data) + "</p>";
+                    return text3;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                    var text5 = "<div class='icon-detail switch-padding-table text-center p-padding-table'>" +
+                        "<label class='switch m-0' >" +
+                        "<input type='checkbox' id='Status' onchange='checkchange(" + meta.row + ",this)'  ";
+                    if (data == 'A') {
+                        text5 += "checked "
+                    }
+                    text5 += ">" +
+                        "<span class='slider round'></span>" +
+                        "</label>" +
+                        "</div>";
+                    return text5;
+                },
+            }, {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                    var text5 = "";
+                    text5 += "<div class='group-btn-table'><button type='button' class='btn btn-green-info mr-2'  onclick='Opendetailitem(" + data + ")'><img class='size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button>";
+                    if (role.toLowerCase() == "owner" || role.toLowerCase() == "admin" || role.toLowerCase() == "manager") {
+                        text5 += "<a class='btn btn-blue-edit mr-2'   onclick='Opendetail(" + data + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></a>";
+                    }
+                    text5 +="</div>";
+                    return text5;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีรายการเมนูอาหาร"]</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>Loading..</p><br/><br/><br/><br/>",
+
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            visible: false,
+            targets: 0,
+            initComplete: function () {
+                start = 1;
+                count = table.data().count();
+                // var count = table.data().count();
+                $('#MenuCount').text(count);
+            }
+        });
+
+        var tables = $('#TablesItemOnBranch').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+
+        $(document).on('change', 'input', function () {
+            var _Price = $('#Price').val();
+            var _SalePrice = $('#SalePriceMenu').val();
+
+            if (jQuery.isEmptyObject(_Price)) {
+                _Price = $('#PriceOld').val();
+            }
+
+            if (jQuery.isEmptyObject(_SalePrice)) {
+                _SalePrice = $('#SalePriceMenuOld').val();
+            }
+
+            var _PriceOld = $('#PriceOld').val();
+            var _SalePriceOld = $('#SalePriceMenuOld').val();
+
+            if (_Price != _PriceOld || _SalePrice != _SalePriceOld) {
+                document.getElementById('btnsaveedit').disabled = false;
+            } else {
+                document.getElementById('btnsaveedit').disabled = true;
+            }
+        });
+
+
+        $("#save").on("submit", function (e) {
+            var _ItemID = $('#ItemID').val();
+            var _Price = $('#Price').val();
+            var _SalePrice = $('#SalePriceMenu').val();
+
+            if (jQuery.isEmptyObject(_Price)) {
+                _Price = $('#PriceOld').val();
+            }
+
+            if (jQuery.isEmptyObject(_SalePrice)) {
+                _SalePrice = $('#SalePriceMenuOld').val();
+            }
+
+            var dataString = {
+                ItemID: _ItemID,
+                Price: _Price,
+                SellingPrice: _SalePrice,
+            };
+            //console.log(dataString);
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ChangePrice", "BranchManagement")",
+                data: dataString,
+                success: function (message) {
+                    window.location.href = "@Url.Action("MenuBranch", "BranchManagement")";
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                    if (message.responseText == "cannot update") {
+                        $('#namealert').val(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขราคาขายได้"].Value)));
+                    } else {
+                        $('#namealert').val(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+
+
+    });
+    function PriceInput() {
+        var display = document.getElementById("Price");
+        var currentValue = display.value;
+        var decimalPattern = /^\d+(\.\d{0,2})?$/;
+
+        if (!decimalPattern.test(currentValue)) {
+            display.value = currentValue.slice(0, -1);
+        } else {
+            display.value = display.value;
+
+        }
+    }
+    function SellingPriceInput() {
+        var display = document.getElementById("SalePriceMenu");
+        var currentValue = display.value;
+        var decimalPattern = /^\d+(\.\d{0,2})?$/;
+
+        if (!decimalPattern.test(currentValue)) {
+            display.value = currentValue.slice(0, -1);
+        } else {
+            display.value = display.value;
+
+        }
+    }
+    function AllIndexOf(txt) {
+        var allIndexOf = [];
+        var index = 0;
+        index = txt.indexOf('.');
+        while (index != -1) {
+            allIndexOf.push(index);
+            index = txt.indexOf('.', index + 1);
+        }
+        return allIndexOf;
+    }
+
+
+    function checkchange(d, ch) {
+
+        var data = $('#TablesItemOnBranch').DataTable().row(d).data();
+        //console.log(data);
+        var status = "";
+        if (ch.checked) {
+            status = "A";
+        } else {
+            status = "I";
+        }
+        //console.log(data);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditStatusItemOnBranch", "BranchManagement")",
+            data: {
+                branchid: data.branchID,
+                status: status,
+                itemid: data.itemID
+            },
+            success: function (message) {
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+
+    //แก้ไข
+    function Opendetail(id) {
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("GetDtailItem", "ManageMenu")",
+            data: {
+                id: id,
+                onbranch: true
+            },
+            dataType: 'json',
+            success: function (message) {
+                //console.log(message);
+                $('#Namemenu').text(message.itemName);
+                $('#ItemID').val(message.itemID);
+                $('#SalePriceMenu').attr('placeholder', "฿ " + roundToTwo(message.sellingPrice));
+                $('#Price').attr('placeholder', "฿ " + roundToTwo(message.price));
+
+                $('#SalePriceMenuOld').attr('value', roundToTwo(message.sellingPrice));
+                $('#PriceOld').attr('value', roundToTwo(message.price));
+
+                if (message.picturePath === "" || message.picturePath === null) {
+                    $('#productimg').attr('src', "/mymenumerchant/images/ItemDefault.png");
+                } else {
+                    $('#productimg').attr('src', message.picturePath);
+                }
+
+                $('#ModalDetailsInfo').modal('toggle');
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+
+        //$('#productimg').attr('src', data.picturePath);
+    }
+
+    //รายละเอียด
+    function Opendetailitem(id) {
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("GetDtailItem", "ManageMenu")",
+            data: {
+                id: id,
+                onbranch: true
+            },
+            dataType: 'json',
+            success: function (message) {
+                $('#nameitem').text(message.itemName);
+                $('#priceitem').html(' ฿ ' + roundToTwo(message.price));
+                $('#pricesell').html(' ฿ ' + roundToTwo(message.sellingPrice));
+
+                if (message.itemDetail == '' || message.itemDetail == null) {
+                    $('#detailitemhidden1').css('display', 'none');
+                    $('#detailitemhidden2').css('display', 'none');
+                } else {
+                    $('#detailitemhidden1').css('display', 'block');
+                    $('#detailitemhidden2').css('display', 'block');
+                    $('#detailitem').html(message.itemDetail);
+                }
+
+                var cat = message.categoryName + ((message.subCategoryName != '') ? ' <samp class= "color-green"> > </samp> ' + message.subCategoryName : '');
+                $('#divcatagory').html(cat);
+
+                if (message.optionitems.length == 0) {
+                    $('#Optionhidden1').css('display', 'none');
+                    $('#Optionhidden2').css('display', 'none');
+                } else {
+                    $('#Optionhidden1').css('display', 'block');
+                    $('#Optionhidden2').css('display', 'block');
+                    var option = '';
+                    $.each(message.optionitems, function (i, item) {
+                        option += '<p class="card-text color-text-list "><i class="fa fa-square me-3 icon-type-size"></i> ' + item.optionName + '</p>'
+                    });
+                    $('#divoption').html(option);
+                }
+
+                if (message.extraitems.length == 0) {
+                    $('#Extrahidden1').css('display', 'none');
+                    $('#Extrahidden2').css('display', 'none');
+                } else {
+                    $('#Extrahidden1').css('display', 'block');
+                    $('#Extrahidden2').css('display', 'block');
+                    var extra = '';
+                    $.each(message.extraitems, function (i, item) {
+                        extra += '<p class="card-text color-text-list " > <i class="fa fa-square me-3 icon-type-size" > </i>' + item.extraName + '</p >'
+                    });
+                    $('#divextra').html(extra);
+                }
+
+                var branch = '';
+                $.each(message.itemonBranches, function (i, item) {
+                    branch += '<p class="card-text color-text-list " > <i class="fa fa-square me-3 icon-type-size" > </i>' + item.branchName + '</p >'
+                });
+                $('#divbranch').html(branch);
+                if (message.picturePath === "" || message.picturePath === null) {
+                    $('#imgitem').attr('src', "/mymenumerchant/images/ItemDefault.png");
+                } else {
+                    $('#imgitem').attr('src', message.picturePath);
+                }
+                //var url = $('#btnedititem').attr("href");
+                //var date = $("#date").val();
+                //url = url.replace("dummyid", message.itemID);
+                $("#btnedititem").attr("href", "/ManageMenu/MenuEdit/" + message.itemID);
+
+                $('#ModalMenuinfo').modal('toggle');
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+
+
+    function itemDetailInput() {
+        var display = document.getElementsByClassName("additem");
+        for (var i = 0; i < display.length; i++) {
+            var currentValue = display[i].value;
+
+            //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+            var countpoint = AllIndexOf(currentValue);
+            if (countpoint.length > 1) {
+                var aaa = currentValue.substr(0, currentValue.length - 1);
+                display[i].value = aaa;
+                return;
+            }
+
+            const chack = currentValue.split("");
+            if (currentValue.length > 1) {
+                if (chack[0] == "0") {
+                    if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                        display[i].value = chack[1];
+                    }
+                }
+            }
+
+            var integerValue = parseFloat(currentValue);
+            if (isNaN(integerValue)) {
+                display[i].value = "";
+                return;
+            }
+
+            if (integerValue >= 1000000000000) {
+                display[i].value = "9,999,999,999,999.99";
+            } else {
+                display[i].value = numberWithCommas(display[i].value);
+            }
+        }
+    }
+
+    function clearTxt() {
+        $('#SalePriceMenu').val('');
+        $('#Price').val('');
+
+    }
+
+</script>

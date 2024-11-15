@@ -1,0 +1,1485 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\obj\\Release\\net8.0\\scopedcss\\projectbundle\\MyMenuMerchant.bundle.scp.css",
+      "PackagePath": "staticwebassets\\MyMenuMerchant.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\Sound\\Bell.mp3",
+      "PackagePath": "staticwebassets\\Sound\\Bell.mp3"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\Sound\\Bell.mp4",
+      "PackagePath": "staticwebassets\\Sound\\Bell.mp4"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\Sound\\Bell.ogg",
+      "PackagePath": "staticwebassets\\Sound\\Bell.ogg"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\Sound\\Mountain Audio - Bell Notification.mp3",
+      "PackagePath": "staticwebassets\\Sound\\Mountain Audio - Bell Notification.mp3"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Branchs.txt",
+      "PackagePath": "staticwebassets\\data\\Branchs.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\BranchsNull.txt",
+      "PackagePath": "staticwebassets\\data\\BranchsNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\CategoryDetail.txt",
+      "PackagePath": "staticwebassets\\data\\CategoryDetail.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\DataNull.txt",
+      "PackagePath": "staticwebassets\\data\\DataNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\InfoMenuList.txt",
+      "PackagePath": "staticwebassets\\data\\InfoMenuList.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Menus.txt",
+      "PackagePath": "staticwebassets\\data\\Menus.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\MenusNull.txt",
+      "PackagePath": "staticwebassets\\data\\MenusNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Orders.txt",
+      "PackagePath": "staticwebassets\\data\\Orders.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\OrdersList.txt",
+      "PackagePath": "staticwebassets\\data\\OrdersList.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\OrdersNull.txt",
+      "PackagePath": "staticwebassets\\data\\OrdersNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Personnel.txt",
+      "PackagePath": "staticwebassets\\data\\Personnel.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\QRCodeGenerates.txt",
+      "PackagePath": "staticwebassets\\data\\QRCodeGenerates.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\QRCodeGeneratesNull.txt",
+      "PackagePath": "staticwebassets\\data\\QRCodeGeneratesNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\QRCodeSetup.txt",
+      "PackagePath": "staticwebassets\\data\\QRCodeSetup.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Receipts.txt",
+      "PackagePath": "staticwebassets\\data\\Receipts.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\ReceiptsNull.txt",
+      "PackagePath": "staticwebassets\\data\\ReceiptsNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\SellNull.txt",
+      "PackagePath": "staticwebassets\\data\\SellNull.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Sells.txt",
+      "PackagePath": "staticwebassets\\data\\Sells.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\Tables.txt",
+      "PackagePath": "staticwebassets\\data\\Tables.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\objects.txt",
+      "PackagePath": "staticwebassets\\data\\objects.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\data\\objects1.txt",
+      "PackagePath": "staticwebassets\\data\\objects1.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Add.png",
+      "PackagePath": "staticwebassets\\images\\Add.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\AddGreen.png",
+      "PackagePath": "staticwebassets\\images\\AddGreen.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\AddInside.png",
+      "PackagePath": "staticwebassets\\images\\AddInside.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Add_1.png",
+      "PackagePath": "staticwebassets\\images\\Add_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\AmountAdd.png",
+      "PackagePath": "staticwebassets\\images\\AmountAdd.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\AmountDel.png",
+      "PackagePath": "staticwebassets\\images\\AmountDel.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BackGreen.png",
+      "PackagePath": "staticwebassets\\images\\BackGreen.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BackGroundShop.png",
+      "PackagePath": "staticwebassets\\images\\BackGroundShop.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BackWhite.png",
+      "PackagePath": "staticwebassets\\images\\BackWhite.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BarMenu.png",
+      "PackagePath": "staticwebassets\\images\\BarMenu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch.png",
+      "PackagePath": "staticwebassets\\images\\Branch.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_Bill.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_Bill.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_Info0.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_Info0.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_Menu.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_Menu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_POS.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_POS.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_QR.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_QR.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_Setting.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_Setting.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_Setting_1.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_Setting_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchManage_TableManage.png",
+      "PackagePath": "staticwebassets\\images\\BranchManage_TableManage.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\BranchW.png",
+      "PackagePath": "staticwebassets\\images\\BranchW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_Bill.png",
+      "PackagePath": "staticwebassets\\images\\Branch_Bill.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_Info.png",
+      "PackagePath": "staticwebassets\\images\\Branch_Info.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_Menu.png",
+      "PackagePath": "staticwebassets\\images\\Branch_Menu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_POS.png",
+      "PackagePath": "staticwebassets\\images\\Branch_POS.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_QR.png",
+      "PackagePath": "staticwebassets\\images\\Branch_QR.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_Setting.png",
+      "PackagePath": "staticwebassets\\images\\Branch_Setting.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_Setting_1.png",
+      "PackagePath": "staticwebassets\\images\\Branch_Setting_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branch_TableManage.png",
+      "PackagePath": "staticwebassets\\images\\Branch_TableManage.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branchcopy.png",
+      "PackagePath": "staticwebassets\\images\\Branchcopy.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Branchcopy2.png",
+      "PackagePath": "staticwebassets\\images\\Branchcopy2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CartButton.png",
+      "PackagePath": "staticwebassets\\images\\CartButton.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CartDown.png",
+      "PackagePath": "staticwebassets\\images\\CartDown.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CartEmpty.png",
+      "PackagePath": "staticwebassets\\images\\CartEmpty.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CartUp.png",
+      "PackagePath": "staticwebassets\\images\\CartUp.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CashDrawer.png",
+      "PackagePath": "staticwebassets\\images\\CashDrawer.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Category.png",
+      "PackagePath": "staticwebassets\\images\\Category.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ChangeLanguage.png",
+      "PackagePath": "staticwebassets\\images\\ChangeLanguage.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Check.png",
+      "PackagePath": "staticwebassets\\images\\Check.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CheckBorder.png",
+      "PackagePath": "staticwebassets\\images\\CheckBorder.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CheckButton.png",
+      "PackagePath": "staticwebassets\\images\\CheckButton.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CheckG.png",
+      "PackagePath": "staticwebassets\\images\\CheckG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CheckList.png",
+      "PackagePath": "staticwebassets\\images\\CheckList.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CheckList_Border.png",
+      "PackagePath": "staticwebassets\\images\\CheckList_Border.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CheckList_Check.png",
+      "PackagePath": "staticwebassets\\images\\CheckList_Check.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Check_1.png",
+      "PackagePath": "staticwebassets\\images\\Check_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Close.png",
+      "PackagePath": "staticwebassets\\images\\Close.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Close_1.png",
+      "PackagePath": "staticwebassets\\images\\Close_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\CoverDefault.png",
+      "PackagePath": "staticwebassets\\images\\CoverDefault.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DashboardBill.png",
+      "PackagePath": "staticwebassets\\images\\DashboardBill.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DashboardOrderAll.png",
+      "PackagePath": "staticwebassets\\images\\DashboardOrderAll.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DashboardOrderPending copy 3.png",
+      "PackagePath": "staticwebassets\\images\\DashboardOrderPending copy 3.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DashboardOrderPending.png",
+      "PackagePath": "staticwebassets\\images\\DashboardOrderPending.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DashboardSaleAll.png",
+      "PackagePath": "staticwebassets\\images\\DashboardSaleAll.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DelInside.png",
+      "PackagePath": "staticwebassets\\images\\DelInside.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DelNum.png",
+      "PackagePath": "staticwebassets\\images\\DelNum.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Delete.png",
+      "PackagePath": "staticwebassets\\images\\Delete.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Delete20.png",
+      "PackagePath": "staticwebassets\\images\\Delete20.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Delete40.png",
+      "PackagePath": "staticwebassets\\images\\Delete40.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Detail.png",
+      "PackagePath": "staticwebassets\\images\\Detail.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Detail20.png",
+      "PackagePath": "staticwebassets\\images\\Detail20.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Detail40.png",
+      "PackagePath": "staticwebassets\\images\\Detail40.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DownBlack.png",
+      "PackagePath": "staticwebassets\\images\\DownBlack.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DownGray.png",
+      "PackagePath": "staticwebassets\\images\\DownGray.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DownGreen.png",
+      "PackagePath": "staticwebassets\\images\\DownGreen.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Download.png",
+      "PackagePath": "staticwebassets\\images\\Download.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\DownloadW.png",
+      "PackagePath": "staticwebassets\\images\\DownloadW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\EN.png",
+      "PackagePath": "staticwebassets\\images\\EN.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Edit.png",
+      "PackagePath": "staticwebassets\\images\\Edit.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Edit20.png",
+      "PackagePath": "staticwebassets\\images\\Edit20.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Edit40.png",
+      "PackagePath": "staticwebassets\\images\\Edit40.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\EditG.png",
+      "PackagePath": "staticwebassets\\images\\EditG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\EditW.png",
+      "PackagePath": "staticwebassets\\images\\EditW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\EditWhite.png",
+      "PackagePath": "staticwebassets\\images\\EditWhite.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\EmployeeSetting.png",
+      "PackagePath": "staticwebassets\\images\\EmployeeSetting.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\EmployeeW.png",
+      "PackagePath": "staticwebassets\\images\\EmployeeW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Extra.png",
+      "PackagePath": "staticwebassets\\images\\Extra.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ExtraW.png",
+      "PackagePath": "staticwebassets\\images\\ExtraW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Failed.png",
+      "PackagePath": "staticwebassets\\images\\Failed.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Filter.png",
+      "PackagePath": "staticwebassets\\images\\Filter.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Help.png",
+      "PackagePath": "staticwebassets\\images\\Help.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Home.png",
+      "PackagePath": "staticwebassets\\images\\Home.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Import.png",
+      "PackagePath": "staticwebassets\\images\\Import.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ItemDefault.png",
+      "PackagePath": "staticwebassets\\images\\ItemDefault.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LAO.png",
+      "PackagePath": "staticwebassets\\images\\LAO.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogInImg.png",
+      "PackagePath": "staticwebassets\\images\\LogInImg.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogInPoweredBySNS.png",
+      "PackagePath": "staticwebassets\\images\\LogInPoweredBySNS.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogOut.png",
+      "PackagePath": "staticwebassets\\images\\LogOut.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogoMerchant.png",
+      "PackagePath": "staticwebassets\\images\\LogoMerchant.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogoMerchantDefault.png",
+      "PackagePath": "staticwebassets\\images\\LogoMerchantDefault.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogoMyMenu-W.png",
+      "PackagePath": "staticwebassets\\images\\LogoMyMenu-W.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogoMyMenu.png",
+      "PackagePath": "staticwebassets\\images\\LogoMyMenu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogoShop.png",
+      "PackagePath": "staticwebassets\\images\\LogoShop.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogomyMenuText-W.png",
+      "PackagePath": "staticwebassets\\images\\LogomyMenuText-W.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\LogomyMenuText.png",
+      "PackagePath": "staticwebassets\\images\\LogomyMenuText.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ManageMenu_Category.png",
+      "PackagePath": "staticwebassets\\images\\ManageMenu_Category.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ManageMenu_Extra.png",
+      "PackagePath": "staticwebassets\\images\\ManageMenu_Extra.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ManageMenu_Menu.png",
+      "PackagePath": "staticwebassets\\images\\ManageMenu_Menu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ManageMenu_Option.png",
+      "PackagePath": "staticwebassets\\images\\ManageMenu_Option.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuBill.png",
+      "PackagePath": "staticwebassets\\images\\MenuBill.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuBillC.png",
+      "PackagePath": "staticwebassets\\images\\MenuBillC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuBillG.png",
+      "PackagePath": "staticwebassets\\images\\MenuBillG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuBranch.png",
+      "PackagePath": "staticwebassets\\images\\MenuBranch.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuBranchC.png",
+      "PackagePath": "staticwebassets\\images\\MenuBranchC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboard.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboard.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardC.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardC_1.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardC_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardC_2.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardC_2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardG.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardGcopy.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardGcopy.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardGcopy2.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardGcopy2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardcopy.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardcopy.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuDashboardcopy2.png",
+      "PackagePath": "staticwebassets\\images\\MenuDashboardcopy2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuHistory.png",
+      "PackagePath": "staticwebassets\\images\\MenuHistory.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuHistoryC.png",
+      "PackagePath": "staticwebassets\\images\\MenuHistoryC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuInvoice.png",
+      "PackagePath": "staticwebassets\\images\\MenuInvoice.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuInvoiceC.png",
+      "PackagePath": "staticwebassets\\images\\MenuInvoiceC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuMenuManage.png",
+      "PackagePath": "staticwebassets\\images\\MenuMenuManage.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuMenuManageC.png",
+      "PackagePath": "staticwebassets\\images\\MenuMenuManageC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuMenuManageG.png",
+      "PackagePath": "staticwebassets\\images\\MenuMenuManageG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuMerchant.png",
+      "PackagePath": "staticwebassets\\images\\MenuMerchant.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuMerchantC.png",
+      "PackagePath": "staticwebassets\\images\\MenuMerchantC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuMerchantG.png",
+      "PackagePath": "staticwebassets\\images\\MenuMerchantG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuOrder.png",
+      "PackagePath": "staticwebassets\\images\\MenuOrder.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuOrderC.png",
+      "PackagePath": "staticwebassets\\images\\MenuOrderC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuOrderG.png",
+      "PackagePath": "staticwebassets\\images\\MenuOrderG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuPrinter.png",
+      "PackagePath": "staticwebassets\\images\\MenuPrinter.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuPrinterC.png",
+      "PackagePath": "staticwebassets\\images\\MenuPrinterC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuPrinterG.png",
+      "PackagePath": "staticwebassets\\images\\MenuPrinterG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuQRCode.png",
+      "PackagePath": "staticwebassets\\images\\MenuQRCode.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuQRCodeC.png",
+      "PackagePath": "staticwebassets\\images\\MenuQRCodeC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuQRCodeG.png",
+      "PackagePath": "staticwebassets\\images\\MenuQRCodeG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuReportC.png",
+      "PackagePath": "staticwebassets\\images\\MenuReportC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuTeble.png",
+      "PackagePath": "staticwebassets\\images\\MenuTeble.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuTebleC.png",
+      "PackagePath": "staticwebassets\\images\\MenuTebleC.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuTebleG.png",
+      "PackagePath": "staticwebassets\\images\\MenuTebleG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MenuW.png",
+      "PackagePath": "staticwebassets\\images\\MenuW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MerchantManage_CashDrawer.png",
+      "PackagePath": "staticwebassets\\images\\MerchantManage_CashDrawer.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MerchantManage_OptionServe.png",
+      "PackagePath": "staticwebassets\\images\\MerchantManage_OptionServe.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MerchantManage_Package.png",
+      "PackagePath": "staticwebassets\\images\\MerchantManage_Package.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MerchantManage_Term.png",
+      "PackagePath": "staticwebassets\\images\\MerchantManage_Term.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MerchantManage_T\u007FServiceCharge.png",
+      "PackagePath": "staticwebassets\\images\\MerchantManage_T\u007FServiceCharge.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MerchantManage_VAT.png",
+      "PackagePath": "staticwebassets\\images\\MerchantManage_VAT.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Merchant_Branch.png",
+      "PackagePath": "staticwebassets\\images\\Merchant_Branch.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Merchant_Discount.png",
+      "PackagePath": "staticwebassets\\images\\Merchant_Discount.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Merchant_Employee.png",
+      "PackagePath": "staticwebassets\\images\\Merchant_Employee.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MyMenuQR.png",
+      "PackagePath": "staticwebassets\\images\\MyMenuQR.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MyMenuQRDefault.png",
+      "PackagePath": "staticwebassets\\images\\MyMenuQRDefault.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MyMenuQR_Guideline.png",
+      "PackagePath": "staticwebassets\\images\\MyMenuQR_Guideline.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MyMenuQR_bg.png",
+      "PackagePath": "staticwebassets\\images\\MyMenuQR_bg.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\MyMenuQR_eg.png",
+      "PackagePath": "staticwebassets\\images\\MyMenuQR_eg.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\NextGray.png",
+      "PackagePath": "staticwebassets\\images\\NextGray.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\NextGreen.png",
+      "PackagePath": "staticwebassets\\images\\NextGreen.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\NextGreen2.png",
+      "PackagePath": "staticwebassets\\images\\NextGreen2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Noti.png",
+      "PackagePath": "staticwebassets\\images\\Noti.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\NotiRed.png",
+      "PackagePath": "staticwebassets\\images\\NotiRed.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\OprionW.png",
+      "PackagePath": "staticwebassets\\images\\OprionW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Option.png",
+      "PackagePath": "staticwebassets\\images\\Option.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\OptionServe.png",
+      "PackagePath": "staticwebassets\\images\\OptionServe.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\OrderAll.png",
+      "PackagePath": "staticwebassets\\images\\OrderAll.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\OrderPrinter.png",
+      "PackagePath": "staticwebassets\\images\\OrderPrinter.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\OrderSuccess.png",
+      "PackagePath": "staticwebassets\\images\\OrderSuccess.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_All.png",
+      "PackagePath": "staticwebassets\\images\\Order_All.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_Cancel.png",
+      "PackagePath": "staticwebassets\\images\\Order_Cancel.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_CancelB.png",
+      "PackagePath": "staticwebassets\\images\\Order_CancelB.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_CancelW.png",
+      "PackagePath": "staticwebassets\\images\\Order_CancelW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_Pending.png",
+      "PackagePath": "staticwebassets\\images\\Order_Pending.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_Printer.png",
+      "PackagePath": "staticwebassets\\images\\Order_Printer.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_Served.png",
+      "PackagePath": "staticwebassets\\images\\Order_Served.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_ServedB.png",
+      "PackagePath": "staticwebassets\\images\\Order_ServedB.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_ServedW.png",
+      "PackagePath": "staticwebassets\\images\\Order_ServedW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_Served_1.png",
+      "PackagePath": "staticwebassets\\images\\Order_Served_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_WaitServe.png",
+      "PackagePath": "staticwebassets\\images\\Order_WaitServe.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_WaitServeB.png",
+      "PackagePath": "staticwebassets\\images\\Order_WaitServeB.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_WaitServeW.png",
+      "PackagePath": "staticwebassets\\images\\Order_WaitServeW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_WaitServed.png",
+      "PackagePath": "staticwebassets\\images\\Order_WaitServed.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Order_WaitServedW.png",
+      "PackagePath": "staticwebassets\\images\\Order_WaitServedW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Otp.png",
+      "PackagePath": "staticwebassets\\images\\Otp.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Package.png",
+      "PackagePath": "staticwebassets\\images\\Package.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\PasswordFalse.png",
+      "PackagePath": "staticwebassets\\images\\PasswordFalse.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\PasswordTrue.png",
+      "PackagePath": "staticwebassets\\images\\PasswordTrue.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\PoweredBySNS.png",
+      "PackagePath": "staticwebassets\\images\\PoweredBySNS.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Print.png",
+      "PackagePath": "staticwebassets\\images\\Print.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\QRDynamic.png",
+      "PackagePath": "staticwebassets\\images\\QRDynamic.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\QRStatic.png",
+      "PackagePath": "staticwebassets\\images\\QRStatic.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\QRTable.png",
+      "PackagePath": "staticwebassets\\images\\QRTable.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Radio.png",
+      "PackagePath": "staticwebassets\\images\\Radio.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\RadioBorder.png",
+      "PackagePath": "staticwebassets\\images\\RadioBorder.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\RadioInside.png",
+      "PackagePath": "staticwebassets\\images\\RadioInside.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Refresh.png",
+      "PackagePath": "staticwebassets\\images\\Refresh.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\RefreshR.png",
+      "PackagePath": "staticwebassets\\images\\RefreshR.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Refresh_1.png",
+      "PackagePath": "staticwebassets\\images\\Refresh_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Reset.png",
+      "PackagePath": "staticwebassets\\images\\Reset.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\SaleMonthDown.png",
+      "PackagePath": "staticwebassets\\images\\SaleMonthDown.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\SaleMonthUp.png",
+      "PackagePath": "staticwebassets\\images\\SaleMonthUp.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Save.png",
+      "PackagePath": "staticwebassets\\images\\Save.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Search.png",
+      "PackagePath": "staticwebassets\\images\\Search.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Search30.png",
+      "PackagePath": "staticwebassets\\images\\Search30.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\ServiceCharge.png",
+      "PackagePath": "staticwebassets\\images\\ServiceCharge.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\StaffInfo.png",
+      "PackagePath": "staticwebassets\\images\\StaffInfo.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\StartButton.png",
+      "PackagePath": "staticwebassets\\images\\StartButton.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\SubGroup.png",
+      "PackagePath": "staticwebassets\\images\\SubGroup.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Success.png",
+      "PackagePath": "staticwebassets\\images\\Success.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TH.png",
+      "PackagePath": "staticwebassets\\images\\TH.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableAddMenu.png",
+      "PackagePath": "staticwebassets\\images\\TableAddMenu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableAddMenuInside.png",
+      "PackagePath": "staticwebassets\\images\\TableAddMenuInside.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableChangeTable.png",
+      "PackagePath": "staticwebassets\\images\\TableChangeTable.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableClose.png",
+      "PackagePath": "staticwebassets\\images\\TableClose.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableCloseInside.png",
+      "PackagePath": "staticwebassets\\images\\TableCloseInside.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableCloseTable.png",
+      "PackagePath": "staticwebassets\\images\\TableCloseTable.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableComment_1.png",
+      "PackagePath": "staticwebassets\\images\\TableComment_1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TablePending.png",
+      "PackagePath": "staticwebassets\\images\\TablePending.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableQRCode.png",
+      "PackagePath": "staticwebassets\\images\\TableQRCode.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableStatus_Bill.png",
+      "PackagePath": "staticwebassets\\images\\TableStatus_Bill.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableStatus_Pending.png",
+      "PackagePath": "staticwebassets\\images\\TableStatus_Pending.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableStatus_Served.png",
+      "PackagePath": "staticwebassets\\images\\TableStatus_Served.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\TableStatus_Waiting.png",
+      "PackagePath": "staticwebassets\\images\\TableStatus_Waiting.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Table_WaitCheckOut.png",
+      "PackagePath": "staticwebassets\\images\\Table_WaitCheckOut.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Term.png",
+      "PackagePath": "staticwebassets\\images\\Term.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\Logo2.png",
+      "PackagePath": "staticwebassets\\images\\Test\\Logo2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\QRCode1.png",
+      "PackagePath": "staticwebassets\\images\\Test\\QRCode1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img1.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img10.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img10.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img11.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img11.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img12.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img12.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img13.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img13.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img14.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img14.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img15.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img15.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img16.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img16.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img17.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img17.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img18.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img18.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img19.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img19.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img2.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img2.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img20.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img20.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img21.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img21.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img22.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img22.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img23.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img23.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img24.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img24.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img25.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img25.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img26.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img26.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img27.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img27.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img28.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img28.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img29.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img29.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img3.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img3.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img30.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img30.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img31.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img31.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img32.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img32.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img33.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img33.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img34.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img34.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img4.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img4.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img5.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img5.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img6.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img6.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img7.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img7.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img8.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img8.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Test\\img9.png",
+      "PackagePath": "staticwebassets\\images\\Test\\img9.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\UpGray.png",
+      "PackagePath": "staticwebassets\\images\\UpGray.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\UpGreen.png",
+      "PackagePath": "staticwebassets\\images\\UpGreen.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Upload1.png",
+      "PackagePath": "staticwebassets\\images\\Upload1.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\UploadG.png",
+      "PackagePath": "staticwebassets\\images\\UploadG.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\UploadW.png",
+      "PackagePath": "staticwebassets\\images\\UploadW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\UserGuide.png",
+      "PackagePath": "staticwebassets\\images\\UserGuide.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\VAT.png",
+      "PackagePath": "staticwebassets\\images\\VAT.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Wait_Bills.png",
+      "PackagePath": "staticwebassets\\images\\Wait_Bills.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Wait_BillsW.png",
+      "PackagePath": "staticwebassets\\images\\Wait_BillsW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Wait_ClearTable.png",
+      "PackagePath": "staticwebassets\\images\\Wait_ClearTable.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\Wait_ClearTableW.png",
+      "PackagePath": "staticwebassets\\images\\Wait_ClearTableW.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\WaitingUpload.png",
+      "PackagePath": "staticwebassets\\images\\WaitingUpload.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\background-dashboard.png",
+      "PackagePath": "staticwebassets\\images\\background-dashboard.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\bar.png",
+      "PackagePath": "staticwebassets\\images\\bar.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\bell.png",
+      "PackagePath": "staticwebassets\\images\\bell.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\bill.png",
+      "PackagePath": "staticwebassets\\images\\bill.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\invoice.png",
+      "PackagePath": "staticwebassets\\images\\invoice.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\menu.png",
+      "PackagePath": "staticwebassets\\images\\menu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\mp4\\480x480.mp4",
+      "PackagePath": "staticwebassets\\images\\mp4\\480x480.mp4"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\mp4\\loading.mp4",
+      "PackagePath": "staticwebassets\\images\\mp4\\loading.mp4"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\myMenu.png",
+      "PackagePath": "staticwebassets\\images\\myMenu.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\qr-code.png",
+      "PackagePath": "staticwebassets\\images\\qr-code.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\shopping-cart.png",
+      "PackagePath": "staticwebassets\\images\\shopping-cart.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\images\\store.png",
+      "PackagePath": "staticwebassets\\images\\store.png"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\js\\jquery.min.js",
+      "PackagePath": "staticwebassets\\js\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\js\\qrcode.js",
+      "PackagePath": "staticwebassets\\js\\qrcode.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\git\\MyMenu\\MVC\\Merchant\\MyMenuMerchant\\MyMenuMerchant\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.MyMenuMerchant.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.build.MyMenuMerchant.props",
+      "PackagePath": "build\\MyMenuMerchant.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.MyMenuMerchant.props",
+      "PackagePath": "buildMultiTargeting\\MyMenuMerchant.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildTransitive.MyMenuMerchant.props",
+      "PackagePath": "buildTransitive\\MyMenuMerchant.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

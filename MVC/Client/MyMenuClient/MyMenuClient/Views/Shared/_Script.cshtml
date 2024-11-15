@@ -1,0 +1,11 @@
+﻿<script>
+   
+    $(document).ready(function () {
+        var listitemchoose = JSON.parse(localStorage.getItem("order"));
+        if (listitemchoose!=null){
+            //console.log("listitemchoose" + listitemchoose);
+            $('#quantity').text(listitemchoose.length);
+        }
+        
+    });
+</script>

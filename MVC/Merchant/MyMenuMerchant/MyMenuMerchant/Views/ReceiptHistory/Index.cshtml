@@ -1,0 +1,513 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .font-receipthistory-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9 !important;
+    }
+
+    .bg-receipthistory {
+        background: #ffffff url(/mymenumerchant/images/MenuHistoryC.png) 0px 17px no-repeat;
+        background-size: 24px 24px;
+    }
+</style>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="ReceiptHistory">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12">
+                <div class="row ">
+                    <div class="col-12 header-group mb-3">
+                        <h2 class="font-weight-bold menu-header">@Localizer["ประวัติใบเสร็จรับเงิน"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item active" aria-current="page">@Localizer["ประวัติใบเสร็จรับเงิน"]</li>
+                        </ul>
+                        <a class="breadcrumb button-add text-center layout-add" id="btnTAXHistory" asp-controller="ReceiptHistory" asp-action="TAXInvoiceHistory">@Localizer["ประวัติใบกำกับภาษี"]</a>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <div class="card border-0">
+                            <div class="card-body ">
+                                <div class="container px-2">
+                                    <div class="form-row">
+                                        <div class="col-12 search">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="SearchTable">@Localizer["ค้นหาใบเสร็จรับเงิน"]</label>
+                                                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["วันที่, เลขที่ใบเสร็จ, ยอดชำระ, จำนวนสินค้า, ประเภทการชำระเงิน"]" style="height: 45px;" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-xl-6 col-lg-6 mb-2">
+                                            <div class="card">
+                                                <div class="card-body ">
+                                                    <div class="form-group mb-0">
+                                                        <label class="font-weight-bold">@Localizer["ประเภทออเดอร์"]</label>
+                                                        <div class="row">
+                                                            <div class="col-6 col-md-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck1" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["ทานที่ร้าน"]</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 col-md-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck2" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["สั่งกลับบ้าน"]</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-xl-6 col-lg-6 mb-2">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="form-group mb-0">
+                                                        <label class="font-weight-bold">@Localizer["ประเภทการชำระเงิน"]</label>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck3" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["เงินสด"]</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck4" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["myQR"]</label>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body pb-0 mb-0">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="d-flex-head">
+                                        <div class="p-0 layout-text-head"><label class="font-weight-bold mb-4 font-size">@Localizer["รายการใบเสร็จรับเงิน"] <small class="size-small font-weight-bold layout-all ms-2 " id="countReceipt"> @Localizer["จำนวนทั้งหมด"] </small></label>  </div>
+                                        <div class="ml-auto"><button type="button" class="btn btn-refresh" id="ButtonRefresh"> <img class="size-refresh" src="/mymenumerchant/images/Refresh.png" /></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 mb-0">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table mb-0" id="TableOrder" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-date">@Localizer["วันที่"]</th>
+                                                <th scope="col" class="size-th-type">@Localizer["เลขที่ใบเสร็จ"]</th>
+                                                <th scope="col" class="size-th-table text-right">@Localizer["ยอดชำระ"]</th>
+                                                <th scope="col" class="size-th-number text-center">@Localizer["จำนวนสินค้า"]</th>
+                                                <th scope="col" class="size-th-typepayment">@Localizer["ประเภทการชำระเงิน"]</th>
+                                                <th scope="col" class="size-th-info"></th>
+                                            </tr>
+                                        </thead>
+                                        @*<tbody>
+                                        <tr>
+                                        <td><p class="mb-0 p-padding-table">16/05/2566 08:42:05</p></td>
+                                        <td><p class="mb-0 p-padding-table">2023000020</p></td>
+                                        <td><p class="mb-0 p-padding-table">100.00</p></td>
+                                        <td><p class="mb-0 p-padding-table">2</p></td>
+                                        <td><p class="mb-0 p-padding-table">เงินสด, myQR</p></td>
+                                        <td>
+                                        <div class="group-btn-table">
+                                        <a class="btn btn-green-info" asp-controller="ReceiptHistory" asp-action="ReceiptInformation"><img class="img-detail size-img-list-menu" src="/mymenumerchant/images/Detail20.png" /></a>
+
+                                        </div></td>
+                                        </tr>
+                                        </tbody>*@
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade bd-example-modal-lg" id="ModalOrderDetails" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                        <div class="container-fluid">
+                            <div class="layout-head-list1">
+                                <p class="menu-header p-pad">2022100000115</p>
+                                <a class=" btn btn-modal-size font-weight-bold" data-dismiss="modal">@Localizer["กลับ"]</a>
+                            </div>
+                            <div class="layout-head-list1">
+                                <div class="form-row p-margin-list1"><p class="p-margin-list1">@Localizer["ออเดอร์"]: </p><p class="ms-1 color-order font-weight-bold p-margin-list1">2022100000115</p></div>
+                                <p class="p-margin-list1">10/4/2565 10:54</p>
+                            </div>
+                            <div class="layout-head-list1">
+                                <div class="form-row p-margin-list1"><p class="p-margin-list1">@Localizer["ประเภทออเดอร์"]: </p><p class=" font-weight-bold p-margin-list1">ทานที่ร้าน</p></div>
+                                <div class="form-row"><p class="p-margin-list1">@Localizer["ชื่อลูกค้า"]: </p><p class="p-margin-list1 text-cut-name">นายบุณยเกียรติ สุขสำโรง</p></div>
+                            </div>
+                            <div class="layout-head-list1">
+                                <div class="form-row"><p class="p-margin-list1">@Localizer["โต๊ะ"]: </p><p class="p-margin-list1 font-weight-bold">A1</p></div>
+                                <div class="form-row"><p class="p-margin-list1">@Localizer["เบอร์โทรลูกค้า"]: </p><p class="p-margin-list1">0861265801</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="modal-body ">
+                            <h5 class="font-weight-bold mb-4">@Localizer["รายการคำสั่งซื้อ"]รายการคำสั่งซื้อ</h5>
+                            <div class="col-md-12 mb-2">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableListOrder" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-menu">@Localizer["ชื่อเมนู"]</th>
+                                                <th scope="col" class="size-th-itemprice">@Localizer["ราคาต่อชิ้น"]</th>
+                                                <th scope="col" class="size-th-number">@Localizer["จำนวน"]</th>
+                                                <th scope="col" class="size-th-totalprice">@Localizer["ราคารวม"]</th>
+                                                <th scope="col" class="size-th-note">@Localizer["หมายเหตุ"]</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-body color-header-text">
+                            <div class=" mb-3">
+                                <div>
+                                    <p class="font-weight-bold">@Localizer["ราคารวมทั้งหมด"]</p>
+                                </div>
+                                <div class="color-background  d-flex justify-content-end ">
+                                    <div class="mx-3">
+                                        <p class="font-weight-bold my-3 p-size">174.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-row font-weight-bold">@Localizer["จำนวนรายการสินค้า"]: <p class="ms-1 font-weight-bold"> 4</p></div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-body">
+                            <div class=" d-flex justify-content-center ">
+                                <button type="button" class="font-weight-bold btn button-modal-print">@Localizer["พิมพ์"]</button>
+                                <button type="button" class="font-weight-bold btn ms-3 button-modal-succeed" data-toggle="modal" data-target="#ModalExtraSucceed">@Localizer["สำเร็จ"]</button>
+                                <button type="button" class="font-weight-bold btn ms-3 button-modal-cancel" data-toggle="modal" data-target="#ModalExtraCancel">@Localizer["ยกเลิก"]</button>
+                                <button type="button" class="font-weight-bold btn ms-3 button-modal-delete" data-toggle="modal" data-target="#ModalExtraDelete">@Localizer["ลบ"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ModalExtraDelete -->
+        <div class="modal fade " id="ModalExtraDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการลบ คำสั่งซื้อ"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-delete">@Localizer["ตกลง"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ModalExtraCancel -->
+        <div class="modal fade " id="ModalExtraCancel" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการยกเลิก คำสั่งซื้อ"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-cancel">@Localizer["ตกลง"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ModalExtraSucceed -->
+        <div class="modal fade " id="ModalExtraSucceed" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันสำเร็จ คำสั่งซื้อ"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-succeed">@Localizer["ตกลง"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<form hidden id="EditExtra" asp-action="ReceiptInformation">
+    <input name="tranHistoryModel" id="ExtraModel" value="" />
+</form>
+<script>
+    function sentdata(d) {
+        var data = $('#TableOrder').DataTable().row(d).data();
+        var test = JSON.stringify(data);
+        console.log(test);
+        $("#ExtraModel").val(test);
+        $("#EditExtra").submit();
+    }
+    function roundToTwo(num) {
+        return format('th-TH', 'THB', num);
+    }
+
+    function format(locale, currency, number) {
+        return new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency,
+            currencyDisplay: "code"
+        })
+            .format(number)
+            .replace(currency, "")
+            .trim();
+    }
+    function fillter() {
+        var tables = $('#TableOrder').DataTable();
+        var dinner = document.getElementById("exampleCheck1").checked;
+        var take = document.getElementById("exampleCheck2").checked;
+        var cash = document.getElementById("exampleCheck3").checked;
+        var qr = document.getElementById("exampleCheck4").checked;
+
+        var text1 = '';
+        var text2 = '';
+        if (dinner) {
+            if (text1 == '') {
+                text1 = 'D'
+            } else {
+                text1 += '|D'
+            }
+        }
+        if (take) {
+            if (text1 == '') {
+                text1 = 'T'
+            } else {
+                text1 += '|T'
+            }
+
+        }
+        if (cash) {
+            if (text2 == '') {
+                text2 = 'เงินสด'
+            } else {
+                text2 += '|เงินสด'
+            }
+        }
+        if (qr) {
+            if (text2 == '') {
+                text2 = 'myQR'
+            } else {
+                text2 += '|myQR'
+            }
+        }
+
+        //tables.column(6).search(fill3).search(fill4).search(fill5).draw();
+        tables.column(1).search(text1, true, false).column(4).search(text2, true, false).draw();
+
+    }
+
+    var count = 1;
+    var offset = 0;
+    $(document).ready(function () {
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false, // ให้ใช้รูปแบบ 24 ชั่วโมง
+        };
+        const stringToDate = function (dateString) {
+            const [dd, mm, yyyy] = dateString.split("-");
+            return new Date(`${yyyy}-${mm}-${dd}`);
+        };
+
+        var $mytable = $("#TableOrder");
+        var page = 1;
+        //initial number of rows
+        var max = 100; //max number of rows (just for demo)
+        var start = 0;
+        $(window).bind('scroll resize fetchmore', function () {
+            var viewportHeight = window.innerHeight;
+            var scrolltop = $(window).scrollTop();
+            var bottomOfTable = $mytable.offset().top + $mytable.outerHeight();
+            if ($(window).scrollTop() + viewportHeight >= bottomOfTable) {
+                if (count == max && start == 1) {
+                    max += 100;
+                    load_more();
+                    $(window).trigger("fetchmore"); //keep triggering this event until we've filled the viewport
+                }
+            }
+        });
+
+        function load_more() {
+            //fetch more data here
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("GetHistory", "ReceiptHistory")",
+                data: {
+                    offset: offset + 1
+                },
+                dataType: 'json',
+                success: function (message) {
+                    if (message && message.length > 0) {
+                        offset++;
+                        count += message.length
+                        message.forEach((item) => {
+                            var table = $('#TableOrder').DataTable();
+                            table.row.add({
+                                "tranDate": item.tranDate,
+                                "tranNo": item.tranNo,
+                                "openOrdersType": item.openOrdersType,
+                                "grandTotal": item.grandTotal,
+                                "totalItem": item.totalItem,
+                                "typePayments": item.typePayments,
+                                "id": item.id,
+                            }).draw(false);
+                        });
+
+                        $('#countReceipt').text("@Localizer["จำนวนทั้งหมด"] " + table.rows().count());
+                    } else {
+                        console.log("No more data available.");
+                    }
+                }, error: function (message) {
+                }
+            });
+        }
+
+        var table = $('#TableOrder').DataTable({
+            ajax: {
+                url: "@Url.Action("GetHistory", "ReceiptHistory")",
+                dataSrc: ''
+            },
+            processing: false,
+            serverSide: false,
+            stateSave: false,
+            columns: [
+                { data: 'tranDate' },
+                { data: { tranNo: 'tranNo', openOrdersType: 'openOrdersType' } },
+                { data: 'grandTotal' },
+                { data: 'totalItem' },
+                { data: 'typePayments' },
+                { data: 'id' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    //console.log(stringToDate("77-78-7980"));
+                    const d = new Date(data);
+                    //console.log(d);
+                    //var text0 = "<p class='p-padding-table'>" + d.toLocaleString('th-TH', options) + "</p>";
+                    var text0 = "<p class='p-padding-table'>" + formatDatefullReceipt(d) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table'>" + data.tranNo + "</p>" + "<p class='p-padding-table' hidden>" + data.openOrdersType + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-right'>" + roundToTwo(data) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-center'>" + data + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table'>"
+                    switch (data[0]) {
+                        case "CH":
+                            text0 += "@Localizer["เงินสด"]";
+                            break;
+                        case "Dr":
+                            text0 += "Debit Card";
+                            break;
+                        case "QRCR":
+                            text0 += "Qr Credit";
+                            break;
+                        case "MYQR":
+                            text0 += "myQR";
+                            break;
+                        case "Cr":
+                            text0 += "Crdit Card";
+                            break;
+                        default:
+                            text0 += "@Localizer["เงินสด"]";
+                            break;
+                    }
+                    text0 += "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                    var edit1 = '<div class="group-btn-table"><a class="btn btn-green-info" onclick="sentdata(' + meta.row + ')"><img class="img-detail size-img-list-menu" src = "/mymenumerchant/images/Detail20.png" /></a></div>';
+                    return edit1;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีประวัติใบเสร็จรับเงิน"]</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            visible: false,
+            targets: 0,
+            "pageLength": 100,
+            "initComplete": function (settings, json) {
+                start = 1;
+                count = table.data().count();
+                $('#countReceipt').text("@Localizer["จำนวนทั้งหมด"] " + table.data().count());
+            },
+        });
+
+        var tables = $('#TableOrder').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+
+        $('#ButtonRefresh').on('click', function () {
+            $('#TableOrder').DataTable().ajax.reload();
+        });
+    });
+
+</script>

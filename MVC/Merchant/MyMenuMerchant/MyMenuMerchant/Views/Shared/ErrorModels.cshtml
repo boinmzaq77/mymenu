@@ -1,0 +1,27 @@
+﻿<div class="modal fade" id="errormodel" style="font-family: 'Kanit', sans-serif;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                @*<p class="modal-titl text-h-login" style="color:#7CC1A9;font-weight:400!important; ">Notification</p>*@
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:#404040; font-size:16px;">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body label-text py-5 mt-2">
+                <p class="mb-0 mx-4" id="errortext" style="color:#404040; text-align: center;"></p>
+            </div>
+            <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2; width:150px" data-dismiss="modal">
+                    กลับ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script >
+    function ErrorShow(text) {
+        $('#errortext').text(text);
+        $('#errormodel').modal('show');
+    }
+</script>

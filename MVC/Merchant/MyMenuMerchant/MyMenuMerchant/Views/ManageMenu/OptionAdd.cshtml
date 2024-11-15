@@ -1,0 +1,503 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="OptionAdd">
+    <div class="container">
+        <form id="saveOption" onkeyup="OptionAddTables();">
+            <div class="form-row">
+                <div class="col-12  mb-2">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="ManageMenu" asp-action="Option"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["เพิ่ม Option"]</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <table id="TablesOptionNember" class="col-md-12 ">
+                    <tr class="col-md-12" hidden>
+                    </tr>
+                    <tr id="Optionrow1" class=" col-md-12 reset-menu">
+                        <td class="card mb-3 border-0">
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="form-row">
+                                        <div class="btn-ml" hidden>
+                                            <div class="d-flex justify-content-end">
+                                                <button type="button" class="form-control  btn-delete-category font-weight-bold reset-menu-delete" id="TableDeleteOption_1" name="TableDeleteOption_1" onclick="delete_row_option('1')">@Localizer["ลบ Option1"]</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12  mb-2 mt-2">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold ">@Localizer["ชื่อ Option"]</label>
+                                                <div class="input-group input-text">
+                                                    <input type="text" class="form-control text-count examine reset-menu-name" id="OptionName_1" name="[0].OptionName" maxlength="250" placeholder="@Localizer["ชื่อ Option"]">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <div class="card border">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="col-md-12 ">
+                                                            <table id="TablesNember1A1" class="reset-table">
+                                                                <tr>
+                                                                    <td class="size-tables-name input-option-size">
+                                                                        <label class="font-weight-bold flex-list-name">@Localizer["ชื่อ Option ย่อย"]<small class="color-list-number font-weight-bold ml-2">@Localizer["เพิ่มได้สูงสุด 30 รายการ"]</small></label>
+                                                                    </td>
+                                                                    <td class="size-tables-name input-option-size">
+                                                                        <label class="font-weight-bold input-option-size">@Localizer["ราคา"]</label>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr id="row1A1" class="size-tr-tables reset-row">
+                                                                    <td class="size-tables-name input-option-size">
+                                                                        <div class="input-text pr-3">
+                                                                            <input type="text" class="form-control text-count examine reset-name" id="TableName_1A1" name="[0].OptionDetailModels[0].OptionDetailName" maxlength="250" placeholder="@Localizer["ชื่อ Option ย่อย รายการที่ 1"]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="size-tables-name input-price-size">
+                                                                        <div class="input-text pr-3">
+                                                                            <input type="text" class="form-control text-count examine reset-price optionprice" oninput="OptionInput(this)" id="TablePrice_1A1" name="[0].OptionDetailModels[0].Price" maxlength="25" placeholder="฿00.00">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="size-tables-delete">
+                                                                        <button class="form-control btn-delete reset-delete" id="TableDelete_1A1" name="TableDelete_1A1" onclick="delete_row('1A1')"><i class="fa fa-trash-o"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-md-12 width-button">
+                                                            <button type="button" class="btn-add-subcategory font-weight-bold reset-add ml-1" onclick="AddLists('1A1');"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการย่อย"]</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="col-md-12 mb-3 mt-3 pl-0 pr-0">
+                    <div class="card ">
+                        <button type="button" class="btn-add-category btn-lg font-weight-bold btn-border-radius" onclick="AddTablesRow();">@Localizer["เพิ่ม Option ใหม่"]</button>
+                    </div>
+                </div>
+
+                <div class="col-md-12   mb-2 pr-0 mt-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <button type="submit" class="btn-save" id="SaveOption" disabled="disabled">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <br />
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin">@Localizer["Option (ตัวเลือก)"] <samp class="color-sub-help">@Localizer["เป็นตัวเลือกเพิ่มเติมที่บังคับเลือก สามารถเลือกได้ 1 รายการ ตัวอย่างเช่น ระดับความหวาน, ขนาดสินค้า"]</samp> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+@*  Modal Post not Success Error*@
+<div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <h5 class="text-center mb-5 my-5 " id="namealert">@Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#saveOption").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("OptionAddSave", "ManageMenu")",
+                data: dataString,
+                success: function (message) {
+                    window.location.href = "@Url.Action("Option", "ManageMenu")";
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                    if (message.responseText == 'Insert OptionDetail Error') {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถเพิ่ม Option ย่อย ได้กรุณาลองใหม่อีกครั้ง"].Value)) );
+                    }else{
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+    });
+    function OptionAddTables() {
+        document.getElementById('SaveOption').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveOption').disabled = true;
+            }
+        });
+    }
+    function AddTablesRow() {
+        var tablesrow = document.getElementById("TablesOptionNember");
+        var tablesrow_id = (tablesrow.rows.length);
+        var row = tablesrow.insertRow(tablesrow_id).outerHTML =
+            "<tr id='Optionrow" + tablesrow_id + "' class=' col-md-12 reset-menu'>" +
+            "<td  class='card mb-3 border-0'>" +
+            "<div class='card-body'>" +
+            "<div class='container'>" +
+            "<div class='form-row'>" +
+            "<div class='btn-ml'>" +
+            "<div class='d-flex justify-content-end'>" +
+            "<button type='button' class='form-control btn-delete-category font-weight-bold reset-menu-delete' id='TableDeleteOption_" + tablesrow_id + "' name='TableDeleteOption_" + tablesrow_id + "' onclick='delete_row_option(&apos;" + tablesrow_id + "&apos;)'><i class='fa fa-trash-o'></i> " + @Html.Raw(Json.Serialize(Localizer["ลบ Option1"].Value))  + "</button>" +
+            "</div>" +
+            "</div>" +
+            "<div class='col-md-12'> " +
+            "<div class='form-group'>" +
+            "<label class='font-weight-bold'>" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option"].Value)) +  "</label>" +
+            "<div class='input-group input-text'>" +
+            "<input type='text' class='form-control text-count examine reset-menu-name' id='OptionName" + tablesrow_id + "'  name='[" + (tablesrow_id - 1) + "].OptionName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option"].Value))  + "'>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "<div class='col-md-12 mb-2'>" +
+            "<div class='card border'>" +
+            "<div class='card-body'>" +
+            "<div class='form-row'>" +
+            "<div class='col-md-12'>" +
+            "<table id='TablesNember" + tablesrow_id + "A1' class='reset-table'>" +
+            "<tr>" +
+            "<td  class='size-tables-name input-option-size'>" +
+            "<label class='font-weight-bold flex-list-name'>" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย"].Value)) + " <small class='color-list-number font-weight-bold ml-2'>" + @Html.Raw(Json.Serialize(Localizer["เพิ่มได้สูงสุด 30 รายการ"].Value))  + "</small></label>" +
+            "</td>" +
+            "<td  class='size-tables-name input-option-size'>" +
+            "<label class='font-weight-bold input-option-size'>ราคา</label>" +
+            "</td>" +
+            "</tr>" +
+            "<tr id='row" + tablesrow_id + "A1' class='size-tr-tables reset-row'>" +
+            "<td  class='size-tables-name input-option-size'>" +
+            "<div class='input-text pr-3'>" +
+            "<input type='text' class='form-control text-count examine reset-name' id='TableName_" + tablesrow_id + "A1' name='[" + (tablesrow_id - 1) + "].OptionDetailModels[0].OptionDetailName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่ 1"].Value)) + "'>" +
+            "</div>" +
+            "</td>" +
+            "<td  class='size-tables-name input-price-size'>" +
+            "<div class='input-text pr-3'>" +
+            "<input type='text' class='form-control text-count examine reset-price optionprice' oninput='OptionInput(this)' id='TablePrice_" + tablesrow_id + "A1' name='[" + (tablesrow_id - 1) + "].OptionDetailModels[0].Price' maxlength='25'  placeholder='฿00.00'>" +
+            "</div>" +
+            "</td>" +
+            "<td class='size-tables-delete'>" +
+            "<button type='button' class='form-control btn-delete reset-delete' id='TableDelete_" + tablesrow_id + "A1' name='TableDelete_" + tablesrow_id + "A1' onclick='delete_row(&apos;" + tablesrow_id + "A1&apos;)'><i class='fa fa-trash-o'></i></button>" +
+            "</td>" +
+            "</tr>" +
+            "</table>" +
+            "</div>" +
+            "<div class='col-md-12 width-button'> " +
+            "<button type='button' class='btn-add-subcategory font-weight-bold reset-add'onclick='AddLists(&apos;" + tablesrow_id + "A1&apos;)';> " + @Html.Raw(Json.Serialize(Localizer["เพิ่มรายการย่อย"].Value)) + "</button>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</td>" +
+            "</tr>";
+        document.getElementById('SaveOption').disabled = true;
+
+    }
+
+    function delete_row_option(no) {
+        document.getElementById("Optionrow" + no + "").outerHTML = "";
+
+        reset_body();
+
+        document.getElementById('SaveOption').disabled = true;
+        var inputtext = document.querySelectorAll(".examine");
+        if (inputtext.length > 1) { 
+            inputtext.forEach((x) => {
+                if (x.id.indexOf('OptionName') >= 0) {
+                    inputtext.forEach((x) => {
+                        if (x.id.indexOf('TableName') >= 0) {
+                            if (x.value == "") {
+                                document.getElementById('SaveOption').disabled = true;
+                                return false;
+                            }
+                        } else if (x.id.indexOf('TablePrice') >= 0) {
+                            if (x.value == "") {
+                                document.getElementById('SaveOption').disabled = true;
+                                return false;
+                            }
+                        } else {
+                            document.getElementById('SaveOption').disabled = false;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function reset_body() {
+
+        var tables_out = document.getElementById("TablesOptionNember");
+        var rows_out = tables_out.getElementsByClassName("reset-menu");
+        var menu_names = tables_out.getElementsByClassName("reset-menu-name");
+        var menu_deletes = tables_out.getElementsByClassName("reset-menu-delete");
+        var menu_adds = tables_out.getElementsByClassName("reset-add");
+        var tables_in = tables_out.getElementsByClassName("reset-table");
+
+        for (var i = 0; i < rows_out.length; i++) {
+            rows_out[i] = i;
+            if (i > 0) {
+                rows_out[i].setAttribute("id", "Optionrow" + (i + 1) + "");
+            }
+        }
+        for (var i = 0; i < menu_names.length; i++) {
+            menu_names[i] = i;
+            if (i > 0) {
+                menu_names[i].setAttribute("id", "OptionName" + (i + 1) + "");
+                menu_names[i].setAttribute("name", "[" + (i) + "].OptionName ");
+
+            }
+        }
+        for (var i = 0; i < menu_deletes.length; i++) {
+            menu_deletes[i] = i;
+            if (i > 0) {
+                menu_deletes[i].setAttribute("id", "TableDeleteOption_" + (i + 1) + "");
+                menu_deletes[i].setAttribute("name", "TableDeleteOption_" + (i + 1) + "");
+                menu_deletes[i].setAttribute("onclick", "delete_row_option('" + (i + 1) + "');");
+            }
+        }
+        for (var i = 0; i < menu_adds.length; i++) {
+            menu_adds[i] = i;
+            menu_adds[i].setAttribute("onclick", "AddLists('" + (i + 1) + "A1');");
+        }
+        for (var i = 0; i < tables_in.length; i++) {
+            tables_in[i] = i;
+            if (i > 0) {
+                tables_in[i].setAttribute("id", "TablesNember" + (i + 1) + "A1");
+                var no = "TablesNember" + (i + 1) + "A1";
+                var tables = document.getElementById(no);
+                var rows = tables.getElementsByTagName("tr");
+                var names = tables.getElementsByClassName("reset-name");
+                var prices = tables.getElementsByClassName("reset-price");
+                var deletes = tables.getElementsByClassName("reset-delete");
+                for (var j = 0; j < rows.length; j++) {
+                    rows[j] = j;
+                    if (j > 0) {
+                        rows[j].setAttribute("id", "row" + (i + 1) + "A" + (j) + "");
+                    }
+                }
+                for (var k = 0; k < names.length; k++) {
+                    names[k] = k;
+                    names[k].setAttribute("id", "TableName_" + (i + 1) + "A" + (k + 1) + "");
+                    names[k].setAttribute("name", "[" + (i) + "].OptionDetailModels[" + (k) + "].OptionDetailName");
+                    //names[k].setAttribute("name", "TableName_" + (i+1) + "A" + (k+1) + "");
+                }
+                for (var l = 0; l < prices.length; l++) {
+                    prices[l] = l;
+                    prices[l].setAttribute("id", "TablePrice_" + (i + 1) + "A" + (l + 1) + "");
+                    prices[l].setAttribute("name", "[" + (i) + "].OptionDetailModels[" + (l) + "].Price");
+                    //prices[l].setAttribute("name", "TablePrice_" + (i+1) + "A" + (l+1) + "");
+                }
+                for (var h = 0; h < deletes.length; h++) {
+                    deletes[h] = h;
+                    deletes[h].setAttribute("id", "TableDelete_" + (i + 1) + "A" + (h + 1) + "");
+                    deletes[h].setAttribute("name", "TableDelete_" + (i + 1) + "A" + (h + 1) + "");
+                    deletes[h].setAttribute("onclick", "delete_row('" + (i + 1) + "A" + (h + 1) + "')");
+                }
+            }
+        }
+    }
+
+    function AddLists(no_id) {
+        var ExamineNoId;
+        const cut_tablesrow_id = no_id.split("A");
+        var Cot_NoId = cut_tablesrow_id[0];
+        if (Cot_NoId == 1) {
+            ExamineNoId = Cot_NoId;
+        } else {
+            ExamineNoId = (Cot_NoId - (Cot_NoId - 1));
+        }
+        var tables = document.getElementById("TablesNember" + Cot_NoId + "A" + ExamineNoId + "");
+        var tablessuboption_id = (tables.rows.length);
+
+        if (tablessuboption_id <= 30) {
+            var row = tables.insertRow(tablessuboption_id).outerHTML =
+                "<tr id='row" + Cot_NoId + "A" + tablessuboption_id + "' class='size-tr-tables reset-row'>" +
+                "<td  class='size-tables-name input-option-size'>" +
+                "<div class='input-text pr-3'>" +
+                "<input type='text' class='form-control text-count examine reset-name' id='TableName_" + Cot_NoId + "A" + tablessuboption_id + "' name='[" + (Cot_NoId - 1) + "].OptionDetailModels[" + (tablessuboption_id - 1) + "].OptionDetailName' maxlength='250' placeholder='@Localizer["ชื่อ Option ย่อย รายการที่"] " + tablessuboption_id + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-name input-price-size'>" +
+                "<div class='input-text pr-3'>" +
+                "<input type='text' class='form-control text-count examine reset-price optionprice'  oninput='OptionInput(this)' id='TablePrice_" + Cot_NoId + "A" + tablessuboption_id + "' name='[" + (Cot_NoId - 1) + "].OptionDetailModels[" + (tablessuboption_id - 1) + "].Price' maxlength='25' placeholder='฿00.00'>" +
+                "</div>" +
+                "</td>" +
+                "<td class='size-tables-delete'>" +
+                "<button type='button' class='form-control btn-delete reset-delete' id='TableDelete_" + Cot_NoId + "A" + tablessuboption_id + "' name='TableDelete_" + Cot_NoId + "A" + tablessuboption_id + "' onclick='delete_row(&apos;" + Cot_NoId + "A" + tablessuboption_id + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+
+            if (tablessuboption_id == 30) {
+                var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold reset-add ml-1');
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].style.opacity = '0.5';
+                    elements[i].style.pointerEvents = "none";
+                    elements[i].style.cursor = "default";
+                }
+            }
+        } else {
+            return false;
+        }
+        document.getElementById('SaveOption').disabled = true;
+
+    }
+    function delete_row(no) {
+        document.getElementById("row" + no + "").outerHTML = "";
+
+        reset_id(no);
+
+        document.getElementById('SaveOption').disabled = true;
+        //ถ้ามีการลบที่เคยสร้างจะต้องเปิดปุ่ม
+        var inputtext2 = document.querySelectorAll(".examine");
+        if (inputtext2.length > 1) {
+            if(inputtext2.length %3 != 0){
+                document.getElementById('SaveOption').disabled = true;
+                return false;
+            }
+            inputtext2.forEach((x) => {
+                if (x.id.indexOf('OptionName') >= 0) {
+                    inputtext2.forEach((x) => { 
+                        if (x.id.indexOf('TableName') >= 0 ) {
+                            if (x.value == "") {
+                                document.getElementById('SaveOption').disabled = true;
+                                return false;
+                            }
+                        }else if (x.id.indexOf('TablePrice') >= 0) {
+                            if (x.value == "") {
+                                document.getElementById('SaveOption').disabled = true;
+                                return false;
+                            }
+                        }else{
+                            document.getElementById('SaveOption').disabled = false;
+                        }
+                    });
+                    //document.getElementById('SaveOption').disabled = true;
+                }
+            });
+        }
+    }
+
+    function reset_id(no) {
+        var ExamineNoId;
+        const cut_tablesrow_id = no.split("A");
+        var Cot_NoId = cut_tablesrow_id[0];
+
+        if (Cot_NoId == 1) {
+            ExamineNoId = Cot_NoId;
+        } else {
+            ExamineNoId = (Cot_NoId - (Cot_NoId - 1));
+        }
+
+        var tables = document.getElementById("TablesNember" + Cot_NoId + "A" + ExamineNoId + "");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var prices = tables.getElementsByClassName("reset-price");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            if (i > 0) {
+                rows[i].setAttribute("id", "row" + Cot_NoId + "A" + i + "");
+            }
+        }
+
+        if (rows.length <= 30) {
+            var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold reset-add ml-1');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.opacity = '1';
+                elements[i].style.pointerEvents = "auto";
+                elements[i].style.cursor = "pointer";
+            }
+        }
+
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableName_" + Cot_NoId + "A" + (i + 1) + "");
+            names[i].setAttribute("name", "[" + (Cot_NoId - 1) + "].OptionDetailModels[" + (i) + "].OptionDetailName");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่"].Value))   + ' ' + (i + 1) + "");
+        }
+        for (var i = 0; i < prices.length; i++) {
+            prices[i] = i;
+            prices[i].setAttribute("id", "TablePrice_" + Cot_NoId + "A" + (i + 1) + "");
+            prices[i].setAttribute("name", "[" + (Cot_NoId - 1) + "].OptionDetailModels[" + (i) + "].Price");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            deletes[i] = i;
+            deletes[i].setAttribute("id", "TableDelete_" + Cot_NoId + "A" + (i + 1) + "");
+            deletes[i].setAttribute("name", "TableDelete_" + Cot_NoId + "A" + (i + 1) + "");
+            deletes[i].setAttribute("onclick", "delete_row('" + Cot_NoId + "A" + (i + 1) + "');");
+        }
+    }
+
+    function OptionInput(arg) {
+        var id = arg.getAttribute('id');
+        var currentValue = arg.value.trim();
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            arg.value = aaa;
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    arg.value = chack[1];
+                }
+            }
+        }
+
+        var integerValue = parseFloat(currentValue);
+        if (isNaN(integerValue)) {
+            arg.value = "";
+            return;
+        }
+
+        if (integerValue >= 1000000000000) {
+            arg.value = "9,999,999,999,999.99";
+        } else {
+            arg.value = numberWithCommas(arg.value);
+        }
+    }
+
+
+</script>
+
+

@@ -1,0 +1,240 @@
+﻿﻿@using MyMenu.ORM.Master;
+@model DiscountTemplate
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+    <body id="DiscountsEdit">
+    <div class="container">
+        <form id="save" onkeyup="ChackInput()">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                            <a asp-controller="Merchant" asp-action="SetDiscounts"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["แก้ไขส่วนลด"]</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="btn-ml" hidden>
+                                    <div class="d-flex justify-content-end">
+                                            <button type="button" class="form-control  btn-delete-category font-weight-bold reset-menu-delete" id="TableDeleteDiscount_1" name="TableDeleteDiscount_1" onclick="delete_row_category('1')">@Localizer["ลบหมวดหมู่"]</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2 mt-2">
+                                    <div class="form-group">
+                                            <label class="font-weight-bold" for="DiscountTemplateName">@Localizer["ชื่อส่วนลด"]</label>
+                                        <div class="input-group input-text">
+                                                <input type="text" id="DiscountTemplateID" name="DiscountTemplateID" value="@Model.DiscountTemplateID" hidden>
+                                                <input type="text" class="form-control text-count examine reset-menu-name" id="DiscountTemplateName" value="@Model.DiscountTemplateName" name="DiscountTemplateName" maxlength="230" placeholder="@Localizer["ชื่อส่วนลด"]">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2 mt-2">
+                                    <div class="form-group mb-0">
+                                        <label for="ServicechargeRate">รูปแบบส่วนลด</label>
+                                        <select class="form-control form-select" aria-label=".form-select-lg example" id="typediscount">
+                                                @if (Model.FmlDiscount.IndexOf('%')==-1)
+                                                {
+                                                    <option value="B" selected>@Localizer["บาท"]</option>
+                                                    <option value="P">%</option>
+                                                    
+                                                }else
+                                                {
+                                                    <option value="B" >บาท</option>
+                                                    <option value="P" selected >%</option>
+                                                }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2 mt-2">
+                                    <div class="form-group">
+                                            <label class="font-weight-bold" for="DiscountName_1">@Localizer["ส่วนลด"]</label>
+                                        <div class="input-group input-text">
+                                                @{
+                                                    var x = "";
+                                                    if (Model.FmlDiscount.IndexOf('%') == -1)
+                                                    {
+                                                        x = Model.FmlDiscount;
+                                                    }
+                                                    else
+                                                    {
+                                                        x = Model.FmlDiscount.Remove(Model.FmlDiscount.IndexOf('%'), 1);
+                                                    }
+                                                }
+                                                <input type="text" class="form-control text-count examine reset-menu-name" oninput="VatInput()" id="FmlDiscount" autocomplete="off" value="@x" name="FmlDiscount" maxlength="230" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-12  mb-2">
+                <div class="d-flex justify-content-end">
+
+                    <div>
+                            <button type="submit" class="btn-save" id="SaveSettingVat">@Localizer["บันทึก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="ModalAlert" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <div class="my-5">
+                        <h5 class="text-center font-weight-bold  my-5-adddiscount fo "> @Localizer["ไม่สามารถแก้ไขได้"]</h5>
+                        <h5 class="text-center font-weight-bold  my-5-adddiscount fo "> @Localizer["กรุณาลองใหม่อีกครั้ง"]</h5>
+                    </div>
+
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert"></h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    /* ต้องปรับ dialog อีกที*/
+    .my-5-adddiscount {
+        margin-top: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#save").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            var typedis = $('#typediscount').val();
+            var discount = {
+                DiscountTemplateID: $('#DiscountTemplateID').val(),
+                DiscountTemplateName: $('#DiscountTemplateName').val(),
+                FmlDiscount: $('#FmlDiscount').val()
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditDiscount", "Merchant")",
+                data: { discountTemplate: discount, type: typedis },
+                success: function (message) {
+                    window.location.href = "@Url.Action("SetDiscounts", "Merchant")";
+                }, error: function (message) {
+                    if (message.responseText == "DiscountTemplates not found") {
+                        $('#ModalPostnotSuccessError').modal('show');
+                        $('#namealert').text("@Localizer["ไม่สามารถแก้ไขได้ กรุณาลองใหม่อีกครั้ง"]");
+                    } else if (message.responseText == "Update DiscountTemplates Fail") {
+                        $('#namealert').text("@Localizer["ไม่สามารถแก้ไขได้ กรุณาลองใหม่อีกครั้ง"]");
+                    }
+                    else {
+                        $('#ModalAlert').modal('show');
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+    });
+
+    function ChackInput() {
+        document.getElementById('SaveSettingVat').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveSettingVat').disabled = true;
+            }
+        });
+
+    }
+    function VatInput() {
+        const display = document.getElementById("FmlDiscount");
+        const currentValue = display.value;
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            $('#FmlDiscount').val(aaa);
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    display.value = chack[1];
+                }
+            }
+        }
+
+        const integerValue = parseInt(currentValue);
+        if (isNaN(integerValue)) {
+            display.value = "";
+            return;
+        }
+
+        if (integerValue >= 100) {
+            display.value = "100";
+        } else {
+            var decimalPattern = /^\d+(\.\d{0,2})?$/;
+
+            if (!decimalPattern.test(currentValue)) {
+                display.value = currentValue.slice(0, -1);
+            } else {
+                display.value = display.value;
+
+            }
+        }
+    }
+
+    function AllIndexOf(txt) {
+        var allIndexOf = [];
+        var index = 0;
+        index = txt.indexOf('.');
+        while (index != -1) {
+            allIndexOf.push(index);
+            index = txt.indexOf('.', index + 1);
+        }
+        return allIndexOf;
+    }
+    // ป้องกันการป้อนอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    document.getElementById("FmlDiscount").addEventListener("keypress", function (e) {
+        if (e.key.match(/[^0-9]./) && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+
+    // ป้องกันการกดปุ่มอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    document.getElementById("FmlDiscount").addEventListener("keydown", function (e) {
+        if (e.key.match(/[^0-9]./) && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+
+</script>

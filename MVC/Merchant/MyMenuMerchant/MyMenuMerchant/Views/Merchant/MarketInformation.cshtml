@@ -1,0 +1,181 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="MarketInformation">
+    <div class="container">
+        <div class="form-row">
+
+        @*Menu Text Header*@
+
+        <div class="col-md-12  mb-2">
+            <div class="row ">
+                <div class="col-md-auto">
+                        <h2 class="font-weight-bold menu-header">@Localizer["จัดการร้านค้า"]</h2>
+                </div>
+                <div class="col-md-auto ">
+                    <ul class="breadcrumb ">
+                    <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home color-a-breadcrumb"></i></a></li>
+                            <li class="breadcrumb-item color-a-breadcrumb">@Localizer["จัดการร้านค้า"]</li>
+                            <li class="breadcrumb-item active" aria-current="page">@Localizer["ข้อมูลร้านค้า"]</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        @*Menu Profile*@
+
+        <div class="col-md-12 mb-2">
+            <div class="card">
+                <div class="d-flex justify-content-end btu-img">
+                        <a class="button-size-edit button-profile m-3 " type="button" asp-controller="Merchant" asp-action="EditProfile"><i class="fa fa-edit "></i> @Localizer["แก้ไข"]</a>
+                    </div>
+                <img class="card-img-top " src="/mymenumerchant/images/dog8.jpg" height="300" alt="รูปภาพพื้นหลัง">
+                <div class="card-body">
+                    <div class="profile-img ">
+                        <img src="/mymenumerchant/images/dog3.jpg" height="300" alt="รูปภาพโปรไฟล์"/>
+                    </div>
+                    <div class="profile-name">
+                            <h2 class="card-title color-name-market m-5">@Localizer["ชื่อร้านค้าชื่อ"]</h2>
+                    </div>
+                     <div class="height-profile">
+                    </div>
+                    <div class="col-md-12  ms-4 mb-1 col-text">
+                            <p class="card-text">@Localizer["สโลแกนร้านค้า"]</p>
+                    </div>  
+                    
+                </div>
+            </div>
+        </div>
+
+          @*Menu เวลาเปิดทำการ*@
+
+        <div class="col-md-6 mb-2">
+            <div class="card" >
+                <div class="card-body">
+                    <div class=" d-flex mb-1">
+                        <div class="mr-auto p-2">
+                                <h5 class="card-title"><i class="fa fa-clock-o color-icon" style="font-size: 25px;"></i> @Localizer["เวลาเปิดทำการ"]</h5>
+                        </div>
+                        
+                        <div class="p-2">
+                                <a class="button-size-edit " type="button" asp-controller="Merchant" asp-action="EditTime"><i class="fa fa-edit "></i>@Localizer["แก้ไข"] </a>
+                            </div>
+                       
+                    </div>
+                    <div class="container">
+                        <div class="row mb-1">
+                            <div class=" col card-text d-flex justify-content-start">อังคาร</div>
+                            <div class=" col card-text d-flex justify-content-end">9:00 - 18:00 น.</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col card-text d-flex justify-content-start">พุธ</div>
+                             <div class=" col card-text d-flex justify-content-end">9:00 - 18:00 น.</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col card-text d-flex justify-content-start">พฤหัสบดี</div>
+                             <div class=" col card-text d-flex justify-content-end">9:00 - 18:00 น.</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col card-text d-flex justify-content-start">ศุกร์</div>
+                             <div class=" col card-text d-flex justify-content-end">9:00 - 18:00 น.</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col card-text d-flex justify-content-start">เสาร์</div>
+                             <div class=" col card-text d-flex justify-content-end">9:00 - 18:00 น.</div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col card-text d-flex justify-content-start">อาทิตย์</div>
+                             <div class=" col card-text d-flex justify-content-end">9:00 - 18:00 น.</div>
+                        </div>  
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @*Menu ตำแหน่งร้านค้า*@
+
+        <div class="col-md-6 mb-2" >
+            <div class="card" style="height:265px;">
+                <div class="card-body" >
+                    <div class=" d-flex mb-1">
+                        <div class="mr-auto p-2">
+                                <h5 class="card-title"><i class="fa fa-map-marker color-icon-map" style="font-size: 25px;"></i> @Localizer["ตำแหน่งร้านค้า"]</h5>
+                        </div>
+                        
+                        <div class="p-2">
+                                <a class="button-size-edit " type="button" asp-controller="Merchant" asp-action="EditPosition"><i class="fa fa-edit "></i> @Localizer["แก้ไข"]</a>
+                            </div>
+                    </div>
+               
+                    <div class="container">
+                        <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                            <a class="button-size-clone" href="#"><i class="fa fa-clone"></i> @Localizer["คัดลอกที่อยู่ร้านค้า"]</a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+         @*Menu ประเภทการสั่งอาหาร โต๊ะ*@
+
+        <div class="col-md-12 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class=" d-flex mb-1">
+                        <div class="mr-auto p-2">
+                                <h5 class="card-title"><i class="fa fa-square color-icon-square" style="font-size: 25px;"></i> @Localizer["ประเภทการสั่งอาหาร"]</h5>
+                        </div>
+                        
+                        <div class="p-2">
+                                <a class="button-size-edit button-size-m" type="button" asp-controller="Merchant" asp-action="EditTypeOrderAndTables"><i class="fa fa-edit "></i> @Localizer["แก้ไข"]</a>
+                            </div>
+                    </div>
+                <div class="container">
+
+                            <p class="card-text ml-5"><i class="fa fa-square me-3 icon-type-size"></i> @Localizer["สั่งกลับบ้าน"]</p>
+                            <p class="card-text ml-5"><i class="fa fa-square me-3 icon-type-size"></i> @Localizer["ทานที่ร้าน"]</p>
+                    
+
+                </div>
+                <hr />
+                <div class=" d-flex mb-1">
+                    <div class="mr-auto p-2">
+                                <h5 class="card-title"><i class="fa fa-square color-icon-square" style="font-size: 25px;"></i> @Localizer["โต๊ะ"]<span class="badge badge-light color-text">@Localizer["จำนวนโต๊ะทั้งหมด"]</span></h5>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="form-row mb-3 ">
+                        <div class="col-md-3 mb-2">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A1</p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A2</p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A3</p>
+                        </div>
+                        <div class="col-md-3 mb-2 ">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A4</p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A5</p>
+                        </div>
+                        <div class="col-md-3 mb-2 ">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A6</p>
+                        </div>
+                        <div class="col-md-3 mb-2 ">
+                            <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A6</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+

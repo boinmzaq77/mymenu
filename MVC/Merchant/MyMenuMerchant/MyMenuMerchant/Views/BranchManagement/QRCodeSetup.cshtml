@@ -1,0 +1,504 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="QRCodeSetup">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["QR Code"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["QR Code"]</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-2 search">
+                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["วันเวลาที่สร้าง, ประเภทออเดอร์, โต๊ะ"]" style="height: 45px;" autocomplete="off">
+            </div>
+            <div class="col-md-12 mb-2">
+                <div class="card box-card border-0 rounded">
+                    <div class="card-body ">
+                        <div class="container">
+                            <div class="d-flex-header">
+                                <div class="form-row">
+                                    <label class="font-weight-bold font-size mb-0">@Localizer["รายการ QR Code"] <small class="size-small font-weight-bold ms-2"> @Localizer["จำนวนทั้งหมด"]  <small class="size-small font-weight-bold ms-2" id="QRCount"></small> </small></label>
+                                </div>
+                                <div class="form-row">
+                                    <button type="button" class="btn btn-color-print" disabled="disabled"><img src="/mymenumerchant/images/Print.png" class="img-btn-print" onclick="buttonPrintQrCode()" /></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-2">
+                                <div class="table-responsive">
+                                    <table class="table" id="TablesQRCodeSetup" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-number">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["วันเวลาที่สร้าง"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ประเภทออเดอร์"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["โต๊ะ"]</th>
+                                                <th scope="col" class="size-th-edit text-center">@Localizer["รูปภาพ QR Code"]</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*QRCode 58mm*@
+    @*<div class="col-md-12 mb-4" id="imagePrintQr58mm" hidden>
+        <div class="card border-0">
+            <div class="card-body">
+                <div class="container">
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="flex-bg-img">
+                                <div class="position-initial">
+                                    <div class="bg-QR-58">
+                                        <p class="text-name-merchant-58 mt-4 pt-2">@Model.MerchantName</p>
+                                        <p class="text-QRname-58">@Model.FoodTableName</p>
+                                        <div class="text-time-58 mx-3 py-3">
+                                            <input type="text" value="@Model.DateModified" id="datetimeqr58" hidden />
+                                            <p class="mb-0" id="date58">@Model.DateModified</p>
+                                            <p class="mb-0" id="time58"></p>
+                                        </div>
+                                        <div id="qrcode-58" class="img-QRCodeup-58 mt-4 pt-2 mb-4"></div>
+                                        <p class="text-QRCode-58">สแกน QR Code เพื่อสั่งอาหาร</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+    @*QRCode 80mm*@
+    @*<div class="col-md-12 mb-4" id="imagePrintQr80mm" hidden>
+        <div class="card border-0">
+            <div class="card-body">
+                <div class="container">
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="flex-bg-img">
+                                <div class="position-initial">
+                                    <div class="bg-QR-80">
+                                        <p class="text-name-merchant-80 mt-4 pt-2" id="MerchantName">XXXXXXX</p>
+                                        <p class="text-QRname-80" id="FoodTableName">XXXXXX</p>
+                                        <div class="text-time-80 mx-3 py-3">
+                                            <p class="mb-0" id="date80">XX/XX/XXXX</p>
+                                            <p class="mb-0" id="time80">XX:XX:XX</p>
+                                        </div>
+                                        <div id="qrcode-80" class="img-QRCodeup-80 mt-4 pt-2 mb-4"></div>
+                                        <p class="text-QRCode-80">สแกน QR Code เพื่อสั่งอาหาร</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+</body>
+<form hidden id="EditCatagory" asp-action="QRCodeSetupDetails">
+    <input name="text" id="CategoryModel" value="" />
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<style>
+    #QRCodeSetup .flex-bg-img {
+        display: flex;
+        justify-content: center;
+    }
+
+    QRCodeSetup .position-initial {
+        position: initial;
+    }
+
+    #QRCodeSetup .bg-QR-58 {
+        width: 219px;
+        height: 496px;
+        position: initial;
+        border: 1px solid #000000;
+    }
+
+    #QRCodeSetup .text-name-merchant-58 {
+        font-size: 24px;
+        font-weight: 400;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+    }
+
+    #QRCodeSetup .text-QRCode-58 {
+        font-size: 15px;
+        font-weight: 400;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+    }
+
+    #QRCodeSetup .img-QRCodeup-58 {
+        display:flex;
+        justify-content:center;
+    }
+
+    #QRCodeSetup .img-QRCodeup-58 img {
+        width: 163px;
+    }
+
+    #QRCodeSetup .text-QRname-58 {
+        font-size: 24px;
+        font-weight: 500;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+    }
+
+    #QRCodeSetup .text-QRname-food-58 {
+        position: absolute;
+        font-size: 20px;
+        font-weight: 400;
+        top: 85%;
+        left: 50%;
+        width: 250px;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    #QRCodeSetup .text-time-58 {
+        font-size: 20px;
+        font-weight: 400;
+        text-align: center;
+        color: #000000;
+        border-bottom: 1px solid #000000;
+        margin: 0 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #QRCodeSetup .bg-QR-80 {
+        width: 344px;
+        height: 496px;
+        position: initial;
+        border: 1px solid #000000;
+    }
+
+    #QRCodeSetup .text-name-merchant-80 {
+        font-size: 24px;
+        font-weight: 400;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+    }
+
+    #QRCodeSetup .text-QRCode-80 {
+        font-size: 15px;
+        font-weight: 400;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+    }
+
+    #QRCodeSetup .img-QRCodeup-80 {
+        display: flex;
+        justify-content: center;
+    }
+
+        #QRCodeSetup .img-QRCodeup-80 img {
+            width: 163px;
+        }
+
+    #QRCodeSetup .text-QRname-80 {
+        font-size: 24px;
+        font-weight: 500;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+    }
+
+    #QRCodeSetup .text-QRname-food-80 {
+        position: absolute;
+        font-size: 20px;
+        font-weight: 400;
+        top: 85%;
+        left: 50%;
+        width: 250px;
+        text-align: center;
+        color: #000000;
+        margin: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    #QRCodeSetup .text-time-80 {
+        font-size: 20px;
+        font-weight: 400;
+        text-align: center;
+        color: #000000;
+        border-bottom: 1px solid #000000;
+        margin: 0 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+</style>
+<script>
+
+    var arryqrCodeGenerate = [];
+
+
+    $(document).ready(function () {
+
+        var table = $('#TablesQRCodeSetup').DataTable({
+            ajax: {
+                url: "@Url.Action("GetQrcode", "BranchManagement")",
+                dataSrc: ''
+            },
+            stateSave: false,
+            columns: [
+                { data: 'id' },
+                { data: 'dateModified' },
+                { data: 'openOrdersType' },
+                { data: 'foodTableName' },
+                { data: 'generateCode' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var numberdata = (meta.row + meta.settings._iDisplayStart + 1);
+                    var text0 = '<div class="margin-right-manu-checkbox p-padding-table"><input type="checkbox" class="form-check-input checkbok-search p-checkbox ml-table margin-top-checkbox" data-id="' + meta.row + '" id="exampleCheck' + numberdata + '" onclick="GetCheckBox(this)" value="' + meta.row + '"><p  class="mb-0 ml-1">' + numberdata + '</p></div>';
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var date = formatDatefull(data);
+                    var text1 = "<p class='p-padding-table'>" + date + "</p>";
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text1 = "";
+                    if (data == "T") {
+                        text1 += "<p class='p-padding-table'>" + @Html.Raw(Json.Serialize(Localizer["สั่งกลับบ้าน"].Value))  + "</p>";
+                    }else{
+                        text1 += "<p class='p-padding-table'>" + @Html.Raw(Json.Serialize(Localizer["ทานที่ร้าน"].Value)) + "</p>";
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var text1 ="";
+                    text1 += "<p class='p-padding-table'>" ;
+                    if (data == "สั่งกลับบ้าน") {
+                        text1 += '-' + "</p>";
+                    } else {
+                        text1 += data + "</p>";
+                    }
+                    return text1;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                    var text2 = "<div class='text-center'><a class='btn btn-green-info mr-2' onclick='sentdata(" + meta.row + ")'  > <img class='size-img-list-menu' src='/mymenumerchant/images/MenuQRCode.png' /> </a></div>";
+                    return text2;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-0'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีสาขา"].Value)) + "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>"+ @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value)) + "</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            initComplete: function () {
+                var count = table.data().count();
+                $('#QRCount').text(count);
+            }
+        });
+        var tables = $('#TablesQRCodeSetup').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+    });
+    function sentdata(d) {
+        var data = $('#TablesQRCodeSetup').DataTable().row(d).data();
+        var test = JSON.stringify(data);
+        $("#CategoryModel").val(test);
+        $("#EditCatagory").submit();
+    }
+
+    var printerSetting = "";
+    var paperSize = 80; // Default size
+    var QrCodeGenerateModel = "";
+
+    function buttonPrintQrCode() {
+        if (arryqrCodeGenerate.length == 0) {
+            return;
+        }
+
+        //Get Printer Setting
+        $.ajax({
+            url: "@Url.Action("GetDataPrints", "BranchManagement")",
+            type: 'GET',
+            success: function (message) {
+                printerSetting = JSON.parse(message);
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+
+        $.each(printerSetting, function (i, item) {
+            if (item.printerMain == 1) {
+                paperSize = item.paperSize;
+            }
+        });
+
+        //Get QrCodeGenerateModel
+        $.ajax({
+            url: "@Url.Action("QrCodeGenerateModel", "BranchManagement")",
+            type: 'GET',
+            data: {
+                text: JSON.stringify(arryqrCodeGenerate[0]),
+            },
+            success: function (message) {
+                QrCodeGenerateModel = message;
+                //console.log(QrCodeGenerateModel);
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+
+        //Create QRCode Print
+
+
+        @*var printContents = "";
+        if (paperSize == 80) {
+            printContents = document.getElementById("imagePrintQr80mm").innerHTML;;
+        } else {
+            printContents = document.getElementById("imagePrintQr58mm").innerHTML;
+        }
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = "<html><head><title></title></head><body>" + printContents + "</body>";
+        window.print();
+        document.body.innerHTML = originalContents;
+
+        $.each(arryqrCodeGenerate, function (i, item) {
+            alert("btn print "  + item);
+        });*@
+
+        //Print Qr
+        var qrc80 = new QRCode(document.getElementById("qrcode-80"), {
+            text: arryqrCodeGenerate[0].generateCode,
+            width: 250,
+            height: 250,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+        });
+    }
+
+
+    function GetCheckBox(n){
+        var grid = document.getElementById("TablesQRCodeSetup");
+        var checkBoxes = grid.getElementsByTagName("input");
+        arryqrCodeGenerate = [];
+
+        //Loop through the CheckBoxes.
+        for (var i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].checked) {
+                var row = checkBoxes[i].value;
+                var data = $('#TablesQRCodeSetup').DataTable().row(checkBoxes[i].value).data();
+                arryqrCodeGenerate.push(data);
+                //console.log(arryqrCodeGenerate);
+            }
+        }
+    }
+
+    function formatDatefull(date) {
+        var aaaa = new Date(date + 'Z');
+        var d = new Date(aaaa),
+
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear(),
+
+            hour = '' + d.getHours(),
+            minunte = '' + d.getMinutes();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        if (hour.length < 2)
+            hour = '0' + hour;
+        if (minunte.length < 2)
+            minunte = '0' + minunte;
+
+        var aaa = [day, month, year].join('/');
+        var bbb = [hour, minunte].join(':');
+        return aaa + ', ' + bbb;
+    }
+
+    function formatDate(date) {
+        var aaaa = new Date(date + 'Z');
+        var d = new Date(aaaa),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        var aaa = [day, month, year].join('/');
+
+        return aaa;
+    }
+
+    function formatTime(date) {
+        var aaaa = new Date(date + 'Z');
+        var d = new Date(aaaa),
+            hour = '' + d.getHours(),
+            minunte = '' + d.getMinutes(),
+            second = '' + d.getSeconds();
+
+        if (hour.length < 2)
+            hour = '0' + hour;
+        if (minunte.length < 2)
+            minunte = '0' + minunte;
+        if (second.length < 2)
+            second = '0' + second;
+
+
+        var bbb = [hour, minunte, second].join(':');
+        return bbb;
+    }
+    
+</script>

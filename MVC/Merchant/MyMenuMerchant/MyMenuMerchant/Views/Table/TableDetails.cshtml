@@ -1,0 +1,2038 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.JAM;
+@model OpenOrderWithDetailModel;
+@using MyMenuMerchant.Controllers;
+@inject IViewLocalizer Localizer
+<body id="TableDetails" onload="myFunction()">
+    <div id="loader"></div>
+    <div class="container animate-bottom" style="display:none;" id="myDiv">
+        <div class="form-row">
+            <div class="col-md-12  mb-3">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <div class="flex-list-text">
+                            <a onclick="history.back()"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            @if (!string.IsNullOrEmpty(Model.FoodTableName))
+                            {
+                                <h2 class="font-weight-bold menu-header  mb-0 pb-0">@Localizer["รายละเอียด"] @Model.FoodTableName </h2>
+                            }
+                            else
+                            {
+                                <h2 class="font-weight-bold menu-header mb-0 pb-0">@Localizer["รายละเอียด"] @Model.CustomerName </h2>
+                            }
+                        </div>
+                        <div class="flex-list-button">
+                            <button type="button" class="btn btn-movetable" id="btnmovetable_@Model.OpenOrdersID" data-openorderid="@Model.OpenOrdersID" data-foodtableno="@Model.FoodTableNO" data-foodtablename="@Model.FoodTableName" onclick="OnClickModalMoveTable(this)"><img class="w-img-table" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                            <button type="button" class="btn btn-table-menu-color-details" data-openorderid="@Model.OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                            <button type="button" class="btn btn-QRFoodtable" onclick="btnQRFoodtable()"><img class="w-img-table" src="/mymenumerchant/images/TableQRCode.png" /></button>
+                            <button type="button" class="breadcrumb btn-discount text-center  layout-add" data-toggle="modal" id="choosediscount" data-target="#ModalDiscount" onclick="savediscount()">@Localizer["เลือกส่วนลด"]</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <input id="OpenOrderID" value="@Model.OpenOrdersID" hidden />
+            @for (int i = 0; i < Model.OrderModels.Count; i++)
+            {
+                <input class="Orderstatus" type="text" value="@Model.OrderModels[i].Status" id="statusorder_@i" data-order="@i" hidden>
+                <div class="col-12 mb-4" id="divorder_@i">
+                    <div class="shadow-sm">
+                        <div class="card border-0 ">
+                            <div class="card-body ">
+                                <div class="container">
+                                    <div class="form-row">
+                                        <div class="col-12">
+                                            <div class="text-head-flex">
+                                                <p class="mb-1 text-order-head">@Localizer["ออเดอร์"] @Model.OrderModels[i].OrdersID</p>
+                                                <p class="mb-1 text-order-subhead">@TableController.ConvertDatetimeLocal(@Model.OrderModels[i].DateModified) </p>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="text-head-flex">
+                                                <p class="mb-1 text-order-subhead">@Localizer["จำนวนรายการ"]: @Model.OrderModels[i].OrderDetailModel.Count</p>
+                                                <p class="mb-1 text-order-number" id="totalup_@i">@TableController.ConvertToCurrency(@Model.OrderModels[i].Total)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="text-head-flex">
+                                                <div class="status-order" id="divshowstatus_@i">
+                                                    @switch (@Model.OrderModels[i].Status.ToString().ToLower())
+                                                    {
+                                                        case "w":
+                                                            <img class="img-size-order mr-1 mb-2" src="/mymenumerchant/images/Order_WaitServe.png" />
+                                                            <p class="mb-2 font-weight-bold state-color-yellow">@Localizer["รอเสิร์ฟ"]</p>
+                                                            break;
+                                                        case "s":
+                                                            <img class="img-size-order mr-1 mb-2" src="/mymenumerchant/images/Order_Served.png" />
+                                                            <p class="mb-2 font-weight-bold state-color-green">@Localizer["เสิร์ฟครบ"]</p>
+                                                            break;
+                                                        case "c":
+                                                            <img class="img-size-order mr-1 mb-2" src="/mymenumerchant/images/Order_Cancel.png" />
+                                                            <p class="mb-2 font-weight-bold state-color-red">@Localizer["ยกเลิก"]</p>
+
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-detail-menu" data-toggle="collapse" href="#collapseExample_@i" role="button" aria-expanded="true" aria-controls="collapseExample_@i">@Localizer["รายละเอียดเมนู"]<i class="ml-2 font-weight-bold fa fa-angle-down"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body p-0 collapse show " id="collapseExample_@i">
+                            <div class="form-row">
+                                <div class="col-md-12 mb-0 ">
+                                    <div class="table-responsive ">
+                                        <table class="table mb-0 " id="TableMenus" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="color-th size-th-name">@Localizer["ชื่อเมนู"]</th>
+                                                    <th scope="col" class="color-th size-th-list">@Localizer["ราคา"]</th>
+                                                    <th scope="col" class="color-th size-th-all">@Localizer["จำนวน"]</th>
+                                                    <th scope="col" class="color-th size-th-list">@Localizer["ราคารวม"]</th>
+                                                    <th scope="col" class="color-th size-th-state">@Localizer["สถานะออเดอร์"]</th>
+                                                    <th scope="col" class="color-th size-th-checkbok">@Localizer["คิดเงิน"]</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @for (int ii = 0; ii < Model.OrderModels[i].OrderDetailModel.Count; ii++)
+                                                {
+
+                                                    <tr>
+                                                        <td>
+                                                            <div class="padding-td">
+                                                                <p class="mb-0">@Model.OrderModels[i].OrderDetailModel[ii].ItemName</p>
+                                                                @for (int iii = 0; iii < Model.OrderModels[i].OrderDetailModel[ii].OptionExtra.Count; iii++)
+                                                                {
+                                                                    <p class="mb-0 set-sub-item">@Model.OrderModels[i].OrderDetailModel[ii].OptionExtra[iii].OptionExtraDetailName (@TableController.ConvertToCurrency(@Model.OrderModels[i].OrderDetailModel[ii].OptionExtra[iii].Price)) </p>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(Model.OrderModels[i].OrderDetailModel[ii].Comments))
+                                                                {
+                                                                    <p class="mb-0 set-sub-item text-line-item">@Model.OrderModels[i].OrderDetailModel[ii].Comments</p>
+
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                        @{
+                                                            var x = (i).ToString() + "_" + (ii).ToString();
+                                                        }
+                                                        <td><div class="padding-td"><p class="mb-0" id="price_@x" data-priceoption="@Model.OrderModels[i].OrderDetailModel[ii].SumOptionExtraPrice">@TableController.ConvertToCurrency(@Model.OrderModels[i].OrderDetailModel[ii].Price + Model.OrderModels[i].OrderDetailModel[ii].SumOptionExtraPrice)</p></div></td>
+                                                        <td>
+                                                            <div class="row-flex-item padding-td">
+                                                                <button type="button" class="btn btn-inside btnminus" id="btnminus_@i-@ii" data-order="@i" data-row="@ii"
+                                                                        data-openid="@Model.OrderModels[i].OrderDetailModel[ii].OpenOrdersID"
+                                                                        data-orderid="@Model.OrderModels[i].OrderDetailModel[ii].OrdersID"
+                                                                        data-orderno="@Model.OrderModels[i].OrderDetailModel[ii].OrderDetailNo">
+                                                                    <img class="img-inside" src="/mymenumerchant/images/DelInside.png" />
+                                                                </button>
+                                                                <p class="mb-0 p-count" id="count_@x">@Model.OrderModels[i].OrderDetailModel[ii].Quantity.ToString("#")</p>
+
+                                                                <button type="button" class="btn btn-inside btnplus" id="btnplus_@i-@ii" data-order="@i" data-row="@ii"
+                                                                        data-openid="@Model.OrderModels[i].OrderDetailModel[ii].OpenOrdersID"
+                                                                        data-orderid="@Model.OrderModels[i].OrderDetailModel[ii].OrdersID"
+                                                                        data-orderno="@Model.OrderModels[i].OrderDetailModel[ii].OrderDetailNo">
+                                                                    <img class="img-inside" src="/mymenumerchant/images/AddInside.png" />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="padding-td">
+                                                                <p class="mb-0" id="amount_@x">@TableController.ConvertToCurrency(@Model.OrderModels[i].OrderDetailModel[ii].Amount)</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="">
+                                                                <p class="mb-0 display-statup1" id="payla_@i-@ii" style="display:none">@Localizer["จ่ายเงินแล้ว"]</p>
+                                                                <select class="form-select chack-status selectstatus_@i" id="exampleFormControlSelect_@i-@ii" data-order="@i"
+                                                                        data-idorderdetail="@Model.OrderModels[i].OrderDetailModel[ii].OrderDetailNo"
+                                                                        data-openid="@Model.OrderModels[i].OrderDetailModel[ii].OpenOrdersID"
+                                                                        data-orderid="@Model.OrderModels[i].OrderDetailModel[ii].OrdersID"
+                                                                        data-order="@i" data-row="@ii"
+                                                                        data-ref="@Model.OrderModels[i].OrderDetailModel[ii].RefTranNo">
+                                                                    @if (@Model.OrderModels[i].OrderDetailModel[ii].Status == 'S')
+                                                                    {
+                                                                        <option class="" value="S" selected>@Localizer["เสิร์ฟครบ"]</option>
+                                                                        <option class="" value="W" disabled>@Localizer["รอเสิร์ฟ"]</option>
+                                                                        <option class="" value="C">ยกเลิก</option>
+                                                                    }
+                                                                    else if (@Model.OrderModels[i].OrderDetailModel[ii].Status == 'C')
+                                                                    {
+                                                                        <option class="" value="S">@Localizer["เสิร์ฟครบ"]</option>
+                                                                        <option class="" value="W" disabled>@Localizer["รอเสิร์ฟ"]</option>
+                                                                        <option class="" value="C" selected>@Localizer["ยกเลิก"]</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option class="" value="S">@Localizer[""]เสิร์ฟครบ</option>
+                                                                        <option class="" value="W" selected disabled>@Localizer["รอเสิร์ฟ"]</option>
+                                                                        <option class="" value="C">@Localizer["ยกเลิก"]</option>
+                                                                    }
+                                                                </select>
+
+
+
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="padding-check-td">
+                                                                <input type="checkbox" class="checkbok-lists checkbok_@i" name="checkchoose" id="Checkbox_@i-@ii" data-order="@i" data-row="@ii" checked data-price="@Model.OrderModels[i].OrderDetailModel[ii].Amount"
+                                                                       data-ordersid="@Model.OrderModels[i].OrderDetailModel[ii].OrdersID"
+                                                                       data-orderdetailno="@Model.OrderModels[i].OrderDetailModel[ii].OrderDetailNo" onchange="Sum()">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+            <div class="col-12 mb-4">
+                <div class="shadow-sm">
+                    <div class="card border-0">
+                        <div class="card-body ">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <p class="text-sum-order text-left">@Localizer["สรุปออเดอร์"]</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-left color-sum-order mb-0">@Localizer["จำนวนออเดอร์"]: @Model.OrderModels.Count </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-right color-sum-order mb-0" id="pcountdetail">@Localizer["จำนวนรายการทั้งหมด"]: 3</p>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="status-order mt-2">
+                                            <p class="text-left color-sum-order mb-0">@Localizer["หมายเหตุ"]  : <span id="showtxtcomment" style="margin-right:5px;">@Model.Comments</span><img onclick="btnShowmodalComment()" class="img-size-comment mr-1 mb-2" src="/mymenumerchant/images/TableComment_1.png"> </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <hr class="hr-sum-order" />
+                                    </div>
+
+                                    <div class="col-6">
+                                        <p class="text-left color-sum-order mb-0">@Localizer["ราคาก่อน VAT"]</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-right color-sum-order mb-0" id="pbtotal">0</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-left color-sum-order mb-0" id="namediscount"></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-right color-sum-order mb-0" id="pdiscount"></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-left color-sum-order mb-0" id="pservice0">Service Charge @Model.ServicechargeRate %</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-right color-sum-order mb-0" id="pservice">0</p>
+                                    </div>
+
+                                    <div class="col-6">
+                                        @if (Model.TaxType == 'E')
+                                        {
+                                            <p class="text-left color-sum-order mb-0" id="pvat0">@Localizer["VAT Exclude"] @Model.TaxRate %</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-left color-sum-order mb-0" id="pvat0">@Localizer["VAT Include"] @Model.TaxRate %</p>
+                                        }
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-right color-sum-order mb-0" id="pvat">0</p>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <p class="text-add color-sum-order mb-0 text-left">@Localizer["ราคารวม"]</p>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <div class="d-flex justify-content-end bg-money">
+                                            <p class="mb-0 text-money" id="ptotal">0</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-invoice mr-3" onclick="CreateTranforReceipt()">@Localizer["พิมพ์ใบแจ้งราคา"]</button>
+                                            <button type="button" class="btn btn-money" id="summitbill" onclick="BFOnSubmitMomey()">@Localizer["คิดเงิน"]</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   @*  *@
+    <div class="col-12 mb-4 set-print-txt  ">
+        <div class="card border-0">
+            <div class="card-body">
+                <div class="container">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="mb-0 font-weight-bold  menu-header">ตัวอย่างใบเสร็จรับเงิน</p>
+                            <div class="col-12 flex-justify-center my-4">
+                                <div class="body-print">
+                                    <div class="bg-QR-80 bg-print" id="divprint80mm">
+                                        <div class="container">
+                                            <div class="receipt">
+                                                <div class="layout-text-center mt-3 mb-2">
+                                                    <p class="mb-0 p-size mb-2 p-weight" id="foodname80">XXXX</p>
+                                                </div>
+                                                <div class="layout-text-center mt-3 mb-2" hidden>
+                                                    <p class="mb-0 p-size p-namemer" id="namemer80">Happy Coffee</p>
+                                                    <p class="mb-0 p-size p-branchmer" id="branchmer80">สาขา สำนักงานใหญ่</p>
+                                                    <p class="mb-0 p-size p-addressmer" id="addressmer80">เลขที่ 2991/23 ถนนลาดพร้าว แขวงคลองจั่น เขตบางกะปิ กรุงเทพมหานคร 10240</p>
+                                                    <p class="mb-0 p-size p-telmer" id="telmer80">081-234-5678</p>
+                                                </div>
+
+                                                <div class="layout-text-center">
+                                                    <p class="mb-0 p-size mb-2 p-weight">ใบแจ้งราคา</p>
+                                                </div>
+                                                <div class="layout-flex-space-between">
+                                                    <p class="mb-0 p-size" id="date80">07/08/2566</p>
+                                                    <p class="mb-0 p-size" id="time80">2023000001</p>
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="border-menu pb-2 mb-2">
+                                                    <p class="mb-0 p-size mb-2">รายการสินค้า</p>
+                                                    <div id="showItemDetail80">
+                                                    </div>
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="layout-sum-lists mb-0">
+                                                </div>
+                                                <div class="my-2">
+
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size w-flex-p-135" id="txtsumitem80">รวมรายการ 2</p>
+                                                        <p class="mb-0 p-size" id="txttotal80">115.00</p>
+                                                    </div>
+
+                                                    @if (Model.ServicechargeType == 'A')
+                                                    {
+                                                        <div class="layout-flex-space-between" id="divshowdiscount80">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtdiscountrate80">หักส่วนลด 5%</p>
+                                                            <p class="mb-0 p-size" id="txtdiscount80">-5.75</p>
+                                                        </div>
+                                                        <div class="layout-flex-space-between" id="divshowservice80">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtservicerate80">ค่าบริการ 10%</p>
+                                                            <p class="mb-0 p-size" id="txtservice80">10.93</p>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="layout-flex-space-between" id="divshowservice80">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtservicerate80">ค่าบริการ 10%</p>
+                                                            <p class="mb-0 p-size" id="txtservice80">10.93</p>
+                                                        </div>
+                                                        <div class="layout-flex-space-between" id="divshowdiscount80">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtdiscountrate80">หักส่วนลด 5%</p>
+                                                            <p class="mb-0 p-size" id="txtdiscount80">-5.75</p>
+                                                        </div>
+                                                    }
+
+                                                    <div class="layout-flex-space-between" id="showVat80">
+                                                        <p class="mb-0 p-size w-flex-p-135" id="txtvatrate80">VAT X%</p>
+                                                        <p class="mb-0 p-size" id="txtvat80">xx.xx</p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="layout-flex-space-between mb-2">
+                                                    <p class="mb-0 p-size p-weight">รวมทั้งหมด</p>
+                                                    <p class="mb-0 p-size p-weight" id="txtgrandtotal80">128.59</p>
+                                                </div>
+
+                                                <div class="color-br"></div>
+                                                @if (!string.IsNullOrEmpty(Model.Comments))
+                                                {
+                                                    <p class="mb-0 p-size">@Localizer["หมายเหตุ"] : @Model.Comments </p>
+                                                }
+
+                                                @* Qrcode ชำระเงิน *@
+
+                                                <div class="layout-text-center mb-4 mt-4">
+                                                    <p class="mb-0 p-size p-weight">QR Code ชำระเงิน</p>
+                                                </div>
+                                                <div class="layout-text-center mt-5 mb-5 flex-justify-center ">
+                                                    <div id="qrcodepic80" style="width:250px;height:250px"></div>
+                                                </div>
+
+                                                <div class="layout-text-center mb-4 mt-4">
+                                                    <div>
+                                                        <p class="p-size">Powered By SeniorSoft</p>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-QR-58 bg-print" id="divprint58mm">
+                                        <div class="container">
+                                            <div class="receipt">
+                                                <div class="layout-text-center mt-3 mb-2">
+                                                    <p class="mb-0 p-size mb-2 p-weight" id="foodname58">XXXX</p>
+                                                </div>
+                                                <div class="layout-text-center mt-3 mb-2" hidden>
+                                                    <p class="mb-0 p-size p-namemer" id="namemer58">Happy Coffee</p>
+                                                    <p class="mb-0 p-size p-branchmer" id="branchmer58">สาขา สำนักงานใหญ่</p>
+                                                    <p class="mb-0 p-size p-addressmer" id="addressmer58">เลขที่ 2991/23 ถนนลาดพร้าว แขวงคลองจั่น เขตบางกะปิ กรุงเทพมหานคร 10240</p>
+                                                    <p class="mb-0 p-size p-telmer" id="telmer58">081-234-5678</p>
+                                                </div>
+
+                                                <div class="layout-text-center">
+                                                    <p class="mb-0 p-size mb-2 p-weight">ใบแจ้งราคา</p>
+                                                </div>
+                                                <div class="layout-flex-space-between">
+                                                    <p class="mb-0 p-size" id="date58">07/08/2566</p>
+                                                    <p class="mb-0 p-size" id="time58">2023000001</p>
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="border-menu pb-2 mb-2">
+                                                    <p class="mb-0 p-size mb-2">รายการสินค้า</p>
+                                                    <div id="showItemDetail58">
+                                                    </div>
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="layout-sum-lists mb-0">
+                                                </div>
+                                                <div class="my-2">
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size w-flex-p-135" id="txtsumitem58">รวมรายการ 2</p>
+                                                        <p class="mb-0 p-size" id="txttotal58">115.00</p>
+                                                    </div>
+
+                                                    @if (Model.ServicechargeType == 'A')
+                                                    {
+                                                        <div class="layout-flex-space-between" id="divshowdiscount58">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtdiscountrate58">หักส่วนลด 5%</p>
+                                                            <p class="mb-0 p-size" id="txtdiscount58">-5.75</p>
+                                                        </div>
+                                                        <div class="layout-flex-space-between" id="divshowservice58">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtservicerate58">ค่าบริการ 10%</p>
+                                                            <p class="mb-0 p-size" id="txtservice58">10.93</p>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="layout-flex-space-between" id="divshowservice58">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtservicerate58">ค่าบริการ 10%</p>
+                                                            <p class="mb-0 p-size" id="txtservice58">10.93</p>
+                                                        </div>
+                                                        <div class="layout-flex-space-between" id="divshowdiscount58">
+                                                            <p class="mb-0 p-size w-flex-p-135" id="txtdiscountrate58">หักส่วนลด 5%</p>
+                                                            <p class="mb-0 p-size" id="txtdiscount58">-5.75</p>
+                                                        </div>
+                                                    }
+
+                                                    <div class="layout-flex-space-between" id="showVat58">
+                                                        <p class="mb-0 p-size w-flex-p-135" id="txtvatrate58">VAT 7%</p>
+                                                        <p class="mb-0 p-size" id="txtvat58">8.41</p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="layout-flex-space-between mb-2">
+                                                    <p class="mb-0 p-size p-weight">รวมทั้งหมด</p>
+                                                    <p class="mb-0 p-size p-weight" id="txtgrandtotal58">128.59</p>
+                                                </div>
+                                                <div class="color-br"></div>
+
+                                                @if (!string.IsNullOrEmpty(Model.Comments))
+                                                {
+                                                    <p class="mb-0 p-size">@Localizer["หมายเหตุ"] : @Model.Comments </p>
+                                                }
+
+                                                @* Qrcode ชำระเงิน *@
+                                                <div class="layout-text-center mb-4 mt-4">
+                                                    <p class="mb-0 p-size p-weight">QR Code ชำระเงิน</p>
+                                                </div>
+
+                                                <div class="layout-text-center mt-4 mb-4 flex-justify-center">
+                                                    <div id="qrcodepic58" style="width:250px;height:250px"></div>
+                                                </div>
+
+                                                <div class="layout-text-center mb-4 mt-4">
+                                                    <div>
+                                                        <p class="p-size">Powered By SeniorSoft</p>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*ModalDiscount*@
+    <div class="modal fade bd-example-modal-lg" id="ModalDiscount" tabindex="1" role="dialog" aria-labelledby="ModalDiscount" aria-hidden="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header-discount">
+                    <div class="d-flex flex-row mb-2">
+                        <div class=" pl-0 pr-0 pt-head"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Checkback();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="pt-1 pm-0 pl-0 pr-0"><h5 class="text-branch-discount mb-0">@Localizer["เลือกส่วนลด"]</h5></div>
+                    </div>
+
+                </div>
+                <input id="iddiscountchoose" hidden />
+                <div class="modal-body bg-color-grey pb-0 pt-4 pl-4 pr-4">
+                    <div class="card-body p-0 " id="divdiscount">
+                    </div>
+                </div>
+                <div class="modal-footer modal-justify-content flex-footer-oeder border-0 ">
+                    <button type="button" class="btn btn-modal-color-discount" data-dismiss="modal" onclick="DeleteDiscount();">@Localizer["เอาส่วนลดออก"]</button>
+                    <button type="button" class="btn btn-modal-color" data-dismiss="modal" onclick="OnSubmitDiscount();">@Localizer["ตกลง"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableCloseMenu *@
+    <div class="modal fade " id="ModalTableCloseMenu" tabindex="1" role="dialog" aria-hidden="true" data-backdrop="false" style="z-index:9999;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["คุณต้องการออกจากหน้าสั่งสินค้าใช่หรือไม่ ?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-delete" onclick="ClearMenu()">@Localizer["ออก"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal" onclick="ClearDetailsMenu()">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalOrderCancel *@
+    <div class="modal fade " id="ModalOrderCancel" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 ">@Localizer["คุณต้องการยกเลิกออเดอร์นี้หรือไม่ ?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <input value="" id="bfClosevalue" hidden />
+                        <input value="" id="openidclose" hidden />
+                        <input value="" id="orderidclose" hidden />
+                        <input value="" id="idorderdetailclose" hidden />
+                        <input value="" id="orderclose" hidden />
+                        <input value="" id="rowclose" hidden />
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-delete" onclick="BtnClose(event)">@Localizer["ใช่"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal" onclick="OrderClose()">@Localizer["กลับ"]</button>
+                        </div>
+                        @*<button type="button" class="font-weight-bold btn button-modal-order-cancel" onclick="BtnClose(event)">ใช่</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal" onclick="OrderClose()">กลับ</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableDelete *@
+    <div class="modal fade " id="ModalTableDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["คุณต้องการ ปิดโต๊ะ 1 หรือไม่?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-delete">@Localizer["ปิดโต๊ะ"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalStatupWaitServe *@
+    <div class="modal fade " id="ModalStatupWaitServe" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">
+                        @Localizer["คุณมีรายการที่สถานะเป็น รอเสิร์ฟ ต้องการคิดเงินหรือไม่?"] <br />@Localizer["ระบบจะทำการเปลี่ยนสถานะจากรอเสิร์ฟเป็น"]<br />@Localizer["เสิร์ฟครบ ให้อัตโนมัติ"]
+                    </h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-accord" onclick="OnSubmitMomey()">@Localizer["คิดเงิน"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*ModalMenu*@
+    <div class="modal fade bd-example-modal-lg" id="ModalMenu" tabindex="-1" role="dialog" aria-labelledby="ModalMenu" aria-hidden="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-item modal-dialog-centered modal-lg " role="document">
+            <div class="modal-content " id="modalitem">
+            </div>
+        </div>
+    </div>
+
+    @*ModalDetailsMenu*@
+    <div class="modal fade bd-example-modal-mb border-modal-details-menu" id="ModalDetailsMenu" tabindex="1" role="dialog" aria-labelledby="ModalDetailsMenu" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered modal-mb modal-dialog-scrollable" role="document">
+            <div class="modal-content" style="min-height: calc(100% - 0rem);" id="modaldetailitem">
+            </div>
+        </div>
+    </div>
+
+    @*ModalCartDetailsMenu*@
+    <div class="modal fade bd-example-modal-lg cart-details-menu modal-pr-4" id="ModalCartDetailsMenu" tabindex="-1" role="dialog" aria-labelledby="ModalMenu" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-item modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content" style="min-height: calc(100% - 0rem);" id="modalcart">
+            </div>
+        </div>
+    </div>
+
+    @* Modal Comment *@
+    <div class="modal fade bd-example-modal-lg" id="ModalComment" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        @* <div class="modal-dialog modal-dialog-centered" role="document"> *@
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row mb-2">
+                        <div class=" pl-0 pr-0 pt-head"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Checkback();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="pt-1 pm-0 pl-0 pr-0"><h5 class="text-branch-discount mb-0">@Localizer["หมายเหตุ"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12 mb-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold font-size16 txt-comment" for="exampleFormControlTextarea1">@Localizer["หมายเหตุ"] : </label>
+                            <input id="idtxtcomment" hidden />
+                            <textarea class="form-control" id="txtcomment" style="resize:none" rows="5" maxlength="100" placeholder="@Localizer["ระบุหมายเหตุ"]">@Model.Comments</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-justify-content flex-footer-comment border-0 ">
+                    <button type="button" class="btn btn-modal-color-comment mb-3 mb-0" data-dismiss="modal" onclick="OnSubmitComment();">@Localizer["บันทึก"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalStatupWaitServe *@
+    <div class="modal fade " id="ModalStatupWaitServe" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">
+                        @Localizer["คุณมีรายการที่สถานะเป็น รอเสิร์ฟ ต้องการคิดเงินหรือไม่?"] <br />@Localizer["ระบบจะทำการเปลี่ยนสถานะจากรอเสิร์ฟเป็น"]<br />@Localizer["เสิร์ฟครบ ให้อัตโนมัติ"]
+                    </h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-accord" onclick="OnSubmitMomey()">@Localizer["คิดเงิน"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableMove *@
+    <div class="modal fade " id="ModalTableMove" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold" id="txtmodaltableMove"> @Localizer["คุณต้องการย้ายโต๊ะ"]   @Localizer["ไปยังโต๊ะอื่นใช่หรือไม่?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <input id="idclose" value="" hidden />
+                        <button type="button" class="font-weight-bold btn button-modal-move" onclick="TableClear('ModalTableMove')" data-toggle="modal" data-target="#ModalSetMoveTable">@Localizer["ย้ายโต๊ะ"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalSetMoveTable *@
+    <div class="modal fade bd-example-modal-lg" id="ModalSetMoveTable" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-move-table">
+                    <div class="d-flex flex-row mb-2">
+                        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal close-move-table" data-dismiss="modal" aria-label="Close" onclick="TableSetClose('ModalSetMoveTable');"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch-modal mb-0">@Localizer["เลือกโต๊ะที่ต้องการย้าย"]</h5></div>
+                    </div>
+                </div>
+                <input type="text" id="setMoveOpenOrdertID" value="" hidden />
+                <form class="modal-body p-0 margin-10" id="FormModalSetMoveTable" onchange="MyMoveTable();">
+                    <div class="form-row " id="divShowdata"></div>
+                </form>
+                <div class="modal-branch modal-footer">
+                    <button type="button" class="btn btn-save-branch" id="SubmitSetMoveTables" data-dismiss="modal" aria-label="Close" onclick="fnMoveTable()" disabled>@Localizer["บันทึก"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableMoveSuccess *@
+    <div class="modal fade " id="ModalTableMoveSuccess" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold"> @Localizer["ย้ายโต๊ะสำเร็จ"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <input id="idclose" value="" hidden />
+                        <button type="button" class="font-weight-bold btn button-modal-move" onclick="fnReload()" data-dismiss="modal">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<form id="ToPayment" asp-action="PaymentProcess" method="post" hidden>
+    <input type="text" name="transtring" id="tranmodel" />
+</form>
+
+<form hidden id="Qrcodejsonform" asp-action="TableQRCode">
+    <input name="json" id="Qrcodejson" value="" />
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    var myVar;
+    var QRCodestring;
+
+    function myFunction() {
+        myVar = setTimeout(showPage, 1000);
+    }
+
+    function showPage() {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("myDiv").style.display = "block";
+    }
+    var openorderwithdetailmodel = [];
+    let discount = [];
+    var _role;
+    var ListBranchConfig = [];
+
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+        openorderwithdetailmodel = @Json.Serialize(Model);
+        //console.log(openorderwithdetailmodel);
+        var discountrate = 0;
+        var discounttext = "";
+        $(".btnplus").on("click", function () {
+            var row = $(this).data("row");
+            var order = $(this).data("order");
+
+            var orderid = $(this).data("orderid");
+            var orderno = $(this).data("orderno");
+
+
+            var count = $('#count_' + order + '_' + row).text();
+            $('#count_' + order + '_' + row).text(parseInt(count) + 1);
+            Sum();
+
+            SentupdateQuantity(orderid, orderno, order, row);
+
+        });
+        $(".btnminus").on("click", function () {
+
+            var row = $(this).data("row");
+            var order = $(this).data("order");
+            var orderid = $(this).data("orderid");
+            var orderno = $(this).data("orderno");
+
+            var count = $('#count_' + order + '_' + row).text();
+            if (count <= 1) {
+                $('#count_' + order + '_' + row).text(1);
+            } else {
+                $('#count_' + order + '_' + row).text(parseInt(count) - 1);
+            }
+            Sum();
+            SentupdateQuantity(orderid, orderno, order, row);
+        });
+
+
+        $.ajax({
+
+            url: "@Url.Action("GetDataDiscoount", "Merchant")",
+            async: false,
+            success: function (message) {
+                var listitemchoose = JSON.parse(message);
+                //console.log(listitemchoose);
+                discount = listitemchoose;
+                var listitem = "";
+                $.each(listitemchoose, function (i, item) {
+                    listitem += '<div class="col-12 mb-4 p-0">';
+                    listitem += '<input type="radio" name="discount" class="form-check-npiut chack-radio" id = "discount_' + item.discountTemplateID + '" data-id="' + item.discountTemplateID + '" data-val="' + item.fmlDiscount + '" data-text="' + item.discountTemplateName + '" hidden>';
+                    listitem += '<label class="card form-check-label text-flex-discount label-set-form" for= "discount_' + item.discountTemplateID + '" >' + item.discountTemplateName + '<small class= "small-set-form"> ' + item.fmlDiscount + '  </small></label></div>';
+                });
+                $("#divdiscount").html(listitem);
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+        //Sum();
+        var previous;
+        $(".chack-status").on("focus click", function () {
+            previous = this.value; // Old vaue
+
+        }).change(function () {
+            var order = $(this).data("order");
+            var row = $(this).data("row");
+            if ($(this).val() == "C") {
+                var id = $(this).data("order");
+                if (checklastC(id)) {
+                    $('#bfClosevalue').val(previous);
+                    $('#openidclose').val($(this).data("openid"));
+                    $('#orderidclose').val($(this).data("orderid"));
+                    $('#idorderdetailclose').val($(this).data("idorderdetail"));
+                    $('#orderclose').val($(this).data("order"));
+                    $('#rowclose').val($(this).data("row"));
+                    $('#ModalOrderCancel').modal('show');
+                    //console.log($('#idorderdetailclose').val());
+                } else {
+                    var orderDetail =
+                    {
+                        openOrdersID: $(this).data("openid"),
+                        ordersID: $(this).data("orderid"),
+                        orderDetailNo: $(this).data("idorderdetail"),
+                        status: "C"
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("EditStatusOrderdetail", "Order")",
+                        data: orderDetail,
+                        success: function (message) {
+                            DisOrderDetail(order, row);
+                            Sum();
+                            //event.preventDefault();
+                            //$("#status_" + id).val("C");
+                            //Checkbtnperclick();
+                        }, error: function (message) {
+                            alert(message.responseText);
+                        }
+
+                    });
+                }
+            } else {
+                var orderDetail =
+                {
+                    openOrdersID: $(this).data("openid"),
+                    ordersID: $(this).data("orderid"),
+                    orderDetailNo: $(this).data("idorderdetail"),
+                    status: "S"
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("EditStatusOrderdetail", "Order")",
+                    data: orderDetail,
+                    success: function (message) {
+                        ShowOrderDetail(order, row);
+                        Checkstatusorder(order);
+                        Sum();
+                        //event.preventDefault();
+                        //$("#status_" + id).val("C");
+                        //Checkbtnperclick();
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+
+                });
+            }
+        });
+        FirstCheckshowhide();
+        Sum();
+
+
+
+        var orderStatus = @Json.Serialize(Model.Status);
+        if (orderStatus == 'P') {
+            $('.breadcrumb.btn-discount.text-center.layout-add.mb-2').css('opacity', '0.5');
+            $('.breadcrumb.btn-discount.text-center.layout-add.mb-2').prop('disabled', true);
+            $('.btn.btn-money').css('opacity', '0.5');
+            $('.btn.btn-money').prop('disabled', true);
+        }
+
+        if (_role == "editor" || _role == "invoice" || _role == "officer") {
+
+            $('#summitbill').prop('disabled', true);
+            $('#choosediscount').prop('disabled', true);
+            $('.btnminus').each(function () {
+
+                $(this).prop("disabled", true);
+                $(this).css({ "opacity": "0.6" });
+
+            });
+            $('.btnplus').each(function () {
+
+                $(this).prop("disabled", true);
+                $(this).css({ "opacity": "0.6" });
+
+            });
+        }
+        if (_role == "cashier") {
+            $('.btnminus').each(function () {
+
+                $(this).prop("disabled", true);
+                $(this).css({ "opacity": "0.6" });
+
+            });
+            $('.btnplus').each(function () {
+
+                $(this).prop("disabled", true);
+                $(this).css({ "opacity": "0.6" });
+
+            });
+        }
+
+        CreateQRCode();
+    });
+
+
+    function SentupdateQuantity(ordersID, orderdetailno, order, row) {
+
+        var orders = openorderwithdetailmodel.orderModels.find((x) => x.ordersID == ordersID);
+        var orderdetail = orders.orderDetailModel.find((x) => x.orderDetailNo == orderdetailno);
+        var count = $('#count_' + order + '_' + row).text();
+        orderdetail.quantity = count;
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditOrderdetailquantity", "Order")",
+            data: orderdetail,
+            success: function (message) {
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+
+    function BtnClose(event) {
+        var order = $('#orderclose').val();
+        var row = $('#rowclose').val();
+        var orderDetail =
+        {
+            openOrdersID: $("#openidclose").val(),
+            ordersID: $("#orderidclose").val(),
+            orderDetailNo: $('#idorderdetailclose').val(),
+            status: "C"
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditStatusOrderdetail", "Order")",
+            data: orderDetail,
+            success: function (message) {
+                event.preventDefault();
+                DisOrderDetail(order, row);
+                DisOrder($('#orderclose').val())
+                $('#ModalOrderCancel').modal('hide');
+                $('#divshowstatus_' + order).html('<img class="img-size-order mr-1 mb-2" src="/mymenumerchant/images/Order_Cancel.png" /><p class= "mb-2 font-weight-bold state-color-red" > ยกเลิก </p>');
+                Sum();
+
+                //เมื่อยกเลิกออเดอร์ทุกรายการ ปุ่มคิดเงินและปุ่มส่วนลดจะกดไม่ได้
+                var values = $('select').children("option").filter(":selected").text();
+                //console.log(values);
+
+                var regex = /รอเสิร์ฟ/;
+                if (regex.test(values)) {
+                    return;
+                }
+                $('.breadcrumb.btn-discount.text-center.layout-add.mb-2').css('opacity', '0.5');
+                $('.breadcrumb.btn-discount.text-center.layout-add.mb-2').prop('disabled', true);
+                $('.btn.btn-money').css('opacity', '0.5');
+                $('.btn.btn-money').prop('disabled', true);
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+    function OrderClose() {
+
+        var order = $('#orderclose').val();
+        var row = $('#rowclose').val();
+        var vals = $('#bfClosevalue').val();
+        $("#exampleFormControlSelect_" + order + "-" + row).val(vals);
+        //$("#exampleFormControlSelect_" + order + "-" + row + " option").each(function () {
+        //    alert($(this).val()+" A");
+        //    alert(vals+" B");
+        //    if ($(this).val() == vals) {
+        //        alert(" c");
+        //        $(this).attr('selected', true);
+        //    }
+        //});
+        //var idddd = $("#exampleFormControlSelect_" + order + "-" + row).val();
+        //alert(idddd);
+    }
+    function changechoose() {
+        Sum();
+    }
+    function Checkstatusorder(idorder) {
+        let liststatus = [];
+        var total = 0;
+        $('.selectstatus_' + idorder).each(function () {
+            liststatus.push($(this).val());
+        });
+
+        var findw = liststatus.findIndex((x) => x == null);
+        var findS = liststatus.findIndex((x) => x == "S");
+        if (findw == -1) {
+            if (findS != -1) {
+                $('#divshowstatus_' + idorder).html('<img class="img-size-order mr-1 mb-2" src="/mymenumerchant/images/Order_Served.png" /><p class= "mb-2 font-weight-bold state-color-green"> เสิร์ฟครบ </p>');
+            }
+        }
+    }
+    function checklastC(id) {
+        let liststatus = [];
+        $('.selectstatus_' + id).each(function () {
+            liststatus.push($(this).val());
+        });
+        if (liststatus.every((x) => x == "C")) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+    function savediscount() {
+        var id = "";
+        $('input[name="discount"]:checked').each(function () {
+            id = $(this).data("id");
+        });
+        $('#iddiscountchoose').val(id);
+    }
+
+    function Checkback() {
+        var id = $('#iddiscountchoose').val();
+        if (id == "") {
+            $('input[name="discount"]:checked').each(function () {
+                $(this).prop("checked", false);
+            });
+        } else {
+            $('input[name="discount"]:checked').each(function () {
+                $('#discount_' + id).prop("checked", true);
+            });
+
+        }
+        Sum();
+    }
+
+    function Sum() {
+        var total = 0;
+        var discounttext = "";
+        var discountrate = 0;
+        var countitem = 0;
+        $('.Orderstatus').each(function () {
+            var order = $(this).data("order");
+            var totalorder = 0;
+
+            if ($(this).val() != "C") {
+                $('.checkbok_' + order).each(function () {
+                    if ($(this).is(':checked')) {
+                        var row = $(this).data("row");
+                        var order = $(this).data("order");
+                        var count = $('#count_' + order + '_' + row).text();
+                        var price = $('#price_' + order + '_' + row).text();
+                        var priceoption = $('#price_' + order + '_' + row).data("priceoption");
+                        $('#amount_' + order + '_' + row).text(roundToTwo(parseInt(price) * parseInt(count)));
+                        totalorder += parseInt(price) * parseInt(count);
+
+                    }
+                });
+
+            } else {
+                $('.checkbok_' + order).each(function () {
+                    var row = $(this).data("row");
+                    var order = $(this).data("order");
+                    var count = $('#count_' + order + '_' + row).text();
+                    var price = $('#price_' + order + '_' + row).text();
+                    var priceoption = $('#price_' + order + '_' + row).data("priceoption");
+                    $('#amount_' + order + '_' + row).text(roundToTwo(parseInt(price) * parseInt(count)));
+                    totalorder += parseInt(price) * parseInt(count);
+                    $('#totalup_' + order).attr('style', 'text-decoration: line-through');
+
+                });
+            }
+
+            $('#totalup_' + order).text(roundToTwo(totalorder));
+        });
+
+
+        $('input[name="checkchoose"]:checked').each(function () {
+            var row = $(this).data("row");
+            var order = $(this).data("order");
+            var count = $('#count_' + order + '_' + row).text();
+            var price = $('#price_' + order + '_' + row).text();
+            var priceoption = $('#price_' + order + '_' + row).data("priceoption");
+            total += parseInt(price) * parseInt(count);
+            countitem += parseInt(count);
+            //alert(total);
+        });
+
+        $('input[name="discount"]:checked').each(function () {
+            discounttext = $(this).data("text");
+            discountrate = $(this).data("val");
+        });
+
+        //var discount =
+        var servicerate = "@Model.ServicechargeRate";
+        var typeservice = "@Model.ServicechargeType";
+
+
+        if (servicerate == "") {
+            servicerate = "0";
+        }
+        var discount = 0;
+        var service = 0;
+        var discountratestr = discountrate.toString();
+        if (discountratestr.indexOf('%') == -1) {
+            if (typeservice == 'A') {
+                if (discounttext != "") {
+                    discount = discountrate;
+                }
+                service = ((total - discount) * parseInt(servicerate)) / 100;
+            } else {
+                service = (total * parseInt(servicerate)) / 100;
+                if (discounttext != "") {
+                    discount = discountrate;
+                }
+            }
+        } else {
+            discountrate = discountrate.substring(0, discountrate.length - 1);
+
+            if (typeservice == 'A') {
+                if (discounttext != "") {
+                    discount = ((total * discountrate) / 100);
+                }
+                service = ((total - discount) * parseInt(servicerate)) / 100;
+            } else {
+                service = (total * parseInt(servicerate)) / 100;
+                if (discounttext != "") {
+                    discount = ((total + service) * discountrate) / 100;
+                }
+            }
+        }
+
+
+        //var service = (total * parseInt(servicerate)) / 100;
+        var totalandservice = service + total - discount;
+        var vat = 0;
+        var taxbaseamount = 0;
+        var taxtype = "@Model.TaxType";
+        var taxrate = "@Model.TaxRate";
+        if (taxrate == "") {
+            taxrate = "0";
+        }
+        var grantotal = 0;
+        if (taxtype == "E") {
+            taxbaseamount = totalandservice;
+            vat = (totalandservice * parseInt(taxrate)) / 100;
+            grantotal = totalandservice + vat;
+        } else {
+            taxbaseamount = (totalandservice * 100) / (100 + parseInt(taxrate));
+            vat = totalandservice - taxbaseamount;
+            grantotal = totalandservice;
+        }
+        //var service = (total * parseInt(@Model.ServicechargeRate)) / 100;
+
+        $('#pcountdetail').text("@Localizer["จำนวนรายการทั้งหมด"]: " + countitem);
+        $('#pbtotal').text(roundToTwo(total));
+        //$('#totalup').text(roundToTwo(total));
+        $('#pservice').text("+ " + roundToTwo(service));
+        $('#pvat').text(roundToTwo(vat));
+        $('#ptotal').text(roundToTwo(grantotal));
+
+        if (discountratestr.indexOf("%") >= 0) {
+            $('#namediscount').text(discounttext + " " + discountrate + "%");
+        } else {
+            $('#namediscount').text(discounttext + " " + discountrate);
+        }
+
+        $('#pdiscount').text("- " + roundToTwo(discount));
+
+
+        if (service == 0) {
+            $('#pservice0').text("");
+            $('#pservice').text("");
+        }
+
+        if (vat == 0) {
+            $('#pvat0').text("");
+            $('#pvat').text("");
+
+        }
+        if (discounttext == "") {
+            $('#namediscount').text("");
+            $('#pdiscount').text("");
+
+        }
+
+    }
+    function OnSubmitDiscount() {
+
+        Sum();
+
+    }
+    function FirstCheckshowhide() {
+
+        $('.chack-status').each(function () {
+            var ref = $(this).data('ref');
+            var row = $(this).data('row');
+            var order = $(this).data('order');
+            if (ref != '') {
+                $("#btnminus_" + order + "-" + row).prop("disabled", true);
+                $("#btnplus_" + order + "-" + row).prop("disabled", true);
+                document.getElementById("btnminus_" + order + "-" + row).style.opacity = "0 !important";
+                document.getElementById("btnplus_" + order + "-" + row).style.opacity = "0 !important";
+                //$("#btnminus_" + order + "-" + row).attr('style', 'opacity:0 !important');
+                //$("#btnplus_" + order + "-" + row).attr('style', 'opacity:0 !important');
+                $("#Checkbox_" + order + "-" + row).prop("checked", false);
+
+                $("#Checkbox_" + order + "-" + row).hide();
+                $(this).hide();
+                $("#payla_" + order + "-" + row).toggleClass('display-statup1')
+                //$("#payla_" + order + "-" + row).show();
+
+            }
+            if ($(this).val() == "C") {
+                $("#btnminus_" + order + "-" + row).prop("disabled", true);
+                $("#btnplus_" + order + "-" + row).prop("disabled", true);
+                document.getElementById("btnminus_" + order + "-" + row).style.opacity = "0 !important";
+                document.getElementById("btnplus_" + order + "-" + row).style.opacity = "0 !important";
+                //$("#btnminus_" + order + "-" + row).attr('style', 'opacity:0 !important');
+                //$("#btnplus_" + order + "-" + row).attr('style', 'opacity:0 !important');
+                $("#Checkbox_" + order + "-" + row).prop("checked", false);
+                $("#Checkbox_" + order + "-" + row).hide();
+            }
+            $(this).attr('checked', false);
+
+        });
+        $('.Orderstatus').each(function () {
+            if ($(this).val() == "C") {
+                DisOrder($(this).data("order"));
+            }
+        });
+
+    }
+
+
+    function DisOrder(idorder) {
+        $('.selectstatus_' + idorder).each(function () {
+            $(this).prop("disabled", true);
+        });
+        $('.statusorder_' + idorder).val("C");
+
+
+    }
+    function DisOrderDetail(idorder, row) {
+
+        $('.btnminus').each(function () {
+            if ($(this).data('row') == row && $(this).data('order') == idorder) {
+                //$(this).hide();
+                $(this).prop("disabled", true);
+                $(this).css({ "opacity": "0.6" });
+            }
+        });
+        $('.btnplus').each(function () {
+            if ($(this).data('row') == row && $(this).data('order') == idorder) {
+                $(this).prop("disabled", true);
+                $(this).css({ "opacity": "0.6" });
+                //$(this).hide();
+            }
+        });
+        $('.checkbok-lists').each(function () {
+            if ($(this).data('row') == row && $(this).data('order') == idorder) {
+                $(this).prop("checked", false);
+                $(this).hide();
+            }
+        });
+    }
+    function ShowOrderDetail(idorder, row) {
+
+        $('.btnminus').each(function () {
+            if ($(this).data('row') == row && $(this).data('order') == idorder) {
+                $(this).show();
+            }
+        });
+        $('.btnplus').each(function () {
+            if ($(this).data('row') == row && $(this).data('order') == idorder) {
+                $(this).show();
+            }
+        });
+        $('.checkbok-lists').each(function () {
+            if ($(this).data('row') == row && $(this).data('order') == idorder) {
+                $(this).prop("checked", true);
+                $(this).show();
+            }
+        });
+    }
+    function DeleteDiscount() {
+
+        $('input[name="discount"]:checked').each(function () {
+            $(this).attr('checked', false);
+        });
+        Sum();
+
+    }
+    function BFOnSubmitMomey() {
+        var i = 0;
+        $('input[name="checkchoose"]:checked').each(function () {
+            var row = $(this).data("row");
+            var order = $(this).data("order");
+            var status = $("#exampleFormControlSelect_" + order + "-" + row).val();
+            if (status == null) {
+                $('#ModalStatupWaitServe').modal('show');
+                i++;
+            }
+        });
+        if (i == 0) {
+            OnSubmitMomey();
+        }
+
+    }
+
+    function OnSubmitMomey() {
+        var openOrderWithDetails = { ...openorderwithdetailmodel };
+        openOrderWithDetails.orderModels = [];
+        //console.log(openOrderWithDetails);
+        $('input[name="checkchoose"]:checked').each(function () {
+            var ordersID = $(this).data("ordersid");
+            var orderdetailno = $(this).data("orderdetailno");
+            var orders = openorderwithdetailmodel.orderModels.find((x) => x.ordersID == ordersID);
+            //console.log(orders);
+            var orderdetail = orders.orderDetailModel.find((x) => x.orderDetailNo == orderdetailno);
+
+            var ordersnew = { ...orders };
+            ordersnew.orderDetailModel = [];
+            ordersnew.orderDetailModel.push(orderdetail);
+            openOrderWithDetails.orderModels.push(ordersnew);
+        });
+        //console.log(openOrderWithDetails);
+
+        var iddiscount = null;
+        $('input[name="discount"]:checked').each(function () {
+            iddiscount = $(this).data("id");
+        });
+        if (iddiscount != null) {
+            var discountfind = discount.find((x) => x.discountTemplateID == iddiscount);
+            openOrderWithDetails.discountTemplates = [];
+            openOrderWithDetails.discountTemplates.push(discountfind);
+        }
+
+        var addcomment = $('#txtcomment').val();
+        if (!jQuery.isEmptyObject(addcomment)) {
+            openOrderWithDetails.Comments = addcomment;
+        }
+        //console.log(openOrderWithDetails);
+
+        var openOrderWithDetailtest = {
+            totalorder: 10
+        };
+        var jsonorder = JSON.stringify(openOrderWithDetails);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CaltranBefore", "Table")",
+            data: {
+                id: jsonorder,
+            },
+            success: function (message) {
+                //console.log(message);
+                //tranmodel
+                var tranmodel = JSON.parse(message);
+                console.log(tranmodel);
+
+
+                Tranmodel = message;
+                $("#tranmodel").val(message);
+                $("#ToPayment").submit();
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+    function roundToTwo(num) {
+        return format('th-TH', 'THB', num);
+    }
+
+    function format(locale, currency, number) {
+        return new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency,
+            currencyDisplay: "code"
+        })
+            .format(number)
+            .replace(currency, "")
+            .trim();
+    }
+
+    var Tranmodel = [];
+
+    function CreateTranforReceipt() {
+        var openOrderWithDetails = { ...openorderwithdetailmodel };
+        openOrderWithDetails.orderModels = [];
+        //console.log(openOrderWithDetails);
+        $('input[name="checkchoose"]:checked').each(function () {
+            var ordersID = $(this).data("ordersid");
+            var orderdetailno = $(this).data("orderdetailno");
+            var orders = openorderwithdetailmodel.orderModels.find((x) => x.ordersID == ordersID);
+            //console.log(orders);
+            var orderdetail = orders.orderDetailModel.find((x) => x.orderDetailNo == orderdetailno);
+
+            var ordersnew = { ...orders };
+            ordersnew.orderDetailModel = [];
+            ordersnew.orderDetailModel.push(orderdetail);
+            openOrderWithDetails.orderModels.push(ordersnew);
+        });
+        //console.log(openOrderWithDetails);
+        var iddiscount = null;
+        $('input[name="discount"]:checked').each(function () {
+            iddiscount = $(this).data("id");
+        });
+        if (iddiscount != null) {
+            var discountfind = discount.find((x) => x.discountTemplateID == iddiscount);
+            openOrderWithDetails.discountTemplates.push(discountfind);
+        }
+
+        var addcomment = $('#txtcomment').val();
+        if (!jQuery.isEmptyObject(addcomment)) {
+            openOrderWithDetails.Comments = addcomment;
+        }
+        //console.log(openOrderWithDetails);
+
+        var openOrderWithDetailtest = {
+            totalorder: 10
+        };
+        var jsonorder = JSON.stringify(openOrderWithDetails);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CaltranBefore", "Table")",
+            data: {
+                id: jsonorder,
+
+            },
+            success: function (message) {
+                Tranmodel = JSON.parse(message);
+                console.log(Tranmodel);
+
+                //NOTSHOWZEROPRICE Item
+                const result = ListBranchConfig.filter((x) => x.cfgKey == "NOTSHOWZEROPRICE");
+                var CheckNOTSHOWZEROPRICE = 0;
+                if (!jQuery.isEmptyObject(result)) {
+                    CheckNOTSHOWZEROPRICE = result[0].cfgInteger;
+                }
+                //ไม่แสดงราคา 0 บาท
+                //แสดงจำนวน เฉพาะราคาที่มากกว่า 0
+                //CheckNOTSHOWZEROPRICE == 1
+
+                if (Tranmodel.foodTableName == null || Tranmodel.foodTableName == '') {
+                    $('#foodname80').text(Tranmodel.customerName + ' , ' + Tranmodel.customerTel);
+                } else {
+                    $('#foodname80').text(Tranmodel.foodTableName);
+                }
+
+                $('#date80').text(formatDateTableDetail(Tranmodel.tranDate));
+                $('#time80').text(formatTime(Tranmodel.tranDate));
+
+                var textitem = '';
+                $.each(Tranmodel.tranDetailItemModels, function (index, val) {
+                    if (CheckNOTSHOWZEROPRICE == 0) {
+                        textitem += '<div class="layout-lists-menu mb-2">';
+                        textitem += '<div class="w-menu-30">';
+                        textitem += '<p class="mb-0 p-size">' + (val.quantity) + '</p> </div>';
+
+                        textitem += '<div class="w-menu-130">';
+                        textitem += '<p class="mb-0 p-size">' + val.itemName + '</p>';
+                        $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                            textitem += '<p class="mb-0 p-size">' + valueOptionExtra.optionExtraDetailName + '</p>';
+                        });
+
+                        if (!jQuery.isEmptyObject(val.comments)) {
+                            textitem += '<p class="mb-0 p-size">' + '@Localizer["Note"]:' + val.comments + '</p>';
+                        }
+                        textitem += '</div>';
+
+                        textitem += '<div class="w-menu-60">';
+                        textitem += '<p class="mb-0 p-size">' + roundToTwo(val.price) + '</p>';
+                        $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                            textitem += '<p class="mb-0 p-size">' + '+' + roundToTwo(valueOptionExtra.price) + '</p>';
+                        });
+                        textitem += '</div>'
+                        textitem += '</div>';
+                    } else {
+                        if (val.price > 0) {
+                            textitem += '<div class="layout-lists-menu mb-2">';
+                            textitem += '<div class="w-menu-30">';
+                            textitem += '<p class="mb-0 p-size">' + (val.quantity) + '</p> </div>';
+
+                            textitem += '<div class="w-menu-130">';
+                            textitem += '<p class="mb-0 p-size">' + val.itemName + '</p>';
+                            $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                                textitem += '<p class="mb-0 p-size">' + valueOptionExtra.optionExtraDetailName + '</p>';
+                            });
+
+                            if (!jQuery.isEmptyObject(val.comments)) {
+                                textitem += '<p class="mb-0 p-size">' + '@Localizer["Note"]:' + val.comments + '</p>';
+                            }
+                            textitem += '</div>';
+
+                            textitem += '<div class="w-menu-60">';
+                            textitem += '<p class="mb-0 p-size">' + roundToTwo(val.price) + '</p>';
+                            $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                                textitem += '<p class="mb-0 p-size">' + '+' + roundToTwo(valueOptionExtra.price) + '</p>';
+                            });
+                            textitem += '</div>'
+                            textitem += '</div>';
+                        }
+                    }
+                });
+
+                $('#showItemDetail80').html(textitem);
+
+                if (Tranmodel.taxRate > 0) {
+                    $('#txtvatrate80').text("@Localizer["VAT"]  " + Tranmodel.taxRate + " %");
+                } else {
+                    document.getElementById("showVat80").hidden = true;
+                }
+
+                if (CheckNOTSHOWZEROPRICE == 0) {
+                    $('#txtsumitem80').text("@Localizer["รวมรายการ"] " + Tranmodel.tranDetailItemModels.length);
+                } 
+                else { 
+                    $('#txtsumitem80').text("@Localizer["รวมรายการ"] " + Tranmodel.tranDetailItemModels.filter( x => x.price > 0).length);
+                }
+
+                
+                $('#txttotal80').text(roundToTwo(Tranmodel.subTotalHaveVat + Tranmodel.subTotalNoneVat));
+                $('#txtvat80').text(roundToTwo(Tranmodel.totalVat));
+                $('#txtgrandtotal80').text(roundToTwo(Tranmodel.grandTotal));
+
+
+                if (Tranmodel.tranTradDiscounts.length > 0) {
+                    $('#txtdiscountrate80').text("@Localizer["หักส่วนลด"] " + Tranmodel.tranTradDiscounts[0].fmlDiscount);
+                    $('#txtdiscount80').text("-" + roundToTwo(Tranmodel.totalTradDiscHaveVat + Tranmodel.totalTradDiscNoneVat));
+
+                } else {
+                    document.getElementById("divshowdiscount80").hidden = true;
+                }
+
+                if (Tranmodel.serviceCharge > 0) {
+                    $('#txtservice80').text(roundToTwo(Tranmodel.serviceCharge));
+                    $('#txtservicerate80').text("@Localizer["ค่าบริการ"] " + Tranmodel.fmlServiceCharge + " %");
+                } else {
+                    document.getElementById("divshowservice80").hidden = true;
+                }
+
+                // 58
+                if (Tranmodel.foodTableName == null || Tranmodel.foodTableName == '') {
+                    $('#foodname58').text(Tranmodel.customerName + ' , ' + Tranmodel.customerTel);
+                } else {
+                    $('#foodname58').text(Tranmodel.foodTableName);
+                }
+
+                $('#date58').text(formatDateTableDetail(Tranmodel.tranDate));
+                $('#time58').text(formatTime(Tranmodel.tranDate));
+
+                var textitem = '';
+                $.each(Tranmodel.tranDetailItemModels, function (index, val) {
+                    if (CheckNOTSHOWZEROPRICE == 0) {
+                        textitem += '<div class="layout-lists-menu mb-2">';
+                        textitem += '<div class="w-menu-30">';
+                        textitem += '<p class="mb-0 p-size">' + (val.quantity) + '</p> </div>';
+
+                        textitem += '<div class="w-menu-130">';
+                        textitem += '<p class="mb-0 p-size">' + val.itemName + '</p>';
+                        $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                            textitem += '<p class="mb-0 p-size">' + valueOptionExtra.optionExtraDetailName + '</p>';
+                        });
+
+                        if (!jQuery.isEmptyObject(val.comments)) {
+                            textitem += '<p class="mb-0 p-size">' + '@Localizer["Note"]:' + val.comments + '</p>';
+                        }
+                        textitem += '</div>';
+
+                        textitem += '<div class="w-menu-60">';
+                        textitem += '<p class="mb-0 p-size">' + roundToTwo(val.price) + '</p>';
+                        $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                            textitem += '<p class="mb-0 p-size">' + '+' + roundToTwo(valueOptionExtra.price) + '</p>';
+                        });
+                        textitem += '</div>'
+                        textitem += '</div>';
+                    } else {
+                        if (val.price > 0) {
+                            textitem += '<div class="layout-lists-menu mb-2">';
+                            textitem += '<div class="w-menu-30">';
+                            textitem += '<p class="mb-0 p-size">' + (val.quantity) + '</p> </div>';
+
+                            textitem += '<div class="w-menu-130">';
+                            textitem += '<p class="mb-0 p-size">' + val.itemName + '</p>';
+                            $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                                textitem += '<p class="mb-0 p-size">' + valueOptionExtra.optionExtraDetailName + '</p>';
+                            });
+
+                            if (!jQuery.isEmptyObject(val.comments)) {
+                                textitem += '<p class="mb-0 p-size">' + '@Localizer["Note"]:' + val.comments + '</p>';
+                            }
+                            textitem += '</div>';
+
+                            textitem += '<div class="w-menu-60">';
+                            textitem += '<p class="mb-0 p-size">' + roundToTwo(val.price) + '</p>';
+                            $.each(val.tranDetailItemOptionExtra, function (i, valueOptionExtra) {
+                                textitem += '<p class="mb-0 p-size">' + '+' + roundToTwo(valueOptionExtra.price) + '</p>';
+                            });
+                            textitem += '</div>'
+                            textitem += '</div>';
+                        }
+                    }
+                });
+
+                $('#showItemDetail58').html(textitem);
+
+                if (Tranmodel.taxRate > 0) {
+                    $('#txtvatrate58').text("VAT  " + Tranmodel.taxRate + " %");
+                } else {
+                    document.getElementById("showVat58").hidden = true;
+                }
+
+                if (CheckNOTSHOWZEROPRICE == 0) {
+                    $('#txtsumitem58').text("@Localizer["รวมรายการ"] " + Tranmodel.tranDetailItemModels.length);
+                } 
+                else { 
+                    $('#txtsumitem58').text("@Localizer["รวมรายการ"] " + Tranmodel.tranDetailItemModels.filter(x => x.price > 0).length);
+                }
+
+                $('#txttotal58').text(roundToTwo(Tranmodel.subTotalHaveVat + Tranmodel.subTotalNoneVat));
+                $('#txtvat58').text(roundToTwo(Tranmodel.totalVat));
+                $('#txtgrandtotal58').text(roundToTwo(Tranmodel.grandTotal));
+
+
+                if (Tranmodel.tranTradDiscounts.length > 0) {
+                    $('#txtdiscountrate58').text("@Localizer["หักส่วนลด"] " + Tranmodel.tranTradDiscounts[0].fmlDiscount);
+                    $('#txtdiscount58').text("-" + roundToTwo(Tranmodel.totalTradDiscHaveVat + Tranmodel.totalTradDiscNoneVat));
+
+                } else {
+                    document.getElementById("divshowdiscount58").hidden = true;
+                }
+
+                if (Tranmodel.serviceCharge > 0) {
+                    $('#txtservice58').text(roundToTwo(Tranmodel.serviceCharge));
+                    $('#txtservicerate58').text("@Localizer["ค่าบริการ"] " + Tranmodel.fmlServiceCharge + " %");
+                } else {
+                    document.getElementById("divshowservice58").hidden = true;
+                }
+
+                Printrecript();
+                //CreateQRCode();
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function Printrecript() {
+        var modelprintmanin = GetMainPrint();
+        var div = "";
+        if (modelprintmanin?.papersize == 80) {
+            div = document.getElementById("divprint80mm");
+        } else {
+            div = document.getElementById("divprint58mm");
+        }
+        html2canvas(div, {
+            scale: 1,
+            useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        }).then(canvas => {
+
+            Print(canvas);
+        });
+    }
+
+    function formatDateTableDetail(date) {
+        var aaaa = new Date(date);
+        var d = new Date(aaaa),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        var aaa = [day, month, year].join('/');
+
+        return aaa;
+    }
+
+    function formatTime(date) {
+        var aaaa = new Date(date);
+        var d = new Date(aaaa),
+            hour = '' + d.getHours(),
+            minunte = '' + d.getMinutes(),
+            second = '' + d.getSeconds();
+
+        if (hour.length < 2)
+            hour = '0' + hour;
+        if (minunte.length < 2)
+            minunte = '0' + minunte;
+        if (second.length < 2)
+            second = '0' + second;
+
+
+        var bbb = [hour, minunte, second].join(':');
+        return bbb;
+    }
+
+    function CreateQRCode() {
+        $.ajax({
+            url: "@Url.Action("GetListMyQRCode", "Table")",
+            type: 'GET',
+            dataType: 'json',
+            success: function (responseData) {
+                ListBranchConfig = responseData;
+                const result = responseData.filter((responseData) => responseData.cfgKey == "QRSTATIC ");
+                QRCodestring = result[0].cfgString;
+                var qrc = new QRCode(document.getElementById("qrcodepic80"), {
+                    text: QRCodestring,
+                    width: 250,
+                    height: 250,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H,
+                });
+
+                var qrc = new QRCode(document.getElementById("qrcodepic58"), {
+                    text: QRCodestring,
+                    width: 250,
+                    height: 250,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H,
+                });
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function btnMoveTable() {
+
+    }
+
+    function additem(a) {
+        var id = $(a).data("openorderid");
+        localStorage.setItem("chooseopenorderid", id);
+        $('#modalitem').load("@Url.Action("ModalMenu", "Table")");
+    }
+
+    function Clear() {
+        e.preventDefault();  // stop the links default behavior\
+        var id = $(this).data("openorderid");
+        localStorage.setItem("chooseopenorderid", id);
+        $('#modalitem').load("@Url.Action("ModalMenu", "Table")");
+    }
+
+    function ClearMenu() {
+        localStorage.removeItem('order');
+        localStorage.removeItem('chooseopenorderid');
+        $('#ModalTableCloseMenu').modal('hide');
+        $('#ModalMenu').modal('hide');
+    }
+
+    function ClearDetailsMenu() {
+        $("#ModalTableCloseMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function Opencart(event) {
+        var listitemchoose = JSON.parse(localStorage.getItem("order"));
+        //console.log(listitemchoose);
+        if (listitemchoose == null) {
+            listitemchoose = [];
+        }
+
+        event.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ModalCart", "Table")",
+            data: {
+                lstorder: listitemchoose,
+            },
+            success: function (message) {
+                $('#modalcart').html(message);
+                $('#ModalCartDetailsMenu').modal('show');
+                event.preventDefault();
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function Close() {
+        $("#ModalDetailsMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function OnAddOrderNumber() {
+        var number = document.getElementById("textorder");
+        var numberAll = document.getElementById("textorder").innerHTML;
+        sumnumber = parseInt(numberAll) + 1;
+        if (sumnumber <= 1) {
+            number.innerHTML = 1;
+            sumnumber = 1;
+            $('#order').val(sumnumber);
+        } else {
+            number.innerHTML = sumnumber
+            $('#order').val(sumnumber);
+        }
+    }
+
+    function OnDelOrderNumber() {
+        var number = document.getElementById("textorder");
+        var numberAll = document.getElementById("textorder").innerHTML;
+        sumnumber = parseInt(numberAll) - 1;
+        if (sumnumber <= 1) {
+            number.innerHTML = 1;
+            sumnumber = 1;
+            $('#order').val(sumnumber);
+        } else {
+            number.innerHTML = sumnumber
+            $('#order').val(sumnumber);
+        }
+    }
+
+    function btnQRFoodtable() {
+        var foodtableno = "";
+        if (@Html.Raw(Json.Serialize(Model.FoodTableNO)) != null && @Html.Raw(Json.Serialize(Model.FoodTableNO)) != typeof 'undifinded') {
+            foodtableno = @Html.Raw(Json.Serialize(Model.FoodTableNO));
+        }
+        var QrCodeGenerateNO = -1;
+        $.ajax({
+            url: "@Url.Action("GetQrcode", "BranchManagement")",
+            type: 'GET',
+            success: function (message) {
+                console.log(message);
+                var getQrCodearr = JSON.parse(message);
+                var qrcode = "";
+
+                if (@Html.Raw(Json.Serialize(Model.FoodTableNO)) == null || @Html.Raw(Json.Serialize(Model.FoodTableNO)) == typeof 'undifinded') {
+                    QrCodeGenerateNO = getQrCodearr[0].qrCodeGenerateNO;
+                } else {
+                    qrcode = getQrCodearr.find(x => x.foodTableNO === foodtableno);
+                    QrCodeGenerateNO = qrcode.qrCodeGenerateNO;
+                }
+
+                if (QrCodeGenerateNO == -1) {
+                    return false;
+                }
+
+                $.ajax({
+                    url: "@Url.Action("GetQrcodeDetail", "BranchManagement")",
+                    data: {
+                        qrcodegenerateno: QrCodeGenerateNO,
+                    },
+                    type: 'GET',
+                    success: function (message) {
+                        //console.log(message);
+                        if (message.qrCodeGenerateNO != null) {
+                            $('#Qrcodejson').val(JSON.stringify(message));
+                            $("#Qrcodejsonform").submit();
+                        } else {
+                            location.reload();
+                        }
+
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+                });
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function btnShowmodalComment() {
+        $('#ModalComment').modal('show');
+    }
+
+    function OnSubmitComment() {
+        var stropenorderID = "";
+        stropenorderID = $('#OpenOrderID').val();
+        var OpenOrderWithDetailModel = {
+            OpenOrdersID: stropenorderID,
+            Comments: $('#txtcomment').val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditComment", "Table")",
+            data: {
+                openOrder: OpenOrderWithDetailModel,
+            },
+            success: function (message) {
+                console.log(message);
+                var comment = $('#txtcomment').val();
+                $('#idtxtcomment').val(comment);
+                $('#showtxtcomment').text(comment);
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function OnClickModalMoveTable(a) {
+        var id = $(a).data("openorderid");
+        $('#setMoveOpenOrdertID').val(id);
+
+        var foodtableno = $(a).data("foodtableno");
+        var foodtablename = $(a).data("foodtablename");
+        var textresponse = '@Localizer["คุณต้องการย้ายโต๊ะ"]' + ' ' + '"' + foodtablename + '"' + ' ' + '@Localizer["ไปยังโต๊ะอื่นใช่หรือไม่?"]';
+        $('#txtmodaltableMove').text(textresponse);
+        $('#ModalTableMove').modal('show');
+    }
+
+    function TableClear(id) {
+        $('#' + id).modal('hide');
+        $("#" + id).modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+
+
+        //get empty Table
+        GetEmptyTable();
+    }
+
+    function TableSetClose(id) {
+        $('#' + id).modal('hide');
+        const radioButtons = document.querySelectorAll("#FormModalSetMoveTable input[type='radio']");
+        for (let i = 0; i < radioButtons.length; i++) {
+            var aaa = radioButtons[i].id;
+            var bbb = aaa.replace('table_', '');
+            var namebranch = document.getElementById("table_" + (bbb) + "");
+            var namelabelbranch = document.getElementById("labeltable_" + (bbb) + "");
+            if (namebranch?.checked == true) {
+                namelabelbranch.classList.remove("on-radio-branch");
+            }
+        }
+        document.getElementById('SubmitSetMoveTables').disabled = true;
+        $('#setMoveOpenOrdertID').val("");
+    }
+
+    function MyMoveTable() {
+        const radioButtons = document.querySelectorAll("#FormModalSetMoveTable input[type='radio']");
+        for (let i = 0; i < radioButtons.length; i++) {
+            var aaa = radioButtons[i].id;
+            var bbb = aaa.replace('table_', '');
+            var namebranch = document.getElementById("table_" + (bbb) + "");
+            var namelabelbranch = document.getElementById("labeltable_" + (bbb) + "");
+            if (namebranch?.checked == true) {
+                namelabelbranch.classList.add("on-radio-branch");
+            } else {
+                namelabelbranch.classList.remove("on-radio-branch");
+            }
+        }
+        ChangeSetMoveTables();
+    }
+    function ChangeSetMoveTables() {
+        //var DefaultTable = "option2";
+        var DefaultTable = "";
+        var ChackTable = $('#FormModalSetMoveTable input[type="radio"][name="tables"]:checked').attr('value');
+        if (DefaultTable == ChackTable) {
+            document.getElementById('SubmitSetMoveTables').disabled = true;
+        } else {
+            document.getElementById('SubmitSetMoveTables').disabled = false;
+        }
+    }
+
+    function fnMoveTable() {
+        var _FoodTableNO = $('#FormModalSetMoveTable input[type="radio"][name="tables"]:checked').attr('value');
+        var _OpenOrdersID = $('#setMoveOpenOrdertID').val();
+
+        //ajax movetable
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("MoveTable", "Table")",
+            data: {
+                OpenOrdersID: _OpenOrdersID,
+                FoodTableNO: _FoodTableNO,
+            },
+            success: function (message) {
+                //console.log(message);
+                $('#ModalTableMoveSuccess').modal('show');
+            }, error: function (message) {
+                alert(message.responseText);
+                $('#ModalPostnotSuccessError').modal('show');
+                $('#namealert').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+            }
+        });
+    }
+
+    function GetEmptyTable() {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetTable", "Table")",
+            success: function (message) {
+                console.log(message);
+
+                //โต๊ะว่าง
+                var arrayTable = message.filter(item => (item.status.toLowerCase() == 'e') || (item.status.toLowerCase() == 'd'))
+                console.log(arrayTable);
+
+                var moveshow = "";
+                for (var i = 0; i < arrayTable.length; i++) {
+                    moveshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-3">';
+                    moveshow += '<div class="form-check box-lists" >';
+                    moveshow += '<div class="row-lists" >';
+                    moveshow += '<label class="form-check-label box-label font-boxs-label" for= "table_' + arrayTable[i].foodTableNO + '" id="labeltable_' + arrayTable[i].foodTableNO + '"  >';  //onchange="MyMoveTable();"
+                    moveshow += arrayTable[i].foodTableName;
+                    moveshow += '</label>';
+                    moveshow += '<input class="" type="radio" name="tables" id="table_' + arrayTable[i].foodTableNO + '" value="' + arrayTable[i].foodTableNO + '" hidden >';
+                    moveshow += '</div>';
+                    moveshow += '</div>';
+                    moveshow += '</div>';
+                }
+
+                $('#divShowdata').html(moveshow);
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function fnReload() {
+        location.reload(true);
+    }
+
+</script>

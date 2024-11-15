@@ -1,0 +1,1359 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model HomeIndexModel
+@inject IViewLocalizer Localizer
+
+<body>
+    <div class="col-12 bg-gif-main z-index-loader" style="display:none;" id="loaderCharge">
+        <div class="text-center gif-loadering ">
+            @* <video class="mb-2 " autoplay loop muted disablePictureInPicture width="300" height="300" id="videoPlayer" style="border-radius: 50%;">
+            <source src="MyMenuClient/images/mp4/480x480.mp4" type="video/mp4" />
+            </video> *@
+            <img src="~/images/150.gif" />
+            <p class="font-size-20 " style="color: #212529;">@Localizer["กรุณารอสักครู่"]...</p>
+        </div>
+    </div>
+
+    <div class="col-12 bg-gif-main z-index-loader" style="display:none;" id="loaderOther">
+        <div class="text-center gif-loadering ">
+            @* <video class="mb-2 " autoplay loop muted disablePictureInPicture width="300" height="300" id="videoPlayer" style="border-radius: 50%;">
+            <source src="MyMenuClient/images/mp4/480x480.mp4" type="video/mp4" />
+            </video> *@
+            <img src="~/images/150.gif" />
+            <p class="font-size-20 " style="color: #212529 ;">@Localizer["กรุณารอสักครู่"]...</p>
+        </div>
+    </div>
+
+    <div class="col-12 mb-main">
+        <div class="card card-shop">
+            @if (string.IsNullOrEmpty(Model.MerchantBackgroundPath))
+            {
+                <img class="card-img-top size-shop" src="~/images/ItemDefault.png">
+            }
+            else
+            {
+                <img class="card-img-top size-shop" src=@Model.MerchantBackgroundPath width="390px" height="260px">
+            }
+
+            <img class="bg-gradient-top" src="~/images/BG_Gradient2.png">
+            <div class="cord-logo">
+                <div class="body-cord-flax">
+                    @if (string.IsNullOrEmpty(Model.MerchantLogo))
+                    {
+                        <img class="cord-logo-size" src="~/images/CoverDefault.png" id="clear" />
+                    }
+                    else
+                    {
+                        <img class="cord-logo-size" src="@Model.MerchantLogo" width="60px" height="60px" id="clear" />
+                    }
+
+                    <div class="cord-text-top">
+                        <h5 class="m-0 mb-1 font-size-20 color-h5-text">@Model.MerchantName</h5>
+                        <p class="m-0 font-size-14 text-p-logo">@Model.MerchantSlogans</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body card-t">
+                <div class="row">
+                    <div class="col-12 head-list">
+                        <div class="head-list-text">
+                            <h5 class="card-title font-size-12 color-time m-0">จ.-อา. @Model.OpeningHours</h5>
+                            <p class="card-text color-details font-size-12 cut-details">@Model.MerchantAddress</p>
+                        </div>
+                        <div class="head-list-button" id="callbell">
+                            <div class="btn" data-toggle="modal" data-target="#ModalServiceDetail" onclick="OnModalServiceDetail();"><img src="~/images/BellButton_2.png" class="img-bell-button" width="46" /></div> @* style="pointer-events: none;opacity:0.5;" disabled *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--แสดงข้อมูลรายการ-->
+    <div class="col-12 mb-main">
+        <!--แสดง Category-->
+        <div class="nav nav-pills wrapper mb-0" id="pills-TabOut" role="tablist">
+            @for (int i = 0; i < Model.lstmenuCategory.Count; i++)
+            {
+                <a class="nav-item nav-link button-item" id="pills_MenuTabOut_@Model.lstmenuCategory[i].CategoryID" data-toggle="pill" href="#pills_ListMenuOut_@Model.lstmenuCategory[i].CategoryID" role="tab" aria-controls="pills_ListMenuOut_@Model.lstmenuCategory[i].CategoryID" aria-selected="false" onclick="clickShowSubCategory(this);"><p class="margin-p-top">@Model.lstmenuCategory[i].CategoryName</p></a>
+            }
+        </div>
+
+        <div class="tab-pane fade show active" id="pills_ListMenuOut" role="tabpanel" aria-labelledby="pills_MenuTabOut_">
+            <div class="tab-content mt-4" id="loadingItem" style="display:none">
+                <div class="box">
+                    <div class="skeleton shadow-sm">
+                        <div class="skeleton-left">
+                            <div class="square"></div>
+                        </div>
+                        <div class="skeleton-right">
+                            <div class="line h17 w40 m10"></div>
+                            <div class="line h10 w50"></div>
+                            <div class="line h17 w20 skeleton-left-abs"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton shadow-sm">
+                        <div class="skeleton-left">
+                            <div class="square"></div>
+                        </div>
+                        <div class="skeleton-right">
+                            <div class="line h17 w40 m10"></div>
+                            <div class="line h10 w50"></div>
+                            <div class="line h17 w20 skeleton-left-abs"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton shadow-sm">
+                        <div class="skeleton-left">
+                            <div class="square"></div>
+                        </div>
+                        <div class="skeleton-right">
+                            <div class="line h17 w40 m10"></div>
+                            <div class="line h10 w50"></div>
+                            <div class="line h17 w20 skeleton-left-abs"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton shadow-sm">
+                        <div class="skeleton-left">
+                            <div class="square"></div>
+                        </div>
+                        <div class="skeleton-right">
+                            <div class="line h17 w40 m10"></div>
+                            <div class="line h10 w50"></div>
+                            <div class="line h17 w20 skeleton-left-abs"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton shadow-sm">
+                        <div class="skeleton-left">
+                            <div class="square"></div>
+                        </div>
+                        <div class="skeleton-right">
+                            <div class="line h17 w40 m10"></div>
+                            <div class="line h10 w50"></div>
+                            <div class="line h17 w20 skeleton-left-abs"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="pills-tabContentOut">
+                <div class="tab-pane fade show active" id="pills_ListMenuOut" role="tabpanel" aria-labelledby="pills_MenuTabOut_">
+                    <div class="nav nav-pills sub_wrapper mb-main " id="pills-TabIn" role="tablist">
+                        <a class="nav-item nav-link sub_button-item" id="pills_ListMenuOut_" data-toggle="pill" href="#pills_ListMenuIn_" role="tab" aria-controls="pills_ListMenuIn_" aria-selected="true" hidden onclick="clickShowItem(this);"><p class="margin-p-top"></p></a>
+                    </div>
+                </div>
+                <div class="tab-content" id="pills_TabContentIn_">
+                    @* <div class="tab-pane fade show " id="pills_ListMenuIn_" role="tabpanel" aria-labelledby="pills_MenuTabIn_" hidden>
+                    <div class="row">
+                    <a class="col-12 mb-main" href="#">
+                    <div class="card border-0 shadow-sm ">
+                    <div class="row">
+                    <div class="col-4 col-layout">
+                    <img class="size-imgs" src="" width="100" height="100" id="itemImage">
+                    </div>
+                    <div class="col-8 col-layout">
+                    <div class="card-body card-layout ">
+                    <div class="head-list-layout">
+                    <p class="p-layout color-number-list font-size-14" id="itemQuantity" >ItemQuantity</p>
+                    <p class="card-text overflow-menu cut-text font-weight-bold color-head-menu" id="itemName" >ItemName</p>
+                    </div>
+                    <p class="card-text p-layout overflow cut-text layout-sub-list" id="itemDescriptione">ItemDescriptione</p>
+                    <p class="card-text p-layout text-right font-weight-bold color-price-list" id="itemPrice">Price</p>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </a>
+                    </div>
+                    </div> *@
+                    <div class="tab-pane fade show " id="pills_ListMenuIn_" role="tabpanel" aria-labelledby="pills_MenuTabIn_" hidden>
+                        <div class="row">
+                            <a class="col-12 mb-main" href="#">
+                                <div class="card border-0 shadow-sm ">
+                                    <div class="row">
+                                        <div class="col-4 col-layout">
+                                            <img class="size-imgs" src="" width="100" height="100" id="itemImage">
+                                        </div>
+                                        <div class="col-8 col-layout">
+                                            <div class="card-body card-layout ">
+                                                <div class="head-list-layout">
+                                                    <p class="p-layout color-number-list font-size-14" id="itemQuantity" style="display:none"> ItemQuantity</p>
+                                                    <p class="card-text overflow-menu cut-text font-weight-bold color-head-menu" id="itemName">ItemName</p>
+                                                </div>
+                                                <p class="card-text p-layout overflow cut-text layout-sub-list" id="itemDescriptione">ItemDescriptione</p>
+                                                <p class="card-text p-layout text-right font-weight-bold color-price-list"><span id="itemsellingPrice"></span>  <span id="itemPrice"> </span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*  ModalService *@
+@*        <div class="modal fade" id="ModalService" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-button-color font-size-15" id="exampleModalLongTitle">เลือกบริการ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closemodel" onclick="closemodel();">
+                            <span aria-hidden="true"><img src="~/images/Close.png" class="btn-close-model" /></span>
+                        </button>
+                    </div>
+                    <div class="modal-body layout-model">
+                        <div class="modal-m-text">
+                            <div class="row text-center ">
+                                <div class="col-6 " style="padding-right: 6px;">
+                                    <button type="button" class="text-center button-serve-noclick" id="Charge" onclick="charge();" value="off">
+                                        เรียกคิดเงิน
+                                    </button>
+                                </div>
+                                <div class="col-6" style="padding-left: 6px;">
+                                    <button type="button" class="text-center button-serve-noclick" id="Other" onclick="other();" value="off">
+                                        อื่นๆ
+                                    </button>
+                                </div>
+                            </div>
+                            <hr class="text-center modal-hr" />
+                            <p class="text-button-color font-size-15 modal-m-text">ระบุหมายเหตุ</p>
+                            <textarea class="form-control" rows="3" id="txtcomment"></textarea>
+                        </div>
+
+                        <div class="col-12 p-0">
+                            <button type="button" class=" btn-lg btn-block button-save-serve-disabled font-weighi-300" disabled="disabled" id="Push" onclick="loadering();">ตกลง</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+
+        @* ModalServiceDetail *@
+        <div class="modal fade" id="ModalServiceDetail" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-button-color font-size-15" id="exampleModalLongTitle">@Localizer["เลือกบริการ"]</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closemodel" @* onclick="closemodel();" *@>
+                            <span aria-hidden="true"><img src="~/images/Close.png" class="btn-close-model" /></span>
+                        </button>
+                    </div>
+                    <div class="modal-body layout-model">
+                        <div class="modal-m-text">
+                            <div class="row text-center ">
+                                <div class="col-6 flex-center-service" style="padding-right: 6px;">
+                                    <button type="button" class="btn text-center btn-payment" onclick="checkbill()">
+                                        <img src="~/images/CheckBill.png" class="text-center img-payment" />
+                                        @Localizer["เรียกคิดเงิน"]
+                                    </button>
+                                </div>
+                                <div class="col-6 flex-center-service" style="padding-left: 6px;">
+                                    <div id="Timer"></div>
+                                    <button type="button" class="btn text-center btn-staff" onclick="ShowmodalCallStaff();" id="btntimerstaff" @(Model.CallStaff == 1 ? "" : "disabled='disabled'")>
+                                        <img src="~/images/CallStaff.png" class="text-center img-staff" />
+                                        @Localizer["เรียกพนักงาน"]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*  ModalCallStaff *@
+        <div class="modal fade" id="ModalCallStaff" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: calc(30% - 3.5rem);">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-callstaff">
+                        <h5 class="modal-title text-button-color font-size-15" id="exampleModalLongTitle">@Localizer["เรียกพนักงาน"]</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closemodel" onclick="exitmodel()">
+                            <span aria-hidden="true"><img src="~/images/Close.png" class="btn-close-model" /></span>
+                        </button>
+                    </div>
+                    <div class="modal-body layout-model">
+                        <div class="modal-m-text">
+                           @* <hr class="text-center modal-hr" />*@
+                            <p class="text-button-color font-size-15 modal-m-text my-3">@Localizer["หมายเหตุ"]</p>
+                            <textarea class="form-control" rows="3" id="txtcomment"></textarea>
+                        </div>
+
+                        <div class="col-12 p-0">
+                            <button type="button" class=" btn-lg btn-block button-save-serve font-weighi-300 btn-size-save" id="Push" onclick="btnCallStaff();">ตกลง</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* ModellimitCallstaff *@
+        <div class="modal fade" id="ModellimitCallstaff" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center mt-4 mb-4">
+                                <p class="text-ordernotcomplete-color modal-m-text " id="txt1">@Localizer["เรียกพนักงานแล้ว"]</p>
+                                <p class="text-ordernotcomplete-color modal-m-text" id="txt2">@Localizer["กรุณารอสักครู่"]...</p>
+                            </div>
+                        </div>
+                        <div class="col-12 p-0">
+                            <button type="button" class="btn-lg btn-block btn-order-notcomplete font-weight-400  btn-size-modal" data-dismiss="modal" id="closemodel" onclick="closemodel3();">กลับ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* Modal Post not Success *@
+        <div class="modal fade" id="ModalPostNotComplete" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center mt-4 mb-4">
+                                <p class="text-ordernotcomplete-color modal-m-text " id="txt1NotComplete"></p>
+                                <p class="text-ordernotcomplete-color modal-m-text" id="txt2NotComplete"></p>
+                            </div>
+                        </div>
+                        <div class="col-12 p-0">
+                            <button type="button" class="btn-lg btn-block btn-order-notcomplete font-weight-400 btn-size-modal" data-dismiss="modal" id="closemodel" onclick="closemodel4();">กลับ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* Modal call Checkbill Again *@
+        <div class="modal fade" id="ModalcallCheckbillAgain" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center mt-4 mb-4">
+                                <p class="text-ordernotcomplete-color modal-m-text " id="txt1">@Localizer["โต๊ะนี้ถูกเรียกคิดเงินแล้วกรุณารอสักครู่"]...</p>
+                            </div>
+                        </div>
+                        <div class="col-12 p-0">
+                            <button type="button" class="btn-lg btn-block btn-order-notcomplete font-weight-400 btn-size-modal" data-dismiss="modal" id="closemodel" onclick="closemodel4();">กลับ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* Modal confirm  Checkbill *@
+        <div class="modal fade" id="ModalconfirmCheckbill" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: calc(30% - 3.5rem);">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center  mt-4 mb-4">
+                                <p class="text-ordernotcomplete-color my-5 " id="txt1">@Localizer["คุณยืนยันการเรียกคิดเงินหรือไม่"]?</p>
+                                <div class="col-6 layout-flex-center">
+                                    <button type="button" class="btn-lg btn-block btn-notconfirm-checkbill font-weight-400 btn-size-confirmCheckbill-back" data-dismiss="modal" id="closemodel" onclick="closemodel5();">กลับ</button>
+                                </div>
+                                <div class="col-6 layout-flex-center">
+                                    <button type="button" class="btn-lg btn-block btn-confirm-checkbill font-weight-400 btn-size-confirmCheckbill" data-dismiss="modal" onclick="ChargeRecordOrder()">ยืนยัน</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        var listSubCategoryandItem = new Array;
+        var subname = "";
+        var subcateid = "";
+        var cateid = "";
+        var itemId = "";
+        var itemPathImage = "";
+        var itemName = "";
+        var itemDes = "";
+        var itemPrice = "";
+        var itemSellingPrice = "";
+        var data = "";
+
+        // $("#clear").click(function () {
+        //     localStorage.clear();
+        // });
+
+        $(document).ready(function () {
+            $('#loadingItem').css('display', 'block');
+            var foodtable = @Html.Raw(Json.Serialize(@Model.FoodTableName));
+            if (foodtable == null || foodtable == '') {
+                $('#callbell').css('display', 'none');
+            } else {
+                $('#callbell').css('display', 'block');
+            }
+
+            $(document).on('click', function (e) {
+                if ($(e.target).closest('.modal').length === 0) {
+                    // Close the modal
+                    if (!(($(e.target).closest(".modal-open").length > 0) || ($(e.target).closest(".modal-backdrop").length > 0))) {
+                        closemodel();
+                        closemodel2();
+                        document.getElementById("loaderCharge").style.display = "none";
+                    }
+                }
+            });
+
+            //เช็ค generatecode ว่าเป็นชุดเดิมไหม เพื่อเช็คว่าปิดโต๊ะไปหรือยัง
+            var generatecodeTemp = null;
+            var generatecode = null;
+
+            var i = 0;
+            var cookies = document.cookie.split(";");
+            for (var cookie in cookies) {
+                i++;
+                if (typeof cookies[i] == 'undefined') {
+                    break;
+                }
+                var aaa = cookies[i].replace(' ', '');
+                if (aaa.indexOf('=')) {
+                    var cookieName = aaa.split('=');
+
+                    if (cookieName[0] == 'generatecode') {
+                        generatecode = cookieName[1];
+                    }else if (cookieName[0] == 'generatecodeTemp') {
+                        generatecodeTemp = cookieName[1];
+                    }
+                }
+            }
+
+            if (generatecodeTemp != generatecode) {
+                localStorage.clear();
+                $.cookie('generatecodeTemp', generatecode);
+                $('#quantity').text('0');
+            }
+
+            var listitemchoose = localStorage.getItem("order");
+            if (listitemchoose == null) {
+                listitemchoose = "[]";
+            }
+            var lstcart = JSON.parse(listitemchoose);
+
+            if (lstcart == null) {
+                lstcart = [];
+            }
+
+            //Send CategoryID
+            var selectCategoryID = "1";
+            var selectSubCategoryID = "1";
+
+            var focuscateid = @ViewBag.FocusCategoryID;
+            var focussubcateid = @ViewBag.FocusSubCategoryID;
+
+            if (focuscateid !== null && typeof (focuscateid) !== 'undefined' && focuscateid > 0) {
+                selectCategoryID = focuscateid;
+                selectSubCategoryID = focussubcateid;
+
+                var tabSubContainer = document.getElementById("pills-TabIn");
+                var tabSub = tabSubContainer.getElementsByClassName("active");
+                if (tabSub.length > 0) {
+                    var aaa = tabSub[0];
+                    aaa.removeAttribute('active');
+                }
+
+                //pills_MenuTabOut_ ตัวล่าสุดที่เลือก
+                var cate = $('#pills_MenuTabOut_' + selectCategoryID);
+                cate.addClass('active');
+
+            } else { //เข้าใช้งานครั้งแรก category เป็นตัวแรก subcategory เป็นตัวแรก
+                var tabContainer = document.getElementById("pills-TabOut");
+
+                if (tabContainer.children.length > 0) {
+                    var tab = tabContainer.children[0];
+                    var aaa = tab.id;
+                    var aaaa = aaa.split("pills_MenuTabOut_");
+                    selectCategoryID = aaaa[1];
+                }
+
+                var cate = $('#pills_MenuTabOut_' + selectCategoryID);
+                cate.addClass('active');
+
+            }
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("SubCategoryItem","Home")',
+                data: {
+                    value: selectCategoryID,
+                },
+                success: function (result) {
+                    setTimeout(function () {
+                        $('#loadingItem').css('display', 'none');
+                    }, 200);
+                    listSubCategoryandItem = [];
+                    listSubCategoryandItem.push(result);
+
+                    if (focuscateid == 0) {
+                        //SubCategory
+                        $.each(listSubCategoryandItem, function (j, Category) {
+                            $.each(Category, function (index, SubCategory) {
+                                cateid = SubCategory.categoryID;
+                                if (index == 0) {
+                                    $.each(SubCategory.subCategories, function (i, subCateDetail) {
+                                        subcateid = subCateDetail.subCategoryID;
+                                        subname = subCateDetail.subCategoryName;
+
+                                        let cloneSubCate = $("#pills_ListMenuOut_").clone();
+                                        cloneSubCate.find('#pills_ListMenuOut_').attr('id', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                        cloneSubCate.find('#pills_ListMenuOut_').attr('aria-labelledby', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                        cloneSubCate.find('#pills_ListMenuOut_').attr('aria-selected', false);
+                                        $("#pills-TabIn").append(cloneSubCate);
+
+                                        var subcate = $('#pills_ListMenuOut_').attr('id', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                        subcate.text(subname);
+                                        subcate.addClass('class_pills_ListSubCategory');
+                                        subcate.attr('href', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        subcate.attr('aria-controls', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        subcate.removeAttr('hidden');
+                                        if (i == 0) {
+                                            subcate.addClass('active');
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                        //Item
+                        $.each(listSubCategoryandItem, function (j, Category) {
+                            $.each(Category, function (index, CagegoryDetail) {
+                                cateid = CagegoryDetail.categoryID;
+
+                                if (index == 0) {
+                                    $.each(CagegoryDetail.items, function (j, items) {
+                                        subcateid = items.subCategoryID;
+                                        itemId = items.itemID;
+                                        itemName = items.itemName;
+                                        itemDes = items.itemDescriptione;
+
+                                        //หากราคาขายน้อยกว่า ราคาปกติ
+                                        //จะแสดงทั้งราคาปกติและราคาขาย ตัวอย่างเช่น สินค้า A ราคาปกติ 60.00 ราคาขาย 50.00 ที่หน้า UI จะแสดงว่า สินค้า A ราคา 50.00 60.00
+                                        if (items.sellingPrice < items.price) {
+                                            itemPrice = items.price;
+                                            itemSellingPrice = items.sellingPrice;
+                                        } else {
+                                            itemPrice = items.sellingPrice;
+                                            itemSellingPrice = -99999;
+                                        }
+
+                                        var quantity = 0;
+                                        $.each(lstcart, function (i, value) {
+                                            if (value.itemID == itemId) {
+                                                var value = parseFloat(value.itemQuantity, 10);
+                                                if (!isNaN(value)) {
+                                                    quantity += value;
+                                                }
+                                            }
+                                        });
+
+                                        if (items.itemImage === "" || items.itemImage === null) {
+                                            pathImage = "../MyMenuClient/images/ItemDefault.png";
+                                        }
+                                        else {
+                                            pathImage = items.itemImage;
+                                        }
+
+                                        let cloneItem = $("#pills_ListMenuIn_").clone();
+                                        cloneItem.find('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        $("#pills_TabContentIn_").append(cloneItem);
+
+                                        var item = $('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        item.addClass('class_pills_ListItem');
+                                        item.find('#itemName').text(itemName);
+                                        item.find('#itemDescriptione').text(itemDes);
+
+                                        if (itemSellingPrice != -99999 && itemSellingPrice < itemPrice) {
+                                            item.find('#itemPrice').css('text-decoration', 'line-through');
+                                            item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                            item.find('#itemPrice').css('color', '#8B8B8B');
+                                            item.find('#itemPrice').css('font-size', '13px');
+                                        } else {
+                                            item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                        }
+
+                                        if (itemSellingPrice == -99999) {
+                                            item.find('#itemsellingPrice').css('display', 'none');
+                                        } else {
+                                            item.find('#itemsellingPrice').text(roundToTwo(itemSellingPrice));
+                                        }
+
+                                        item.find('#itemImage').attr('src', pathImage);
+                                        if (quantity == 0) {
+                                            item.find('#itemQuantity').text('');
+                                        } else {
+                                            item.find('#itemName').css("margin-left", '');
+                                            item.find('#itemQuantity').css("display", "block");
+                                            item.find('#itemQuantity').text(quantity + "x");
+                                            item.find('#itemsellingPrice').css('color', '#7CC1A9');
+                                        }
+                                        item.removeAttr('hidden');
+                                        item.addClass('active');
+                                        item.find('a').attr('href', '@Url.Action("SubList","Home")?itemID=' + itemId + '&focuscategoryID=' + @ViewBag.FocusCategoryID + '&focussubcategoryID=' + @ViewBag.FocusSubCategoryID);
+                                    });
+                                }
+                            });
+                        });
+                    } else {
+                        //SubCategory
+                        $.each(listSubCategoryandItem, function (j, Category) {
+                            $.each(Category, function (index, SubCategory) {
+                                cateid = SubCategory.categoryID;
+                                if (cateid == focuscateid) {
+                                    $.each(SubCategory.subCategories, function (i, subCateDetail) {
+                                        subcateid = subCateDetail.subCategoryID;
+                                        subname = subCateDetail.subCategoryName;
+
+                                        let cloneSubCate = $("#pills_ListMenuOut_").clone();
+                                        cloneSubCate.find('#pills_ListMenuOut_').attr('id', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                        cloneSubCate.find('#pills_ListMenuOut_').attr('aria-labelledby', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                        cloneSubCate.find('#pills_ListMenuOut_').attr('aria-selected', false);
+                                        $("#pills-TabIn").append(cloneSubCate);
+
+                                        var subcate = $('#pills_ListMenuOut_').attr('id', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                        subcate.text(subname);
+                                        subcate.addClass('class_pills_ListSubCategory');
+                                        subcate.attr('href', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        subcate.attr('aria-controls', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        subcate.removeAttr('hidden');
+                                        if (subcateid == focussubcateid) {
+                                            subcate.addClass('active');
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                        //Item
+                        $.each(listSubCategoryandItem, function (j, Category) {
+                            $.each(Category, function (index, CagegoryDetail) {
+                                cateid = CagegoryDetail.categoryID;
+                                if (cateid == focuscateid) {
+                                    $.each(CagegoryDetail.items, function (j, items) {
+                                        if (focussubcateid == 0) {
+                                            itemId = items.itemID;
+                                            itemName = items.itemName;
+                                            itemDes = items.itemDescriptione;
+
+                                            //หากราคาขายน้อยกว่า ราคาปกติ
+                                            //จะแสดงทั้งราคาปกติและราคาขาย ตัวอย่างเช่น สินค้า A ราคาปกติ 60.00 ราคาขาย 50.00 ที่หน้า UI จะแสดงว่า สินค้า A ราคา 50.00 60.00
+                                            if (items.sellingPrice < items.price) {
+                                                itemPrice = items.price;
+                                                itemSellingPrice = items.sellingPrice;
+                                            } else {
+                                                itemPrice = items.sellingPrice;
+                                                itemSellingPrice = -99999;
+                                            }
+
+                                            var quantity = 0;
+                                            $.each(lstcart, function (i, value) {
+                                                if (value.itemID == itemId) {
+                                                    var value = parseFloat(value.itemQuantity, 10);
+                                                    if (!isNaN(value)) {
+                                                        quantity += value;
+                                                    }
+                                                }
+                                            });
+                                            subcateid = items.subCategoryID;
+
+                                            if (items.itemImage === "" || items.itemImage === null) {
+                                                pathImage = "../MyMenuClient/images/ItemDefault.png";
+                                            }
+                                            else {
+                                                pathImage = items.itemImage;
+                                            }
+
+                                            let cloneItem = $("#pills_ListMenuIn_").clone();
+                                            cloneItem.find('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                            $("#pills_TabContentIn_").append(cloneItem);
+
+                                            var item = $('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                            item.addClass('class_pills_ListItem');
+                                            item.find('#itemName').text(itemName);
+                                            item.find('#itemDescriptione').text(itemDes);
+
+                                            if (itemSellingPrice != -99999 && itemSellingPrice < itemPrice) {
+                                                item.find('#itemPrice').css('text-decoration', 'line-through');
+                                                item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                                item.find('#itemPrice').css('color', '#8B8B8B');
+                                                item.find('#itemPrice').css('font-size', '13px');
+                                            } else {
+                                                item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                            }
+
+                                            if (itemSellingPrice == -99999) {
+                                                item.find('#itemsellingPrice').css('display', 'none');
+                                            } else {
+                                                item.find('#itemsellingPrice').text(roundToTwo(itemSellingPrice));
+                                            }
+
+                                            item.find('#itemImage').attr('src', pathImage);
+                                            if (quantity == 0) {
+                                                item.find('#itemQuantity').text('');
+                                            } else {
+                                                item.find('#itemName').css("margin-left", '');
+                                                item.find('#itemQuantity').css("display", "block");
+                                                item.find('#itemQuantity').text(quantity + "x");
+                                                item.find('#itemsellingPrice').css('color', '#7CC1A9');
+                                            }
+                                            item.removeAttr('hidden');
+                                            item.addClass('active');
+                                            item.find('a').attr('href', '@Url.Action("SubList","Home")?itemID=' + itemId + '&focuscategoryID=' + @ViewBag.FocusCategoryID + '&focussubcategoryID=' + @ViewBag.FocusSubCategoryID);
+
+                                        } else {
+                                            subcateid = items.subCategoryID;
+                                            if (subcateid == focussubcateid) {
+                                                itemId = items.itemID;
+                                                itemName = items.itemName;
+                                                itemDes = items.itemDescriptione;
+                                                itemPrice = items.sellingPrice;
+
+                                                var quantity = 0;
+                                                $.each(lstcart, function (i, value) {
+                                                    if (value.itemID == itemId) {
+                                                        var value = parseFloat(value.itemQuantity, 10);
+                                                        if (!isNaN(value)) {
+                                                            quantity += value;
+                                                        }
+                                                    }
+                                                });
+
+                                                if (items.itemImage === "" || items.itemImage === null) {
+                                                    pathImage = "../MyMenuClient/images/ItemDefault.png";
+                                                }
+                                                else {
+                                                    pathImage = items.itemImage;
+                                                }
+
+                                                let cloneItem = $("#pills_ListMenuIn_").clone();
+                                                cloneItem.find('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                                $("#pills_TabContentIn_").append(cloneItem);
+
+                                                var item = $('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                                item.addClass('class_pills_ListItem');
+                                                item.find('#itemName').text(itemName);
+                                                item.find('#itemDescriptione').text(itemDes);
+                                                item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                                item.find('#itemImage').attr('src', pathImage);
+                                                if (quantity == 0) {
+                                                    item.find('#itemQuantity').text('');
+                                                } else {
+                                                    item.find('#itemName').css("margin-left", '');
+                                                    item.find('#itemQuantity').css("display", "block");
+                                                    item.find('#itemQuantity').text(quantity + "x");
+                                                }
+                                                item.removeAttr('hidden');
+                                                item.addClass('active');
+                                                item.find('a').attr('href', '@Url.Action("SubList","Home")?itemID=' + itemId + '&focuscategoryID=' + @ViewBag.FocusCategoryID + '&focussubcategoryID=' + @ViewBag.FocusSubCategoryID);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        });
+
+        function clickShowSubCategory(getCateID) {
+            $('#loadingItem').css('display', 'block');
+            var listitemchoose = localStorage.getItem("order");
+            if (listitemchoose == null) {
+                listitemchoose = "[]";
+            }
+            var lstcart = JSON.parse(listitemchoose);
+            if (lstcart == null) {
+                lstcart = [];
+            }
+
+            var a = $('.class_pills_ListSubCategory');
+            a.remove();
+
+            var b = $('.class_pills_ListItem');
+            b.remove();
+
+            //Send CategoryID
+            var selectCategoryID = getCateID.id.split("pills_MenuTabOut_");
+            var focuscateid = selectCategoryID[1];
+            var focussubcateid = 0;
+
+            var tabSubContainer = document.getElementById("pills-TabIn");
+            var tabSub = tabSubContainer.getElementsByClassName("active");
+            if (tabSub.length > 0) {
+                var splitselectSubCateID = tabSub[0].id.split("_");
+                var selectCateID = splitselectSubCateID[2].split("cate")
+                var selectSubCateID = splitselectSubCateID[3].split("subcate");
+                focussubcateid = selectSubCateID[1];
+            }
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("SubCategoryItem","Home")',
+                data: {
+                    value: selectCategoryID[1],
+                },
+                success: function (result) {
+
+                    setTimeout(function () {
+                        $('#loadingItem').css('display', 'none');
+                    }, 200);
+
+                    listSubCategoryandItem = [];
+                    listSubCategoryandItem.push(result);
+
+                    //SubCategory
+                    $.each(listSubCategoryandItem, function (j, Category) {
+                        $.each(Category, function (index, SubCategory) {
+                            cateid = SubCategory.categoryID;
+                            if (cateid == selectCategoryID[1]) {
+                                $.each(SubCategory.subCategories, function (i, subCateDetail) {
+                                    subcateid = subCateDetail.subCategoryID;
+                                    subname = subCateDetail.subCategoryName;
+
+                                    let cloneSubCate = $("#pills_ListMenuOut_").clone();
+                                    cloneSubCate.find('#pills_ListMenuOut_').attr('id', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                    cloneSubCate.find('#pills_ListMenuOut_').attr('aria-labelledby', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                    cloneSubCate.find('#pills_ListMenuOut_').attr('aria-selected', false);
+                                    $("#pills-TabIn").append(cloneSubCate);
+
+                                    var subcate = $('#pills_ListMenuOut_').attr('id', 'pills_ListMenuOut_' + "cate" + cateid + "_subcate" + subcateid);
+                                    subcate.text(subname);
+                                    subcate.addClass('class_pills_ListSubCategory');
+                                    subcate.attr('href', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                    subcate.attr('aria-controls', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                    subcate.removeAttr('hidden');
+                                    if (i == 0) {
+                                        subcate.addClass('active');
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                    //Item
+                    $.each(listSubCategoryandItem, function (j, Category) {
+                        $.each(Category, function (index, CagegoryDetail) {
+                            cateid = CagegoryDetail.categoryID;
+                            if (cateid == selectCategoryID[1]) {
+                                if (index == 0) {
+                                    $.each(CagegoryDetail.items, function (j, items) {
+                                        subcateid = items.subCategoryID;
+                                        itemId = items.itemID;
+                                        itemName = items.itemName;
+                                        itemDes = items.itemDescriptione;
+
+                                        //หากราคาขายน้อยกว่า ราคาปกติ
+                                        //จะแสดงทั้งราคาปกติและราคาขาย ตัวอย่างเช่น สินค้า A ราคาปกติ 60.00 ราคาขาย 50.00 ที่หน้า UI จะแสดงว่า สินค้า A ราคา 50.00 60.00
+                                        if (items.sellingPrice < items.price) {
+                                            itemPrice = items.price;
+                                            itemSellingPrice = items.sellingPrice;
+                                        } else {
+                                            itemPrice = items.sellingPrice;
+                                            itemSellingPrice = -99999;
+                                        }
+
+                                        var quantity = 0;
+                                        $.each(lstcart, function (i, value) {
+                                            if (value.itemID == itemId) {
+                                                var value = parseFloat(value.itemQuantity, 10);
+                                                if (!isNaN(value)) {
+                                                    quantity += value;
+                                                }
+                                            }
+                                        });
+
+                                        if (items.itemImage === "" || items.itemImage === null) {
+                                            pathImage = "../MyMenuClient/images/ItemDefault.png";
+                                        }
+                                        else {
+                                            pathImage = items.itemImage;
+                                        }
+
+                                        let cloneItem = $("#pills_ListMenuIn_").clone();
+                                        cloneItem.find('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        $("#pills_TabContentIn_").append(cloneItem);
+
+                                        var item = $('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                        item.addClass('class_pills_ListItem');
+                                        item.find('#itemName').text(itemName);
+                                        item.find('#itemDescriptione').text(itemDes);
+                                        if (itemSellingPrice != -99999 && itemSellingPrice < itemPrice) {
+                                            item.find('#itemPrice').css('text-decoration', 'line-through');
+                                            item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                            item.find('#itemPrice').css('color', '#8B8B8B');
+                                            item.find('#itemPrice').css('font-size', '13px');
+                                        } else {
+                                            item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                        }
+
+                                        if (itemSellingPrice == -99999) {
+                                            item.find('#itemsellingPrice').css('display', 'none');
+                                        } else {
+                                            item.find('#itemsellingPrice').text(roundToTwo(itemSellingPrice));
+                                        }
+
+                                        item.find('#itemImage').attr('src', pathImage);
+                                        if (quantity == 0) {
+                                            item.find('#itemQuantity').text('');
+                                        } else {
+                                            item.find('#itemName').css("margin-left", '');
+                                            item.find('#itemQuantity').css("display", "block");
+                                            item.find('#itemQuantity').text(quantity + "x");
+                                            item.find('#itemsellingPrice').css('color', '#7CC1A9');
+                                        }
+                                        item.removeAttr('hidden');
+                                        item.addClass('active');
+                                        item.find('a').attr('href', '@Url.Action("SubList","Home")?itemID=' + itemId + '&focuscategoryID=' + focuscateid + '&focussubcategoryID=' + focussubcateid);
+
+                                    });
+                                }
+                            }
+                        });
+                    });
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+
+        function clickShowItem(getsubcateID) {
+            var listitemchoose = localStorage.getItem("order");
+            if (listitemchoose == null) {
+                listitemchoose = "[]";
+            }
+            var lstcart = JSON.parse(listitemchoose);
+            if (lstcart == null) {
+                lstcart = [];
+            }
+
+            var b = $('.class_pills_ListItem');
+            b.remove();
+
+            var splitselectSubCateID = getsubcateID.id.split("_");
+            var selectCateID = splitselectSubCateID[2].split("cate")
+            var selectSubCateID = splitselectSubCateID[3].split("subcate");
+
+            //Send CategoryID
+            var focuscateid = selectCateID[1];
+            var focussubcateid = selectSubCateID[1];
+
+            //Item
+            $.each(listSubCategoryandItem, function (j, Category) {
+                $.each(Category, function (index, CagegoryDetail) {
+                    cateid = CagegoryDetail.categoryID;
+                    if (cateid == selectCateID[1]) {
+                        $.each(CagegoryDetail.items, function (j, items) {
+                            if (focussubcateid == 0) {
+                                itemId = items.itemID;
+                                itemName = items.itemName;
+                                itemDes = items.itemDescriptione;
+
+                                //หากราคาขายน้อยกว่า ราคาปกติ
+                                //จะแสดงทั้งราคาปกติและราคาขาย ตัวอย่างเช่น สินค้า A ราคาปกติ 60.00 ราคาขาย 50.00 ที่หน้า UI จะแสดงว่า สินค้า A ราคา 50.00 60.00
+                                if (items.sellingPrice < items.price) {
+                                    itemPrice = items.price;
+                                    itemSellingPrice = items.sellingPrice;
+                                } else {
+                                    itemPrice = items.sellingPrice;
+                                    itemSellingPrice = -99999;
+                                }
+
+                                var quantity = 0;
+                                $.each(lstcart, function (i, value) {
+                                    if (value.itemID == itemId) {
+                                        var value = parseFloat(value.itemQuantity, 10);
+                                        if (!isNaN(value)) {
+                                            quantity += value;
+                                        }
+                                    }
+                                });
+
+                                if (items.itemImage === "" || items.itemImage === null) {
+                                    pathImage = "../MyMenuClient/images/ItemDefault.png";
+                                }
+                                else {
+                                    pathImage = items.itemImage;
+                                }
+
+                                let cloneItem = $("#pills_ListMenuIn_").clone();
+                                cloneItem.find('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                $("#pills_TabContentIn_").append(cloneItem);
+
+                                var item = $('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                item.addClass('class_pills_ListItem');
+                                item.find('#itemName').text(itemName);
+                                item.find('#itemDescriptione').text(itemDes);
+
+                                if (itemSellingPrice != -99999 && itemSellingPrice < itemPrice) {
+                                    item.find('#itemPrice').css('text-decoration', 'line-through');
+                                    item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                    item.find('#itemPrice').css('color', '#8B8B8B');
+                                    item.find('#itemPrice').css('font-size', '13px');
+                                } else {
+                                    item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                }
+
+                                if (itemSellingPrice == -99999) {
+                                    item.find('#itemsellingPrice').css('display', 'none');
+                                } else {
+                                    item.find('#itemsellingPrice').text(roundToTwo(itemSellingPrice));
+                                }
+
+                                item.find('#itemImage').attr('src', pathImage);
+                                if (quantity == 0) {
+                                    item.find('#itemQuantity').text('');
+                                } else {
+                                    item.find('#itemName').css("margin-left", '');
+                                    item.find('#itemQuantity').css("display", "block");
+                                    item.find('#itemQuantity').text(quantity + "x");
+                                    item.find('#itemsellingPrice').css('color', '#7CC1A9');
+                                }
+                                item.removeAttr('hidden');
+                                item.addClass('active');
+                                item.find('a').attr('href', '@Url.Action("SubList","Home")?itemID=' + itemId + '&focuscategoryID=' + focuscateid + '&focussubcategoryID=' + focussubcateid);
+                            } else {
+                                subcateid = items.subCategoryID;
+                                if (subcateid == selectSubCateID[1]) {
+                                    itemId = items.itemID;
+                                    itemName = items.itemName;
+                                    itemDes = items.itemDescriptione;
+
+                                    //หากราคาขายน้อยกว่า ราคาปกติ
+                                    //จะแสดงทั้งราคาปกติและราคาขาย ตัวอย่างเช่น สินค้า A ราคาปกติ 60.00 ราคาขาย 50.00 ที่หน้า UI จะแสดงว่า สินค้า A ราคา 50.00 60.00
+                                    if (items.sellingPrice < items.price) {
+                                        itemPrice = items.price;
+                                        itemSellingPrice = items.sellingPrice;
+                                    } else {
+                                        itemPrice = items.sellingPrice;
+                                        itemSellingPrice = -99999;
+                                    }
+
+                                    var quantity = 0;
+                                    $.each(lstcart, function (i, value) {
+                                        if (value.itemID == itemId) {
+                                            var value = parseFloat(value.itemQuantity, 10);
+                                            if (!isNaN(value)) {
+                                                quantity += value;
+                                            }
+                                        }
+                                    });
+
+                                    if (items.itemImage === "" || items.itemImage === null) {
+                                        pathImage = "../MyMenuClient/images/ItemDefault.png";
+                                    }
+                                    else {
+                                        pathImage = items.itemImage;
+                                    }
+
+                                    let cloneItem = $("#pills_ListMenuIn_").clone();
+                                    cloneItem.find('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                    $("#pills_TabContentIn_").append(cloneItem);
+
+                                    var item = $('#pills_ListMenuIn_').attr('id', 'pills_ListMenuIn_' + "cate" + cateid + "_subcate" + subcateid);
+                                    item.addClass('class_pills_ListItem');
+                                    item.find('#itemName').text(itemName);
+                                    item.find('#itemDescriptione').text(itemDes);
+                                    if (itemSellingPrice != -99999 && itemSellingPrice < itemPrice) {
+                                        item.find('#itemPrice').css('text-decoration', 'line-through');
+                                        item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                        item.find('#itemPrice').css('color', '#8B8B8B');
+                                        item.find('#itemPrice').css('font-size', '13px');
+                                    } else {
+                                        item.find('#itemPrice').text(roundToTwo(itemPrice));
+                                    }
+
+                                    if (itemSellingPrice == -99999) {
+                                        item.find('#itemsellingPrice').css('display', 'none');
+                                    } else {
+                                        item.find('#itemsellingPrice').text(roundToTwo(itemSellingPrice));
+                                    }
+
+                                    item.find('#itemImage').attr('src', pathImage);
+                                    if (quantity == 0) {
+                                        item.find('#itemQuantity').text('');
+                                    } else {
+                                        item.find('#itemName').css("margin-left", '');
+                                        item.find('#itemQuantity').css("display", "block");
+                                        item.find('#itemQuantity').text(quantity + "x");
+                                        item.find('#itemsellingPrice').css('color', '#7CC1A9');
+                                    }
+                                    item.removeAttr('hidden');
+                                    item.addClass('active');
+                                    item.find('a').attr('href', '@Url.Action("SubList","Home")?itemID=' + itemId + '&focuscategoryID=' + focuscateid + '&focussubcategoryID=' + focussubcateid);
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+        }
+
+        function charge() {
+            var buttoncharge = document.getElementById("Charge");
+            var buttonother = document.getElementById("Other");
+            var buttonpush = document.getElementById("Push");
+
+            buttoncharge.value = "on";
+            buttoncharge.classList.remove("button-serve-noclick");
+            buttoncharge.classList.add("button-serve-click");
+
+            buttonpush.classList.remove("button-save-serve-disabled");
+            buttonpush.classList.add("button-save-serve");
+            buttonpush.disabled = false;
+
+            if (buttonother.classList.contains('button-serve-click')) {
+                buttonother.classList.remove("button-serve-click");
+                buttonother.classList.add("button-serve-noclick");
+            }
+            if (buttonother.value == "on") {
+                buttonother.value = "off";
+            }
+        }
+        function other() {
+            var buttonother = document.getElementById("Other");
+            var buttoncharge = document.getElementById("Charge");
+            var buttonpush = document.getElementById("Push");
+
+            buttonother.value = "on";
+            buttonother.classList.remove("button-serve-noclick");
+            buttonother.classList.add("button-serve-click");
+
+            buttonpush.classList.remove("button-save-serve-disabled");
+            buttonpush.classList.add("button-save-serve");
+            buttonpush.disabled = false;
+
+            if (buttoncharge.classList.contains('button-serve-click')) {
+                buttoncharge.classList.remove("button-serve-click");
+                buttoncharge.classList.add("button-serve-noclick");
+            }
+            if (buttoncharge.value == "on") {
+                buttonother.value = "off";
+            }
+        }
+        function closemodel() { 
+
+            // var buttonother = document.getElementById("Other");
+            // var buttoncharge = document.getElementById("Charge");
+            // var buttonpush = document.getElementById("Push");
+
+            // if (buttoncharge.classList.contains('button-serve-click')) {
+            //     buttoncharge.classList.remove("button-serve-click");
+            //     buttoncharge.classList.add("button-serve-noclick");
+            // }
+            // if (buttonother.classList.contains('button-serve-click')) {
+            //     buttonother.classList.remove("button-serve-click");
+            //     buttonother.classList.add("button-serve-noclick");
+            // }
+            // if (buttonpush.classList.contains('button-save-serve')) {
+            //     buttonpush.classList.remove("button-save-serve");
+            //     buttonpush.classList.add("button-save-serve-disabled");
+            //     buttonpush.disabled = true;
+            // }
+            // if (buttoncharge.value == "on") {
+            //     buttonother.value = "off";
+            // }
+            // if (buttonother.value == "on") {
+            //     buttonother.value = "off";
+            // }
+        }
+        function btnCallStaff() {
+
+            if (!starttimer) {
+                starttimer = true;
+                //Callstaff or checkbill
+                var _Comments = $('#txtcomment').val();
+                if (_Comments == '' || _Comments == null) {
+                    _Comments = @Html.Raw(Json.Serialize(@Localizer["เรียกพนักงาน"]));
+                }
+                var _NotificationType = 'C';
+
+                $('#ModalServiceDetail').modal('hide');
+                //$('#ModalServiceDetail').css('display', 'none');
+                $('#ModalCallStaff').modal('hide');
+                //document.getElementById("loaderCharge").style.display = "block";
+                //document.body.classList.add("modal-open");
+
+                timerId = setInterval(countdown, 1000);
+            }
+
+            $.ajax({
+                url: "@Url.Action("CallStaff", "Home")",
+                type: 'POST',
+                data: {
+                    Comments: _Comments,
+                    NotificationType: _NotificationType,
+                },
+                success: function (message) {
+                    console.log(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                }, error: function (message) {
+                    if (message.responseText == "OpenOrders Status is Billing") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                        $('#txt2').text(@Html.Raw(Json.Serialize(@Localizer["เนื่องจากโต๊ะนี้มีการเรียกคิดเงินแล้ว"].Value)));
+                    } else {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                    }
+                }
+            });
+        }
+
+        function roundToTwo(num) {
+            return format('th-TH', 'THB', num);
+        }
+
+        function format(locale, currency, number) {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency,
+                currencyDisplay: "code"
+            })
+                .format(number)
+                .replace(currency, "")
+                .trim();
+        }
+
+        function ShowmodalCallStaff() {
+            //$('#ModalServiceDetail').modal('hide');
+            //$('#ModalServiceDetail').on('hidden.bs.modal', function (e) {
+            //    $("body").addClass("modal-open");
+            //    $("body").css({ "padding-right": "0px" });
+            //});
+            if (starttimer) {
+                if (timeLeft > 0) {
+                    $('#ModellimitCallstaff').modal('show');
+                } else {
+                    //$('#ModalServiceDetail').modal('hide');
+                    $('#ModalCallStaff').modal('show');
+                    starttimer = false;
+                    timeLeft = 10;
+                }
+            } else {
+                //$('#ModalServiceDetail').modal('hide');
+                $('#ModalCallStaff').modal('show');
+            }
+        }
+
+        function exitmodel() {
+            $('#ModalCallStaff').modal('hide');
+            $('#ModalCallStaff').on('hidden.bs.modal', function (e) {
+                $("body").addClass("modal-open");
+                $('#ModalServiceDetail').css({ "display": "block" });
+            })
+        }
+
+        function closemodel2() {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+        }
+
+        function closemodel3() {
+            $('#ModellimitCallstaff').modal('hide');
+            $('#ModalCallStaff').modal('hide');
+            //$('body').removeClass('modal-open');
+        }
+
+        function closemodel4() {
+            $('#ModalPostNotComplete').modal('hide');
+            //$('body').removeClass('modal-open');
+        }
+
+        function closemodel5() {
+            $('#ModalconfirmCheckbill').modal('hide');
+            $('#ModalconfirmCheckbill').on('hidden.bs.modal', function (e) {
+                $("body").addClass("modal-open");
+                $('#ModalServiceDetail').css({ "display": "block" });
+            })
+            //$('body').removeClass('modal-open');
+        }
+
+        //Call Staff Timer
+        var timeLeft = 180;
+        var elem = document.getElementById('Timer');
+        var timerId = 0;
+        var starttimer = false;
+
+
+        function countdown() {
+            if (timeLeft == 0) {
+                clearTimeout(timerId);
+            }
+            else {
+                //elem.innerHTML = timeLeft
+                timeLeft--;
+            }
+        }
+
+
+        function checkbill() {
+            //$('#ModalServiceDetail').modal('hide');
+            //$('#ModalServiceDetail').on('hidden.bs.modal', function (e) {
+            //    $("body").addClass("modal-open");
+            //    $("body").css({ "padding-right": "0px" });
+            //});
+            $('#ModalconfirmCheckbill').modal('show');
+        }
+        function ChargeRecordOrder() {
+            // location.replace("/mymenuclient/Home/RecordOrder")
+            $('#ModalServiceDetail').modal('hide');
+            $.ajax({
+                url: "@Url.Action("CallStaff", "Home")",
+                type: 'POST',
+                data: {
+                    Comments: '',
+                    NotificationType: 'B',
+                },
+                success: function (message) {
+                    location.replace("@Url.Action("RecordOrder","Home")?openPage=" + 'c');
+                    
+                }, error: function (message) {
+                    if (message.responseText == "OpenOrders Status is Billing") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                        $('#txt2NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["เนื่องจากโต๊ะนี้มีการเรียกคิดเงินแล้ว"].Value)));
+                    } else if (message.responseText == "ORDER is null") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["คุณยังไม่มีรายการสั่งอาหาร"].Value)));
+                        $('#txt2NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถเรียกคิดเงินได้"].Value)));
+                    }
+                    else if (message.responseText == "OPENORDER is null") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["คุณยังไม่มีรายการสั่งอาหาร"].Value)));
+                        $('#txt2NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถเรียกคิดเงินได้"].Value)));
+                    }
+                    else {
+                        $('#txt1NotComplete').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                    }
+                   
+                }
+            });
+
+        }
+        function OnModalServiceDetail(){
+            $('#ModalServiceDetail').on('show.bs.modal', function (event) {
+                $("body").css({ "padding-right": "0px !important" });
+            });
+        }
+
+
+    </script>
+</body>
+
+
+

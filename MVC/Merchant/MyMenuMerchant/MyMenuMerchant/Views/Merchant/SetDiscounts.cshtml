@@ -1,0 +1,289 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="SetDiscounts">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="Merchant" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["ส่วนลด"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Merchant" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item color-a-breadcrumb text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="Merchant" asp-action="Index">@Localizer["จัดการร้านค้า"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["ส่วนลด"]</li>
+                        </ul>
+                        @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin")
+                        {
+                            <a class="breadcrumb button-add text-center layout-add" asp-controller="Merchant" asp-action="DiscountAdd" id="btnAddDiscount"><img class="img-icon-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มส่วนลด"]</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-2 search">
+                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["ชื่อส่วนลด, ส่วนลด"]" style="height: 45px;" autocomplete="off">
+            </div>
+            <div class="col-md-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold font-size mb-0">@Localizer["รายการส่วนลด"] <small class="size-small font-weight-bold ms-2"> @Localizer["จำนวนทั้งหมด"]  <small class="size-small font-weight-bold ms-2" id="DiscountCount">X</small>/3</small></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableDiscount" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ชื่อส่วนลด"]</th>
+                                                <th scope="col" class="size-th-number">@Localizer["ส่วนลด"]</th>
+                                                <th scope="col" class="size-th-edit"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<div class="modal fade " id="ModalOptionDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body ">
+                <h5 class="text-center font-weight-bold mb-5 my-5 fo " id="namedelete">@Localizer["ยืนยันการลบ Option"]</h5>
+                <div class=" d-flex justify-content-center">
+                    <input id="iddelete" value="" hidden />
+                    <button type="button" class="font-weight-bold btn  button-modal-delete" onclick="fnDelete()">@Localizer["ลบ"]</button>
+
+                    <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade bd-example-modal-lg" id="ModalBranchsInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <div class="d-flex flex-row mb-2">
+                    <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                    <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0">รายละเอียดสาขา</h5></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <div class="media">
+                        <div class="align-self-center mr-3  box-border-radius">
+                            <img class="size-icon-w" src="/mymenumerchant/images/Merchant_Discount.png">
+                        </div>
+                        <div class="media-body">
+                            <div class="text-groud-body position-initial">
+                                <div class="layout-text-profile">
+                                    <p class="text-h2-header">ข้อมูลสาขา</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 pt-2">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="text-w-title text-top">
+                                    <p class="text-p-heder font-weight-bold">รหัสสาขา</p>
+                                </td>
+                                <td>
+                                    <p class="text-p-list text-weight color-branch-p" id="branchid">1</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-w-title text-top pt-1">
+                                    <p class="text-p-heder font-weight-bold">ชื่อสาขา</p>
+                                </td>
+                                <td class="pt-1">
+                                    <p class="text-p-list text-weight color-branch-p" id="branchname">สาขาสำนักงานใหญ่</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-w-title text-top pt-1">
+                                    <p class="text-p-heder font-weight-bold">เวลาเปิดทำการ</p>
+                                </td>
+                                <td class="pt-1">
+                                    <p class="text-p-list text-weight color-branch-p" id="branchtime">จ.-ศ. 9.00 - 18.00 น.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-w-title text-top pt-1">
+                                    <p class="text-p-heder font-weight-bold">ที่อยู่</p>
+                                </td>
+                                <td class="pt-1 pb-2">
+                                    <p class="text-p-list text-weight color-branch-p" id="branchaddress">เลขที่ 2991/23 อาคารซีเนียร์ซอฟท์ โครงการวิสุทธานี ถนนลาดพร้าว แขวงคลองจั่น เขตบางกะปิ กรุงเทพมหานคร 10240</p>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@*  Modal Post not Success Error*@
+<div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <h5 class="text-center mb-5 my-5 " id="namealert"></h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<form hidden id="EditDiscount" asp-action="DiscountEdit">
+    <input name="discount" id="OptionModel" value="" />
+</form>
+
+
+<script>
+    var role;
+    $(document).ready(function () {
+        role = "@ViewBag.role";
+        var table = $('#TableDiscount').DataTable({
+            ajax: {
+                url: "@Url.Action("GetDataDiscoount", "Merchant")",
+                dataSrc: ''
+            },
+            stateSave: false,
+            columns: [
+                { data: 'discountTemplateID', },
+                { data: 'discountTemplateName' },
+                { data: 'fmlDiscount' },
+                { data: 'discountTemplateID' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text = "<p class='p-padding-table'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text;
+                    
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text = "<p class='p-padding-table'>" + data + "</p>";
+                    return text;
+                    
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text = "<p class='p-padding-table'>" + data + " </p>";
+                    return text;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    if (role.toLowerCase() == "owner" || role.toLowerCase() == "admin") {
+                        var btnedit = '<div class="group-btn-table ">' +
+                            '<a class="btn btn-blue-edit mr-2"  onclick="sentdata(' + meta.row + ')" > <img class="size-img-list-menu" src= "/mymenumerchant/images/Edit20.png" /> </a>' +
+                            '<button type= "button" class="btn btn-red-delete" data-toggle="modal" data-target="#ModalOptionDelete" onclick="btnDelete(' + meta.row + ')"> <img class="size-img-list-menu" src="/mymenumerchant/images/Delete20.png" /> </button>' +
+                            '</div>';
+                        return btnedit;
+                    } else {
+                        return '';
+                    }
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีรายการส่วนลด"].Value))  + "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value))  + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value))  + "</p><br/><br/><br/><br/>",
+
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            initComplete: function () {
+                //After the ajax has run, initComplete can get the total count of lines .
+                var count = table.data().count();
+                $('#DiscountCount').text(count);
+
+                var maxduscount = 3;
+                var btn = document.getElementById("btnAddDiscount");
+                if (btn == null || typeof btn == 'undefined') {
+                    return;
+                }
+                if (count < maxduscount) { //anable
+                    $("#btnAddDiscount").attr('style', 'opacity:1');
+                    btn.style.pointerEvents = "auto";
+                    btn.style.cursor = "pointer";
+                } else if (count == maxduscount) { //disable
+                    $("#btnAddDiscount").attr('style', 'opacity:0.5');
+                    btn.style.pointerEvents = "none";
+                    btn.style.cursor = "default";
+                }
+            }
+        });
+
+        var tables = $('#TableDiscount').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+    });
+
+    function sentdata(d) {
+        var data = $('#TableDiscount').DataTable().row(d).data();
+        var test = JSON.stringify(data);
+        $("#OptionModel").val(test);
+        $("#EditDiscount").submit();
+    }
+
+    function btnDelete(id) {
+        var data = $('#TableDiscount').DataTable().row(id).data();
+        $('#iddelete').val(data.discountTemplateID);
+        $('#namedelete').text(@Html.Raw(Json.Serialize(Localizer["คุณต้องการลบ ส่วนลด"].Value)) + ' '+ '"' + data.discountTemplateName + '"' + ' ' + @Html.Raw(Json.Serialize(Localizer["หรือไม่?"].Value)));
+    }
+
+    function fnDelete() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteDiscount", "Merchant")",
+            data: {
+                id: $('#iddelete').val(),
+            },
+            success: function (message) {
+                location.reload();
+            }, error: function (message) {
+                $('#ModalPostnotSuccessError').modal('show');
+                if (message.responseText == "Delete DiscountTemplate Fail") {
+                    $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถลบส่วนลดได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else {
+                    $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถลบส่วนลดได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+            }
+        });
+    }
+</script>

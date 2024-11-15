@@ -1,0 +1,67 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "times": "08:40",
+      "typeorders": "ทานที่ร้าน",
+      "tablenumbers": "A1",
+      "ordernumber": "2022100000210",
+	"settles": "100.00",
+	"statuss": "1"
+    },
+    {
+      "id": "2",
+      "times": "08:45",
+      "typeorders": "ทานที่ร้าน",
+      "tablenumbers": "A4",
+      "ordernumber": "2022100000211",
+	"settles": "240.00",
+	"statuss": "1"
+    },
+    {
+      "id": "3",
+      "times": "09:20",
+      "typeorders": "สั่งกลับบ้าน",
+      "tablenumbers": "-",
+      "ordernumber": "2022100000214",
+	"settles": "150.00",
+	"statuss": "1"
+    },
+    {
+      "id": "4",
+      "times": "09:23",
+      "typeorders": "ทานที่ร้าน",
+      "tablenumbers": "A5",
+      "ordernumber": "2022100000215",
+	"settles": "140.00",
+	"statuss": "2"
+    },
+    {
+      "id": "5",
+      "times": "09:35",
+      "typeorders": "สั่งกลับบ้าน",
+      "tablenumbers": "-",
+      "ordernumber": "2022100000216",
+	"settles": "570.00",
+	"statuss": "3"
+    },
+    {
+      "id": "6",
+      "times": "10:01",
+      "typeorders": "ทานที่ร้าน",
+      "tablenumbers": "A10",
+      "ordernumber": "2022100000217",
+	"settles": "590.00",
+	"statuss": "2"
+    },
+    {
+      "id": "7",
+      "times": "10:05",
+      "typeorders": "ทานที่ร้าน",
+      "tablenumbers": "A18",
+      "ordernumber": "2022100000218",
+	"settles": "640.00",
+	"statuss": "2"
+    }
+  ]
+}

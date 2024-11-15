@@ -1,0 +1,400 @@
+﻿@{
+    Layout = null;
+}
+
+@using MyMenu.JAM
+@using MyMenuClient.Controllers;
+@model OpenOrderWithDetailModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MyMenuClient</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="icon" type="image/x-icon" href="/MyMenuClient/images/LogoMyMenu.png" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/MyMenuClient.styles.css" asp-append-version="true" />*@
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body class="">
+    <nav class="navbar navbar-default ">
+        <div class="container-fluid nav-width">
+            <div class="container mt-2 mb-1 navbar-padding">
+                <div class="layout-left">
+                    <a asp-controller="Home" asp-action="Basket" class=" navbar-btn layout-i-bank" id="btnback">
+                        <i class="fa fa-angle-left back-green"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-menu-center">
+                @if (!string.IsNullOrEmpty(ViewBag.FoodTableName))
+                {
+                    @*แสดงชื่อโต๊ะ*@
+                    <h1 class="h1-size font-weight-bold navbar-text-head ">@Localizer["รายการที่สั่ง"]</h1>
+                    <h2 class="h2-size font-weight-400">@ViewBag.FoodTableName</h2>
+                }
+                else
+                {
+                    @*แสดงชื่อคนสั่งกลับบ้าน*@
+                    <h1 class="h1-size font-weight-bold navbar-text-head ">@Localizer["รายการที่สั่ง"]</h1>
+                    <div class="navbar-menu-text-name">
+                        <h2 class="h2-size font-weight-400 navbar-text-name">@ViewBag.CustomerName</h2>
+                        <h2 class="h2-size font-weight-400 navbar-menu-padding ">, </h2>
+                        <h2 class="h2-size font-weight-400 ">@HomeController.PhoneNumberFormat(@ViewBag.Customerphone) </h2>
+                    </div>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 bg-gif z-index-loader" style="display:none;" id="loader">
+                <div class="text-center gif-loadering ">
+                    @*  <video class="mb-2 " autoplay loop muted disablePictureInPicture width="300" height="300" id="videoPlayer" style="border-radius: 50%;">
+                    <source src="~/images/mp4/480x480.mp4" type="video/mp4" />
+                    </video> *@
+                    <img src="~/images/150.gif" />
+                    <p class="font-size-20 " style="color: #212529 ;">@Localizer["กรุณารอสักครู่"]...</p>
+                </div>
+            </div>
+            <div class="col-12 order-body " id="NoSelectOrder">
+                @*class no-order-body คือ Not Show , class order-body คือ Show*@
+                <div class="text-center no-order-basket">
+                    <img class="size-img-history-empty mb-2" src="~/images/HistoryEmpty.png" />
+                    <p class="p-no-order">@Localizer["ยังไม่มีประวัติการสั่งอาหาร"]</p>
+                </div>
+            </div>
+
+            <div class="col-12  no-order-body" id="RecodeOrder">
+                @foreach (var order in Model.OrderModels)
+                {
+                    <input type="text" style="position:absolute;" value="@Model.OrderModels.Count" hidden id="odercount" />
+                    <a class="col-12 order-body mb-main record-order-list" id="SelectOrderDetail" data-openordersid="@Model.OpenOrdersID" data-ordersid="@order.OrdersID">
+                        <div class="card card-body shadow-sm">
+                            <div class="row mb-2">
+                                <div class="col-12 text-start">
+                                    <p class="font-weight-bold p-number-id">Order ID : @order.OrdersID</p>
+                                </div>
+                                <div class="col-8">
+                                    <p class="text-p-color p-list-2 font-color-400">@HomeController.ConvertDatetimeLocal(@order.DateModified)</p>
+                                </div>
+                                <div class="col-4">
+                                    @if (order.Status == 'S')
+                                    {
+                                        <p class="font-weight-bold text-right text-color-fully p-list-2">@Localizer["เสิร์ฟครบ"]</p>
+                                    }
+                                    else if (order.Status == 'W')
+                                    {
+                                        <p class="font-weight-bold text-right text-color-wait p-list-2">@Localizer["รอเสิร์ฟ"]</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="font-weight-bold text-right text-color-dismiss p-list-2">@Localizer["ยกเลิก"]</p>
+                                    }
+                                </div>
+
+                                @foreach (var Orderdetail in order.OrderDetailModel)
+                                {
+                                    <div class="col-2">
+                                        <p class="text-p-color p-list-3 font-color-400">@HomeController.ConvertToInt(@Orderdetail.Quantity)x</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-p-color p-list-3 font-color-400">@Orderdetail.ItemName</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-right text-p-color p-list-3 font-color-400">@HomeController.ConvertToCurrencyPrice(Orderdetail.Amount)</p>
+                                    </div>
+                                }
+
+                                <div class="col-12"><hr /></div>
+                                <div class="col-8">
+                                    <p class="text-p-color font-color-400 p-sum-record-order ">จำนวน   @HomeController.ConvertToInt(@order.OrderDetailModel.Sum(x=>x.Quantity))  @Localizer["รายการ"]</p>
+                                </div>
+
+
+                                <div class="col-4">
+                                    <p class="font-weight-bold text-right p-sum-record-order ">@HomeController.ConvertToCurrencyPrice(order.Total)</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="col-12 mb-5">
+                <br /><br /><br /><br /><br /><br />
+            </div>
+        </div>
+    </div>
+
+    <form hidden id="ListOrder" asp-action="ListOrder" method="post">
+        <input name="OpenOrdersID" id="OpenOrdersID" value="" />
+        <input name="OrdersID" id="OrdersID" value="" />
+    </form>
+
+    @*Modal Post not Success*@
+    <div class="modal fade" id="ModalPostNotComplete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <p class="text-ordernotcomplete-color modal-m-text " id="txt1"></p>
+                            <p class="text-ordernotcomplete-color modal-m-text" id="txt2"></p>
+                        </div>
+                    </div>
+                    <div class="col-12 p-0">
+                        <button type="button" class="btn-lg btn-block btn-order-notcomplete font-weight-400 btn-size-modal" data-dismiss="modal" id="closemodel" onclick="closemodel2();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-start mx-1 mb-2 mt-2">
+                    <p class="font-weight-400 color-text-order-2  size-boxs ">@Localizer["ยังไม่รวม VAT และ Service Charge"]</p>
+                </div>
+                <div class="col-12 mb-main list-record-order no-order-body" id="listorder">
+                    <div class="card basket-card shadow-sm">
+                        <div class="card-body basket-body">
+                            <div class="row ">
+                                <div class="col-6 text-start ">
+                                    <p class="mt-1  size-list card-text text-bottom p-sub-list font-size-14">
+                                        @Model.TotalOrder  @Localizer["ออเดอร์"] 
+                                    </p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <p class="m-1 size-number p-bold-600">
+                                        @HomeController.ConvertToCurrencyPrice(@Model.GrandTotal)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 order-body" id="listorderbtn">
+                    <button class=" mb-3 btn-add-basket btn-lg btn-block btn-weight font-size-14" onclick="Charge();" id="btnCharge">@Localizer["เรียกคิดเงิน"]</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 no-order-body" id="Newsale">
+                    <button class=" mb-3  btn-add-orader btn-lg btn-block btn-weight font-size-14" onclick="NewSale();">@Localizer["สั่งอาหารเพิ่ม"]</button>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+    <script>
+        var flagcheckbill = false;
+        var foodtable = '';
+        $(document).ready(function () {
+
+            var open = @Html.Raw(Json.Serialize(@ViewBag.OpenPage));
+            if (open == 'C') {
+                $('#btnback').css('display', 'none');
+                document.getElementById("loader").style.display = "block";
+            }
+
+            foodtable = @Html.Raw(Json.Serialize(@ViewBag.FoodTableName));
+            if (foodtable == '' || foodtable == null) {
+                $('#btnCharge').text(@Html.Raw(Json.Serialize(Localizer["ยืนยันการสั่ง"].Value)));
+            } else {
+                $('#btnCharge').text(@Html.Raw(Json.Serialize(Localizer["เรียกคิดเงิน"].Value)));
+            }
+
+            var count = $('#odercount').val();
+            if (count > 0) {
+                var aaa = $('#NoSelectOrder');
+                aaa.removeClass('order-body');
+                aaa.addClass('no-order-body');
+
+                var bbb = $('#RecodeOrder');
+                bbb.removeClass('no-order-body');
+                bbb.addClass('order-body');
+
+                var ccc = $('#listorder');
+                ccc.removeClass('no-order-body');
+                ccc.addClass('order-body');
+
+                var ccc = $('#listorderbtn');
+                ccc.removeClass('no-order-body');
+                ccc.addClass('order-body');
+
+                var ddd = $('#Newsale');
+                ddd.removeClass('order-body');
+                ddd.addClass('no-order-body');
+            } else {
+                var aaa = $('#NoSelectOrder');
+                aaa.removeClass('no-order-body');
+                aaa.addClass('order-body');
+
+                var ccc = $('#listorder');
+                ccc.removeClass('order-body');
+                ccc.addClass('no-order-body');
+
+                var ccc = $('#listorderbtn');
+                ccc.removeClass('order-body');
+                ccc.addClass('no-order-body');
+
+                var ddd = $('#Newsale');
+                ddd.removeClass('no-order-body');
+                ddd.addClass('order-body');
+            }
+
+
+
+            $('.col-12.bg-gif.z-index-loader').on('click', function () {
+                //$('#loader').remove();
+                document.getElementById("loader").style.display = "none";
+                $('#btnback').css('display', 'none');
+            });
+        });
+
+        function closemodel2() {
+            $('#ModalPostNotComplete').modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+        }
+
+        var flagclick = false;
+        function Charge() {
+            if (flagcheckbill) {
+                $('#ModalPostNotComplete').modal('show');
+                $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["โต๊ะนี้ถูกเรียกคิดเงินแล้ว"].Value)));
+                $('#txt2').text(@Html.Raw(Json.Serialize(@Localizer["กรุณารอสักครู่..."].Value)));
+                $('#btnback').css('display', 'none');
+                return;
+            }
+
+            flagcheckbill = true;
+
+
+            if (flagclick) {
+                document.getElementById("loaderCharge").style.display = "block";
+                document.body.classList.add("modal-open");
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("CallStaff", "Home")",
+                type: 'POST',
+                data: {
+                    Comments: '',
+                    NotificationType: 'B',
+                },
+                success: function (message) {
+                    console.log(message.responseText);
+                    document.getElementById("loader").style.display = "block";
+                    flagclick = true;
+                }, error: function (message) {
+                    if (message.responseText == "OpenOrders Status is Billing") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                        $('#txt2').text(@Html.Raw(Json.Serialize(@Localizer["เนื่องจากโต๊ะนี้มีการเรียกคิดเงินแล้ว"].Value)));
+                    } else if (message.responseText == "ORDER is null") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["คุณยังไม่มีรายการสั่งอาหาร"].Value)));
+                        $('#txt2').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถเรียกคิดเงินได้"].Value)));
+                    }
+                    else if (message.responseText == "OPENORDER is null") {
+                        $('#ModalPostNotComplete').modal('show');
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["คุณยังไม่มีรายการสั่งอาหาร"].Value)));
+                        $('#txt2').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถเรียกคิดเงินได้"].Value)));
+                    }
+                    else {
+                        $('#txt1').text(@Html.Raw(Json.Serialize(@Localizer["สั่งอาหารไม่สำเร็จ"].Value)));
+                    }
+                }
+            });
+
+
+            //กรณีสั่งกลับบ้าน
+            // if (foodtable == '' || foodtable == null) {
+            //     //Clear Cookie and Local Stroage
+            //     var i = 0;
+            //     var cookies = document.cookie.split(";");
+
+            //     for (var cookie in cookies) {
+            //         i++;
+            //         if (typeof cookies[i] == 'undefined') {
+            //             break;
+            //         }
+            //         var aaa = cookies[i].replace(' ', '');
+            //         if (aaa.indexOf('=')) {
+            //             var cookieName = aaa.split('=');
+
+            //             switch (cookieName[0]) {
+            //                 case 'merchantid':
+            //                 case 'branchid':
+            //                 case 'generatecode':
+            //                 case 'customername':
+            //                 case 'phonenumber':
+            //                 case 'access_token':
+            //                 case 'refresh_token':
+            //                 case 'merchantname':
+            //                 case 'foodtablename':
+            //                 case 'openordersid':
+            //                     clearCookie(cookieName[0]);
+            //             }
+            //         }
+            //     }
+            //     localStorage.clear();
+            // }
+        }
+
+        function clearCookie(name) {
+            document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+        function NewSale() {
+            location.replace("/mymenuclient") // <-- No history saved.
+        }
+
+        $('a#SelectOrderDetail*').click(function () {
+            var OpenOrdersID = "";
+            var OrdersID = "";
+
+            OpenOrdersID = $(this).data('openordersid');
+            OrdersID = $(this).data('ordersid');
+
+            $("#OpenOrdersID").val(OpenOrdersID);
+            $("#OrdersID").val(OrdersID);
+            $("#ListOrder").submit();
+        });
+
+    </script>
+
+
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
+
+

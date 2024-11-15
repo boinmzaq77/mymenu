@@ -1,0 +1,423 @@
+﻿@{
+    Layout = null;
+}
+@model OrderModel;
+@using MyMenu.JAM;
+@using MyMenuMerchant.Controllers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<div class="modal-header ">
+    <div class="d-flex flex-row mb-2">
+        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" @* onclick="Close();" *@><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0">@Localizer["รายละเอียดออเดอร์"]</h5></div>
+    </div>
+</div>
+<div class="container">
+    <div class="modal-body px-0 pb-0">
+        <div class="col-md-12 mb-2">
+            <div class="layout-head-list1">
+                <div class="form-row p-margin-list1"><p class="p-margin-list1">@Localizer["ประเภทออเดอร์"]: </p>
+                    @if (!String.IsNullOrEmpty(Model.FoodTableName))
+                    {
+                        <p class=" font-weight-bold p-margin-list1">@Localizer["ทานที่ร้าน"]</p>
+                    }else
+                    {
+                        <p class=" font-weight-bold p-margin-list1">@Localizer["สั่งกลับบ้าน"]</p>
+                    }
+                    
+                </div>
+                <p class="p-margin-list1">@OrderController.ConvertDatetimeLocal(@Model.DateModified)</p>
+            </div>
+            <div class="layout-head-list1">
+                @*<div class="form-row p-margin-list1"><p class="p-margin-list1">โต๊ะ: </p><p class=" font-weight-bold p-margin-list1">1</p></div>*@
+                <div class="form-row p-margin-list1"><p class="p-margin-list1">@Model.FoodTableName @Model.CustomerName</div>
+                <div class="form-row">
+                    <p class="p-margin-list1">@Localizer["สถานะออเดอร์"]: </p>
+                    <div id="divstatusall">
+                        @if (Model.Status == 'C')
+                        {
+                            <p class="p-margin-list1 text-cut-name status-color-cancel flex-jcenter-acenter">
+                                <img class="order-size-table mx-2" src="/mymenumerchant/images/Order_Cancel.png" />
+                                @Localizer["ยกเลิก"]
+                            </p>
+                        }else if (Model.Status == 'W')
+                        {
+                            <p class="p-margin-list1 text-cut-name status-color-pending flex-jcenter-acenter">
+                                <img class="order-size-table mx-2" src="/mymenumerchant/images/Order_WaitServe.png" />
+                                @Localizer["รอเสิร์ฟ"]
+                            </p>
+                        }else
+                        {
+                            <p class="p-margin-list1 text-cut-name status-color-succeed flex-jcenter-acenter">
+                                <img class="order-size-table mx-2" src="/mymenumerchant/images/Order_Served.png" />
+                                @Localizer["เสิร์ฟครบ"]
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 padding-hr">
+            <hr />
+        </div>
+        <div class="col-md-12 padding-hr">
+            <p class="">@Localizer["รายการเมนู"]</p>
+        </div>
+    </div>
+</div>
+<div class="">
+    <div class="modal-body p-0">
+        <div class="col-md-12 p-0">
+            <div class="table-responsive">
+                <table class="table mb-0" id="TableListOrder" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="size-th-order-menu">@Localizer["ชื่อเมนู"]</th>
+                            <th scope="col" class="size-th-order-itemprice text-right">@Localizer["ราคาต่อชิ้น"]</th>
+                            <th scope="col" class="size-th-order-number text-center">@Localizer["จำนวน"]</th>
+                            <th scope="col" class="size-th-order-totalprice text-right">@Localizer["ราคารวม"]</th>
+                            @*<th scope="col" class="size-th-order-print">จุดพิมพ์</th>*@
+                            <th scope="col" class="size-th-order-statusorder">@Localizer["สถานะเมนู"]</th>
+                            <th scope="col" class="size-th-order-status">@Localizer["เลือกสถานะ"]</th>
+                        </tr>
+                    </thead>
+                    <input class="form-check-input  status-order-radio" type="text" id="statusall" value="@Model.Status" hidden>
+                    <input class="form-check-input  status-order-radio" type="text" id="OpenOrdersID" value="@Model.OpenOrdersID" hidden>
+                    <input class="form-check-input  status-order-radio" type="text" id="OrdersID" value="@Model.OrdersID" hidden>
+                    <tbody class="border-b-w-thin">
+                        @for (int i = 0; i < Model.OrderDetailModel.Count; i++)
+                        {
+                            
+                        <tr>
+                            <input class="form-check-input  status-order-radio inputstatus" type="text" id="status_@i" value="@Model.OrderDetailModel[i].Status" data-garndtotal="@Model.OrderDetailModel[i].Amount" data-id="@i" hidden>
+                            <td colspan="2">
+                                <div class="flex-td-item">
+                                    <div>
+                                        <p class="mt-2 mb-0 h-sublist"> @Model.OrderDetailModel[i].ItemName</p>
+                                        <div class="mb-2">
+                                            @for (int ii = 0; ii < Model.OrderDetailModel[i].OptionExtra.Count; ii++)
+                                            {
+                                                <p class="my-0 color-sublist h-sublist ml-3 text-line-item">@Model.OrderDetailModel[i].OptionExtra[ii].OptionExtraDetailName @*( @TableController.ConvertToCurrency(@Model.OrderDetailModel[i].OptionExtra[ii].Price))*@</p>
+                                            }
+                                            @if (!string.IsNullOrEmpty(Model.OrderDetailModel[i].Comments))
+                                            {
+                                                <p class="my-0 color-sublist h-sublist ml-3 text-line-item">@Model.OrderDetailModel[i].Comments</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="mt-2 mb-0  text-right h-sublist">@TableController.ConvertToCurrency(Model.OrderDetailModel[i].Price)</p>
+                                        <div class="mb-2">
+                                            @for (int ii = 0; ii < Model.OrderDetailModel[i].OptionExtra.Count; ii++)
+                                            {
+                                                if (@TableController.ConvertToCurrency(@Model.OrderDetailModel[i].OptionExtra[ii].Price) == "0.00")
+                                                {
+                                                    <p class="my-0 color-sublist text-right h-sublist">@TableController.ConvertToCurrency(@Model.OrderDetailModel[i].OptionExtra[ii].Price)</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="my-0 color-sublist text-right h-sublist">+@TableController.ConvertToCurrency(@Model.OrderDetailModel[i].OptionExtra[ii].Price)</p>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><p class="my-2 text-center">@Model.OrderDetailModel[i].Quantity.ToString("###")</p></td>
+                            <td><p class="my-2 text-right">@TableController.ConvertToCurrency(Model.OrderDetailModel[i].Amount)</p></td>
+                                @*<td><p class="my-2">@Model.OrderDetailModel[i].Comments</p></td>*@
+                            <td>
+                                    @if (Model.OrderDetailModel[i].Status == 'W')
+                                    {
+                                        <p class="my-2" id="order_waitserve_@i">@Localizer["รอเสิร์ฟ"]</p>
+                                       
+                                    }
+                                    else if (Model.OrderDetailModel[i].Status == 'S')
+                                    {
+                                        <p class="my-2" id="order_waitserve_@i">@Localizer["เสิร์ฟครบ"]</p>
+                                       
+                                    }else
+                                    {
+                                        <p class="my-2" id="order_waitserve_@i">@Localizer["ยกเลิก"]</p>
+                                    }
+                                </td>
+                            <td class="td-flex-order">
+                                <div class="">
+                                        <input class="form-check-input  status-order-radio radioS" type="radio" name="exampleRadios_@i" id="exampleRadios1_@i" value="option11"
+                                               data-status="@Model.OrderDetailModel[i].Status"
+                                               hidden>
+                                        <label class="form-check-label btn btn-set-status-order btn-dropdown-status-order-served btn-dropdown-set-flex my-2" data-id="@i"
+                                               data-idorderdetail="@Model.OrderDetailModel[i].OrderDetailNo"
+                                               data-openid="@Model.OrderDetailModel[i].OpenOrdersID"
+                                               data-orderid="@Model.OrderDetailModel[i].OrdersID" for="exampleRadios1_@i">
+                                            @Localizer["เสิร์ฟครบ"]
+                                    </label>
+                                </div>
+                                <div>
+                                        <input class="form-check-input status-order-radio radioC" type="radio" name="exampleRadios_@i" id="exampleRadios2_@i" value="option12" 
+                                                data-status="@Model.OrderDetailModel[i].Status"
+                                                hidden>
+                                        <label class="form-check-label btn btn-set-status-order btn-dropdown-status-order-cancel btn-dropdown-set-flex my-2 " data-id="@i"
+                                               data-idorderdetail="@Model.OrderDetailModel[i].OrderDetailNo"
+                                               data-openid="@Model.OrderDetailModel[i].OpenOrdersID"
+                                               data-orderid="@Model.OrderDetailModel[i].OrdersID"
+                                                for="exampleRadios2_@i">
+                                           @Localizer["ยกเลิก"]
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="modal-body color-header-text px-0 pt-0 pb-0">
+        <div class="col-md-12 padding-hr">
+            <div class="my-4">
+                <div class="form-row font-weight-bold padding-l-list body-sumorders">@Localizer["จำนวนรายการ"]: <p class="ml-1 font-weight-bold mb-0 font-size14 ">@Model.OrderDetailModel.Count</p></div>
+            </div>
+            <div class="mb-5r">
+                <div>
+                    <p class="font-weight-bold mb-2">@Localizer["ราคารวมทั้งหมด"]</p>
+                </div>
+                <div class="color-background  d-flex justify-content-end ">
+                    <div class="mx-3">
+                        <p class="font-weight-bold my-1 p-size" id="ptotal">@TableController.ConvertToCurrency(Model.Total)</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-12 mx-0 my-3 p-0">
+                <div class="flex-row-nowrap-space-between">
+                    <button type="button" class="btn button-modal-print flex-jcenter-acenter" onclick = "Printorder()" ><img class="size-print  mr-2" src="/mymenumerchant/images/Print.png" />@Localizer["พิมพ์"]</button>
+                    <button type="button" id="btnAllS" class="btn button-modal-succeed flex-jcenter-acenter" data-toggle="modal" data-target="#ModalOrderSucceed"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_Served.png" />@Localizer["เสิร์ฟครบ"]</button>
+                    <button type="button" id="btnAllC" class="btn button-modal-cancel flex-jcenter-acenter " data-toggle="modal" data-target="#ModalOrderCancel"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_Cancel.png" />@Localizer["ยกเลิกออเดอร์"]</button>
+                    @*<button type="button" class="font-weight-bold btn ms-3 button-modal-delete" data-toggle="modal" data-target="#ModalExtraDelete">ลบ</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var modelorder = [];
+    var _role;
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+         modelorder = @Json.Serialize(Model);
+        $(".btn-dropdown-status-order-served").on('click', function (event) {
+            var id = $(this).data("id");
+            var isDisabled = $("#exampleRadios1_" + id).prop('disabled');
+            if (isDisabled) {
+                return;
+            }
+            var isChecked = $("#exampleRadios1_" + id).prop('checked');
+            if (isChecked) {
+                return;
+            }
+            $("#order_waitserve_" + id).text("@Localizer["เสิร์ฟครบ"]");
+            //$("#order_waitserve_" + id).addClass("opacity-status-chack");
+            
+            var orderDetail =
+            {
+                openOrdersID: $(this).data("openid"),
+                ordersID: $(this).data("orderid"),
+                orderDetailNo: $(this).data("idorderdetail"),
+                status: "S"
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditStatusOrderdetail", "Order")",
+                data: orderDetail,
+                success: function (message) {
+                    event.preventDefault();
+                    $("#status_" + id).val("S");
+                    Checkbtnperclick();
+                }, error: function (message) {
+                    //alert(message.responseText);
+                }
+
+            });
+        });
+        $(".btn-dropdown-status-order-cancel").on('click', function (event) {
+            var id = $(this).data("id");
+            var isDisabled = $("#exampleRadios2_" + id).prop('disabled');
+            if (isDisabled) {
+                return;
+            }
+            var isChecked = $("#exampleRadios2_" + id).prop('checked');
+            if (isChecked) {
+                return;
+            }
+            var id = $(this).data("id");
+            //$("#order_waitserve_" + id).addClass("opacity-status-chack");
+            $("#order_waitserve_" + id).text("@Localizer["ยกเลิก"]");
+            var orderDetail =
+            {
+                openOrdersID: $(this).data("openid"),
+                ordersID: $(this).data("orderid"),
+                orderDetailNo: $(this).data("idorderdetail"),
+                status: "C"
+
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditStatusOrderdetail", "Order")",
+                data: orderDetail,
+                success: function (message) {
+                    event.preventDefault();
+                    $("#status_" + id).val("C");
+                    Checkbtnperclick();
+                }, error: function (message) {
+                    //alert(message.responseText);
+                }
+
+            });
+            
+        });
+        Checkbtn();
+        if (_role == "editor" || _role == "invoice" || _role == "officer" || _role == "cashier") {
+
+            if (_role != "officer") {
+                console.log("test");
+                $('.radioS').each(function () {
+                    var id = $(this).data("status");
+                    if (id == 'S') {
+                        $(this).prop("checked", true);
+                        $("#btnAllC").prop("disabled", true);
+                    }
+                    if (idall == 'C') {
+                        $(this).prop("disabled", true);
+                    }
+                });
+                $('.radioS').attr('disabled', true);
+                $("#btnAllS").prop("disabled", true);
+            }
+            $('.radioC').each(function () {
+                var id = $(this).data("status");
+                if (id == 'C') {
+                    $(this).prop("checked", true);
+                }
+                if (idall == 'C') {
+                    $(this).prop("disabled", true);
+                }
+            });
+            $('.radioC').attr('disabled',true);
+            $("#btnAllC").prop("disabled", true);
+            
+        }
+        
+    });
+    function Printorder(){
+        var modelprintmanin = GetMainPrint();
+        var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                var modelforsent =
+                {
+                    result1: JSON.stringify(modelorder),
+                    result2: JSON.stringify(modelprintmanin)
+                }
+                window.webkit.messageHandlers.PrintOrder.postMessage(JSON.stringify(modelforsent));
+                };
+            } else {
+                Device.PrintOrder(JSON.stringify(modelorder),JSON.stringify(modelprintmanin)); //<-- executes C# code
+            };
+    }
+
+    var idall;
+    function Checkbtn() {
+        idall = $('#statusall').val();
+        $('.radioS').each(function () {
+            var id = $(this).data("status");
+            if (id=='S') {
+                $(this).prop("checked", true);
+                $("#btnAllC").prop("disabled", true);
+            }
+            if (idall == 'C') {
+                $(this).prop("disabled", true);
+            }
+        });
+        $('.radioC').each(function () {
+            var id = $(this).data("status");
+            if (id == 'C') {
+                $(this).prop("checked", true);
+            }
+            if (idall == 'C') {
+                $(this).prop("disabled", true);
+            }
+        });
+        if (idall!='W') 
+        {
+            $("#btnAllS").prop("disabled", true);
+            $("#btnAllC").prop("disabled", true);
+        }
+    }
+    function Checkbtnperclick() {
+        $("#btnAllC").prop("disabled", false);
+        $("#btnAllS").prop("disabled", false);
+        let liststatus = [];
+        var total = 0;
+        $('.inputstatus').each(function () {
+            liststatus.push($(this).val());
+            if ($(this).val() != "C") {
+                total +=  parseInt($(this).data("garndtotal"));
+            }
+        });
+        var allc = liststatus.every((x) => x == "C");
+        if (allc) {
+            $('.radioC').each(function () {
+                $(this).prop("disabled", true);
+            });
+            $('.radioS').each(function () {
+                $(this).prop("disabled", true);
+            });
+            $("#btnAllS").prop("disabled", true);
+            $("#btnAllC").prop("disabled", true);
+            $('#divstatusall').html('<p class="p-margin-list1 text-cut-name status-color-cancel flex-jcenter-acenter" ><img class="order-size-table mx-2" src = "/mymenumerchant/images/Order_Cancel.png" />@Localizer["ยกเลิก"]</p>');
+        }
+        var findw = liststatus.findIndex((x) => x == "W");
+        if(findw == -1){
+            if (findS != -1) {
+                $('#divstatusall').html('<p class="p-margin-list1 text-cut-name status-color-succeed flex-jcenter-acenter" ><img class="order-size-table mx-2" src = "/mymenumerchant/images/Order_Served.png" />@Localizer["เสิร์ฟครบ"]</p>');
+            }
+            $("#btnAllS").prop("disabled", true);
+            $("#btnAllC").prop("disabled", true);
+        }
+
+        var findS = liststatus.findIndex((x) => x == "S");
+        if (findS!=-1){
+            $("#btnAllC").prop("disabled", true);
+        }
+        $("#ptotal").text(roundToTwo(total));
+    } 
+
+    function roundToTwo(num) {
+        return format('th-TH', 'THB', num);
+    }
+
+    function format(locale, currency, number) {
+        return new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency,
+            currencyDisplay: "code"
+        })
+            .format(number)
+            .replace(currency, "")
+            .trim();
+    }
+    
+</script>

@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "name": "กาแฟนม",
+      "productsnumber": "1"
+    },
+    {
+      "id": "2",
+      "name": "กาแฟ",
+      "productsnumber": "2"
+    },
+    {
+      "id": "3",
+      "name": "กาแฟผลไม้",
+      "productsnumber": "1"
+    },
+    {
+      "id": "4",
+      "name": "กาแฟเย็น",
+      "productsnumber": "0"
+    },
+    {
+      "id": "5",
+      "name": "กาแฟปั่น",
+      "productsnumber": "0"
+    },
+    {
+      "id": "6",
+      "name": "กาแฟร้อน",
+      "productsnumber": "1"
+    },
+    {
+      "id": "7",
+      "name": "กาแฟพิเศษ",
+      "productsnumber": "4"
+    }
+  ]
+}

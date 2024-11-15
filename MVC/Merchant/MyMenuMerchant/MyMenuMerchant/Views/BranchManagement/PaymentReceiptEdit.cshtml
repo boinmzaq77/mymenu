@@ -1,0 +1,273 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using MyMenu.ORM.Master;
+@model Branch;
+
+<body id="PaymentReceiptEdit">
+    <div class="container mb-5">
+        <div id="save" onkeyup="PaymentReceiptEdit();">
+            <div class="form-row">
+                <div class="col-12 mb-2 ">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a onclick="CheckEdit()" style="cursor:pointer;"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h1 class="font-weight-bold menu-header">@Localizer["แก้ไขใบเสร็จรับเงิน"]</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head" for="TypeName">@Localizer["ชื่อประเภทเอกสาร"]</label>
+                                            <input type="text" class="form-control" id="TypeName" name="TypeName" placeholder="@Localizer["ชื่อประเภทเอกสาร"]" value="@Model.ReceiptName">
+                                            <input type="hidden" id="oldTypeName" value="@Model.ReceiptName" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head" for="TypeNamePayment">@Localizer["ข้อความท้ายใบเสร็จ"]</label>
+                                            <textarea class="form-control" id="TypeNamePayment" name="TypeNamePayment" placeholder="@Localizer["ข้อความท้ายใบเสร็จ"]" rows="3" >@Model.ReceiptTextFooter</textarea>
+                                            <input type="hidden" id="oldTypeNamePayment" value="@Model.ReceiptTextFooter" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <p class="text-h2-header">@Localizer["การแสดงรายการสินค้าบนใบเสร็จรับเงิน"]</p>
+                                            <div class="row mt-3">
+                                                <div class="col-6">
+                                                    <p class="font-weight-bold">@Localizer["ไม่แสดงรายการสินค้า ราคา 0 บาท"]</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class=" input-group-prepend  d-flex justify-content-start">
+                                                        <label class="switch">
+                                                            <input type="hidden" name="NOTSHOWZEROPRICE_new" id="NOTSHOWZEROPRICE_new" />
+                                                            <input type="hidden" name="NOTSHOWZEROPRICE_old" id="NOTSHOWZEROPRICE_old" />
+                                                            <input type="checkbox" id="CheckboxDefaultZero">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+
+                        <div>
+                            <button type="submit" class="btn-save" id="btnSave" disabled="disabled" onclick="SaveHeaderFooterReceipt()">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@* ModalEditdata *@
+<div class="modal fade" id="ModalEditdata" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body ">
+                <h5 class="text-center mb-5 my-5  text-h-delete">@Localizer["คุณยังไม่ได้บันทึกข้อมูลต้องการกลับไปหน้า"]</h5>
+                <h5 class="text-center mb-5 my-5  text-h-delete">@Localizer["ตั้งค่าใบเสร็จรับเงินหรือไม่?"]</h5>
+                <div class=" d-flex justify-content-center mr-4 ml-4 mb-3">
+                    <input id="iddelete" value="" hidden />
+                    <button type="button" class="font-weight-bold btn  button-modal-delete" onclick="btnBack()">@Localizer["ใช่"]</button>
+                    <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* ModalPostnotSuccess *@
+<div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <h5 class="text-center mt-5"></h5>
+                        <h5 class="text-center mb-5 mt-0 " id="namePutnotSuccess">@Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        Getnotshowzeroprice();
+    });
+
+    function PaymentReceiptEdit() {
+        var oldTypeName = $('#oldTypeName').val();
+        var oldTypeNamePayment = $('#oldTypeNamePayment').val();
+        var NOTSHOWZEROPRICE_old = $('#NOTSHOWZEROPRICE_old').val();
+        
+        var newTypeNamePayment = $('#TypeNamePayment').val();
+        var newTableName = $('#TypeName').val();
+        var NOTSHOWZEROPRICE_new = $('#NOTSHOWZEROPRICE_new').val();
+
+        if (jQuery.isEmptyObject(NOTSHOWZEROPRICE_new)) {
+            NOTSHOWZEROPRICE_new = $('#NOTSHOWZEROPRICE_old').val();
+        }
+
+        if (oldTypeName != newTableName || NOTSHOWZEROPRICE_old != NOTSHOWZEROPRICE_new || oldTypeNamePayment != newTypeNamePayment) {
+            document.getElementById('btnSave').disabled = false;
+        } else {
+            document.getElementById('btnSave').disabled = true;
+        }
+    }
+
+    function SaveHeaderFooterReceipt() {
+        $.ajax({
+            type: "PUT",
+            url: "@Url.Action("UpdateHeaderFooterReceipt", "BranchManagement")",
+            data: {
+                ReceiptName: $('#TypeName').val(),
+                ReceiptTextFooter: $('#TypeNamePayment').val(),
+            },
+            success: function (message) {
+                //console.log(message);
+                var NOTSHOWZEROPRICE_new = $('#NOTSHOWZEROPRICE_new').val();
+                var NOTSHOWZEROPRICE_old = $('#NOTSHOWZEROPRICE_old').val();
+
+                if (jQuery.isEmptyObject(NOTSHOWZEROPRICE_new)) {
+                    NOTSHOWZEROPRICE_new = $('#NOTSHOWZEROPRICE_old').val();
+                }
+
+                if (NOTSHOWZEROPRICE_old != NOTSHOWZEROPRICE_new) {
+                    SaveEditNOTSHOWZEROPRICE();
+                }
+
+                window.location.href = "@Url.Action("PaymentReceipt", "BranchManagement")";
+            }, error: function (message) {
+                if ("Update Fail" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+                else {
+                    $('#ModalPostnotSuccess').modal('show');
+                }
+            }
+        });
+    }
+
+    function CheckEdit() {
+        //old value
+        var NameReceipe = @Html.Raw(Json.Serialize(@Model.ReceiptName));
+        var ReceiptTextFooter = @Html.Raw(Json.Serialize(@Model.ReceiptTextFooter));
+        var NOTSHOWZEROPRICE_old = $('#NOTSHOWZEROPRICE_old').val();
+
+        //new value
+        var newName = $('#TypeName').val();
+        var newFooter = $('#TypeNamePayment').val();
+        var NOTSHOWZEROPRICE_new = $('#NOTSHOWZEROPRICE_new').val();
+
+        if (jQuery.isEmptyObject(NOTSHOWZEROPRICE_new)) {
+            NOTSHOWZEROPRICE_new = $('#NOTSHOWZEROPRICE_old').val();
+        }
+
+        if (NameReceipe != newName || ReceiptTextFooter != newFooter || NOTSHOWZEROPRICE_old != NOTSHOWZEROPRICE_new) {
+            $('#ModalEditdata').modal('show');
+        } else {
+            window.location = "@Url.Action("PaymentReceipt", "BranchManagement")";
+        }
+    }
+
+    function btnBack() {
+        window.location = "@Url.Action("PaymentReceipt", "BranchManagement")";
+    }
+
+    $("#CheckboxDefaultZero").change(function () {
+        updateFormData();
+        PaymentReceiptEdit();
+    });
+
+    function updateFormData() {
+        var setshow = 0;
+        var NOTSHOWZEROPRICE = $('#CheckboxDefaultZero').is(":checked");
+        if (NOTSHOWZEROPRICE) {
+            setshow = 1; //On: ไม่แสดงรายการสินค้า ที่ราคา 0 บาท ในบิลเลย
+        } else {
+            setshow = 0; //Off: แสดงรายการสินค้า 0 บาท ในบิลด้วย
+        }
+        $('#NOTSHOWZEROPRICE_new').val(setshow);
+    }
+
+    function Getnotshowzeroprice() {
+        $.ajax({
+            url: "@Url.Action("GetListMyQRCode", "Table")",
+            type: 'GET',
+            dataType: 'json',
+            success: function (responseData) {
+                const result = responseData.filter((responseData) => responseData.cfgKey == "NOTSHOWZEROPRICE");
+                //const result = responseData.filter((responseData) => responseData.cfgKey == "CASHDRAWER");
+                var CheckNOTSHOWZEROPRICE = result[0].cfgInteger;
+                if (CheckNOTSHOWZEROPRICE == 1) {
+                    $('#CheckboxDefaultZero').prop("checked", true);
+                    $('#NOTSHOWZEROPRICE_old').val(1);
+                } else {
+                    $('#CheckboxDefaultZero').prop("checked", false);
+                    $('#NOTSHOWZEROPRICE_old').val(0);
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function SaveEditNOTSHOWZEROPRICE() {
+        formData = new FormData();
+        var lstbranchconfig = [];
+        var notshowzeroprice = $('#NOTSHOWZEROPRICE_new').val();
+        var BranchConfig = {
+            CfgKey: 'NOTSHOWZEROPRICE',
+            CfgInteger: notshowzeroprice,
+        }
+        lstbranchconfig.push(BranchConfig);
+
+        formData.append('value', JSON.stringify(lstbranchconfig));
+        $.ajax({
+            type: "PUT",
+            url: "@Url.Action("UpdateQRpath", "BranchManagement")",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (message) {
+                //window.location.href = "@Url.Action("PaymentReceipt", "BranchManagement")";
+            }, error: function (message) {
+                if ("Update Fail" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+                else {
+                    $('#ModalPostnotSuccess').modal('show');
+                }
+            }
+        });
+    }
+
+</script>
+
+

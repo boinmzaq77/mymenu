@@ -1,0 +1,260 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" type="image/x-icon" href="/mymenumerchant/images/LogoMyMenu.png">
+    <title>MyMenuMerchant</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyMenuMerchant.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body id="Register">
+    <div class="header-logo">
+        <img class="logo-otp" src="/mymenumerchant/images/LogomyMenuText.png" />
+    </div>
+    <form class="mb-0" onkeyup="OnRegister();" id="editmerchant">
+        <div class="container mb-5">
+            <div class="row">
+                <div class="col-12 mb-3 mt-3">
+                    <div class="gruop-main">
+                        <a class="mr-4" asp-controller="Login" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="menu-header mb-0">@Localizer["ลงทะเบียน"]</h2>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="NameMerchant">@Localizer["ชื่อร้านค้า"] <small class="small-color">*</small></label>
+                        <input type="text" class="form-control examine" id="NameMerchant" placeholder="@Localizer["ชื่อร้านค้า"]">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="BounsCode">@Localizer["Bonus Code (ถ้ามี)"]</label>
+                        <input type="text" class="form-control" id="BounsCode" placeholder="@Localizer["Bonus Code"]">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check flex-chack">
+                        <input class="form-check-input examine" type="checkbox" value="" id="PrivacyPolicy" onclick="OnPrivacyPolicy()">
+                        <label class="form-check-label">
+                            @Localizer["ฉันยอมรับ"]<a class="a-color-green " asp-controller="Login" asp-action="DetailsPrivacyPolicy">@Localizer["นโยบายความเป็นส่วนตัว และ ข้อตกลงและเงื่อนไขการใช้บริการระบบ myMenu"]</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="btn-flex-end">
+                        <button type="button" class="btn btn-register" id="Submit" disabled="disabled" onclick="RegisterMerchant()">@Localizer["ลงทะเบียน"]</button>
+                    </div>
+                </div>
+                <div class="col-12" hidden>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelNotBonusCode">
+                        @Localizer["ไม่พบ Code"]
+                    </button>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelBonusCodeExpire">
+                        @Localizer["Code นี้หมดอายุ"]
+                    </button>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelNotBonusCodeActivated">
+                        @Localizer["Code นี้ยังไม่เปิดให้ใช้งาน"]
+                    </button>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelBonusCodeSucceed">
+                        @Localizer["ลงทะเบียนสำเร็จ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="footer-help pt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="img-padding">
+                    <img class="footer-img" src="/mymenumerchant/images/LogInPoweredBySNS.png" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="text-flex">
+                    <p class="text-footer me-2">Version 1.1</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModelNotBonusCode" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textNotBonusCode" style="color:#404040; text-align: center;">@Localizer["ขออภัย ไม่พบ Code นี้"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModelBonusCodeExpire" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textExpire" style="color:#404040; text-align: center;">@Localizer["ขออภัย Code นี้หมดอายุ"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModelNotBonusCodeActivated" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textNotActivated" style="color:#404040; text-align: center;">@Localizer["ขออภัย Code นี้ยังไม่เปิดให้ใช้งาน"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModelBonusCodeSucceed" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" style="color:#404040; text-align: center;">@Localizer["ลงทะเบียนสำเร็จ"]</p>
+                    <p class="mb-0 mx-4" id="textSuccess" style="color:#404040; text-align: center;">วันหมดอายุการใช้งาน 31/12/2567</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #7CBFA7; border: 1px solid #7CBFA7;" data-dismiss="modal" onclick="gotoLoginBranch()"> 
+                        @Localizer["ตกลง"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+<script>
+    
+    function OnRegister() {
+        document.getElementById('Submit').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('Submit').disabled = true;
+            }
+        });
+
+    }
+    function OnPrivacyPolicy() {
+        var datavalue = $("#PrivacyPolicy").val();
+        if (datavalue == null || datavalue == "") {
+            $("#PrivacyPolicy").val("1");
+        } else {
+            $("#PrivacyPolicy").val("");
+        }
+        OnRegister();
+    }
+
+    function RegisterMerchant() {
+        var MerchantLicenceModel = {
+            MerchantName: $('#NameMerchant').val(),
+            BonusCode: $('#BounsCode').val(),
+            ProductName: 'MyMenu',
+            TotalDaysGiven: 7,
+        };
+        $.ajax({
+            url: "@Url.Action("PostSeauthMerchant", "Login")",
+            type: 'POST',
+            async: false,
+            data: MerchantLicenceModel,
+            success: function (res) {
+                if (res.status) {
+                    $('#ModelBonusCodeSucceed').modal('show');
+                    //console.log(res);
+                    var bbb = formatDate(res.message.replace(/\"/g, ''));
+                    $('#textSuccess').text(@Html.Raw(Json.Serialize(Localizer["วันหมดอายุการใช้งาน"].Value)) + " " + bbb);
+                } else {
+                    if (res.message == '107') { //Bonus_code_expires
+                        $('#ModelBonusCodeExpire').modal('show');
+                    } 
+                    else {
+                        $('#ModelNotBonusCode').modal('show');
+                    }
+                }
+            }, error: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function gotoLoginBranch() {
+        window.location = "@Url.Action("LoginBranchs", "Login")";
+    }
+
+    function formatDate(date) {
+        var aaaa = new Date(date);
+        var d = new Date(aaaa),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        var aaa = [day, month, year].join('/');
+
+        return aaa;
+    }
+
+</script>
+
+
+
+
+

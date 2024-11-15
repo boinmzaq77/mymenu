@@ -1,0 +1,163 @@
+﻿@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenuClient.Models;
+@using MyMenuMerchant.Controllers;
+@model List<SubListAddtoCartModel>;
+@inject IViewLocalizer Localizer
+<div class="modal-header">
+    <div class="d-flex flex-row mb-2">
+        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" onclick="OnCartDetailsMenu()"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0 font-weight-bold">@Localizer["ตะกร้า"]</h5></div>
+    </div>
+</div>
+<div class="modal-body p-0 mb-0" style="overflow-x: hidden;">
+    <div class="form-row p-0 mb-0">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table mb-0" id="TableOrder" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="size-th-menuname">@Localizer["ชื่อเมนู"]</th>
+                            <th scope="col" class="size-th-numberorder">@Localizer["ราคาต่อชิ้น"]</th>
+                            <th scope="col" class="size-th-number">@Localizer["จำนวน"]</th>
+                            <th scope="col" class="size-th-paynumber">@Localizer["ราคารวม"] </th>
+                            <th scope="col" class="size-th-clear-order"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr id="@Model[i].ItemID">
+                                <td>
+                                    <p class="mb-0 p-padding-table">@Model[i].ItemName </p>
+                                    @for (int ii = 0; ii < Model[i].itemOption.Count; ii++)
+                                    {
+                                        <p class="mb-0 set-sub-item-cart color-sub-item"> @Model[i].itemOption[ii].OptionDetailName @TableController.ConvertToCurrency(Model[i].itemOption[ii].Price) </p>
+                                    }
+                                    @for (int ii = 0; ii < Model[i].itemExtras.Count; ii++)
+                                    {
+                                        <p class="mb-0 set-sub-item-cart color-sub-item">+ @Model[i].itemExtras[ii].ExtraDetailName @TableController.ConvertToCurrency(Model[i].itemExtras[ii].Price) </p>
+                                    }
+                                    @if (Model[i].Comment != "" || Model[i].Comment != null)
+                                    {
+                                        <p class="mb-0 set-sub-item-cart color-sub-item">@Model[i].Comment </p>
+                                    }
+                                </td>
+                                <td><p class="mb-0 p-padding-table" id="price_@i">@TableController.ConvertToCurrency(Model[i].SellingPrice+Model[i].itemExtras.Sum(x=>x.Price)+Model[i].itemOption.Sum(x=>x.Price)) </p></td>
+                                <td>
+                                    <div class="row-flex-item padding-td p-padding-table">
+                                        <button type="button" class="btn btn-inside btnminus" data-row="@i"><img class="img-inside" src="/mymenumerchant/images/DelInside.png" /></button>
+                                        <p class="mb-0 p-count count" id="count_@i" data-row="@i" data-itemid="@Model[i].ItemID">@Model[i].ItemQuantity</p>
+                                        <button type="button" class="btn btn-inside btnplus" data-row="@i"><img class="img-inside" src="/mymenumerchant/images/AddInside.png" /></button>
+                                    </div>
+                                </td>
+                                <td><p class="mb-0 p-padding-table" id="totolprice_@i">@TableController.ConvertToCurrency(Model[i].SellingPrice+Model[i].itemExtras.Sum(x=>x.Price)+Model[i].itemOption.Sum(x=>x.Price))</p></td>
+                                <td><div class="td-close-order p-padding-table"><button type="button" class="btn btn-close-order" onclick="DeleteIteminCart(this)" data-id="@Model[i].ItemID" data-index="@i" data-row="@i"><img class="img-close" src="/mymenumerchant/images/Close.png" /></button></div></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer footer-layout-flex-btn">
+    <p class=" mb-0">@Localizer["จำนวนที่เลือก"] <small class="color-green mb-0 font-size16 ml-1" id="sumcount">@Model.Sum(x => x.ItemQuantity)</small></p>
+    <button type="button" class="btn btn-modal-color" onclick="OnCartDetailsMenuSummit()" data-dismiss="modal">@Localizer["ตกลง"]</button>
+</div>
+
+
+<script>
+    function OnCartDetailsMenu() {
+        $("#ModalCartDetailsMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function OnCartDetailsMenuSummit() {
+        $("#ModalCartDetailsMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+
+        var model = [];
+        model = JSON.parse(localStorage.getItem("order"));
+        console.log(model);
+
+        $('.count').each(function (i, item) {
+            // var row = $(this).data("row");
+            // var id = $(this).data("itemid");
+            var bbb = $(this).text();
+            model[i].itemQuantity = parseInt(bbb);
+        });
+        localStorage.setItem("order", JSON.stringify(model));
+        set();
+    }
+
+    
+    $(document).ready(function () {
+        $(".btnplus").on("click", function () {
+
+            var row = $(this).data("row");
+            var count = $('#count_' + row).text();
+            $('#count_' + row).text(parseInt(count) + 1);
+
+            var price = $('#price_' + row).text();
+            $('#totolprice_' + row).text(roundToTwo(parseInt(price) * (parseInt(count) + 1)));
+
+            var count2 = $('#sumcount').text();
+            $('#sumcount').text(parseInt(count2) + 1);
+
+        });
+        $(".btnminus").on("click", function () {
+
+            var row = $(this).data("row");
+
+            var count = $('#count_' + row).text();
+            if (count <= 1) {
+                $('#count_' + row).text(1);
+                var price = $('#price_' + row).text();
+                $('#totolprice_' + row).text(roundToTwo(parseInt(price) * 1));
+            } else {
+                $('#count_' + row).text(parseInt(count) - 1);
+                var price = $('#price_' + row).text();
+                $('#totolprice_' + row).text(roundToTwo(parseInt(price) * (parseInt(count) - 1)));
+
+                var count2 = $('#sumcount').text();
+                $('#sumcount').text(parseInt(count2) - 1);
+            }
+        });
+    });
+
+    function DeleteIteminCart(arg) {
+        var id = $(arg).data('id');
+        var index = $(arg).data('index');
+        var row = $(arg).data("row");
+
+        var listitemchoose = JSON.parse(localStorage.getItem("order"));
+        if (listitemchoose == null) {
+            listitemchoose = [];
+        }
+
+        //sum item quantity ใหม่
+        var quantity = 0;
+        var aaa = $('#count_' + row).text();
+        quantity = parseInt(aaa);
+        var count2 = $('#sumcount').text();
+        $('#sumcount').text(parseInt(count2) - quantity);
+        
+        //remove from local storage
+        if (index > -1) {
+            listitemchoose.splice(index, 1);
+            localStorage.setItem("order", JSON.stringify(listitemchoose));
+        }
+
+        //remove from table
+        $('#' + id).remove();
+    }
+</script>
+
+

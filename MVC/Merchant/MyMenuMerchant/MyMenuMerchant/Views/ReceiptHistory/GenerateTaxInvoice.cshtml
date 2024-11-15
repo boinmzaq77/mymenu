@@ -1,0 +1,203 @@
+﻿@{
+    ViewData["Title"] = "GenerateTaxInvoice";
+}
+@using MyMenu.JAM;
+@model TranDetailModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="GenerateTaxInvoice" onkeyup="GenerateTaxInvoice();">
+    <div class="container mb-5">
+        <div class="form-row">
+            <div class="col-12 mb-2 ">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="ReceiptHistory" asp-action="ReceiptInformation"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h1 class="font-weight-bold menu-header">@Localizer["กรอกข้อมูลลูกค้า"]</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="merchantName">@Localizer["ชื่อลูกค้า/ชื่อบริษัท"]</label>
+                                        <input type="text" class="form-control examine" id="merchantName" name="merchantName" placeholder="@Localizer["ชื่อลูกค้า"]" value="ทดสอบ">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="branchName">@Localizer["ชื่อสาขา (กรณีเป็นนิติบุคคุล)"]</label>
+                                        <input type="text" class="form-control" id="branchName" name="branchName" placeholder="@Localizer["ชื่อสาขา"]">
+                                    </div>
+                                </div><div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="branchID">@Localizer["รหัสสาขา (กรณีเป็นนิติบุคคุล)"]</label>
+                                        <input type="tel" class="form-control" id="branchID" name="branchID" placeholder="@Localizer["รหัสสาขา"]" maxlength="5" oninput="numberInput(this)"> 
+                                    </div>
+                                </div><div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="TAXID">@Localizer["TAX ID"]</label>
+                                        <input type="tel" class="form-control examine" id="TAXID" name="TAXID" placeholder="@Localizer["TAX ID"]" maxlength="13" oninput="taxidinput(this)" value="123456789666">
+                                    </div>
+                                </div><div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="address1">@Localizer["รายละเอียดที่อยู่"]</label>
+                                        <input type="text" class="form-control mb-2 examine" id="address1" name="address1" placeholder="@Localizer["รายละเอียดที่อยู่ 1"]" value="ทดสอบ ทดสอบใบกำกับ 10111">
+                                        <input type="text" class="form-control" id="address2" name="address2" placeholder="@Localizer["รายละเอียดที่อยู่ 2"]" value="">
+                                    </div>
+                                </div><div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-name-head" for="MoblieNumber">@Localizer["เบอร์โทรศัพท์"]</label>
+                                        <input type="text" class="form-control examine" id="MoblieNumber" name="MoblieNumber" placeholder="000-000-0000" maxlength="12" onkeypress="return isNumeric(event)" value="0123654789">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  mb-2">
+                <div class="d-flex justify-content-end">
+                    <div> 
+                        <button type="button" class="btn-save" id="btnsaveinvoice" onclick="btnSaveData()" disabled="disabled"> @Localizer["ยืนยัน"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--Modal Post not Success-->
+<div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <h5 class="text-center mb-5 my-5 " id="namePutnotSuccess"></h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<form hidden id="EditExtra" asp-action="Receipt">
+    <input name="tranDetailModel" id="ExtraModel" value="" />
+</form>
+
+
+<script>
+    var flagcheck = false;
+
+    $(document).ready(function () {
+        // var data = @Html.Raw(Json.Serialize(Model));
+        // console.log(data);
+    });
+
+    function GenerateTaxInvoice() {
+        document.getElementById('btnsaveinvoice').disabled = true;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                flagcheck = false;
+                return false;
+            }
+            else {
+                flagcheck = true;
+            }
+        });
+
+        if (flagcheck) {
+            document.getElementById('btnsaveinvoice').disabled = false;
+        }
+    }
+
+    function btnSaveData() {
+        var data = @Html.Raw(Json.Serialize(Model));
+        data.customerName = $('#merchantName').val() + ' ' + $('#branchName').val() + ' ' + $('#branchID').val();
+        data.customerTaxID = $('#TAXID').val();
+        data.customerAddress1 = $('#address1').val();
+        data.customerAddress2 = $('#address2').val();
+        data.customerTel = $('#MoblieNumber').val();
+
+        $.ajax({
+            url: "@Url.Action("CreateTAXInvoice", "ReceiptHistory")",
+            data: { 
+                trandetailmodel: JSON.stringify(data) 
+            },
+            type: "POST",
+            success: function (message) {
+                // console.log(message);
+                $("#ExtraModel").val(message);
+                $("#EditExtra").submit();
+            }, error: function (message) {
+                $('#ModalPostnotSuccess').modal('show');
+                if (message.responseText == "Merchants TaxID is null") {
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } 
+                else if (message.responseText == "This merchant is not Fount") {
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else if (message.responseText == "This branch is not Fount") {
+                     $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else if (message.responseText == "This TranNo is not Fount") {
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else if (message.responseText == "This TranNo has Tax Invoice") {
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ใบเสร็จนี้ออกใบกำกับภาษีแล้ว"].Value)));
+                } else if (message.responseText == "Insert TaxInvoice Error") {
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } 
+                else if (message.responseText == "ร้านค้ากรอกข้อมูล TAX ไม่ครบ") {
+                    $('#namePutnotSuccess').text("ร้านค้ากรอกข้อมูล TAX ไม่ครบ");
+                }
+                else 
+                { 
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+            }
+        });
+    }
+
+    const phoneInput = document.getElementById('MoblieNumber');
+    phoneInput.addEventListener('input', () => {
+        const unformattedNumber = phoneInput.value.replace(/-/g, '');
+        const match = unformattedNumber.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        if (match) {
+            const formattedNumber = [match[1], match[2], match[3]].filter(Boolean).join('-');
+            phoneInput.value = formattedNumber;
+        }
+    });
+    function isNumeric(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    function numberInput(input) {
+        const inputValue = input.value;
+        const isValid = /^\d{1,5}$/.test(inputValue); // ใช้ regular expression เพื่อตรวจสอบว่ามีเฉพาะตัวเลข 0-9
+        if (!isValid) {
+            $("#branchID").val("");
+        }
+    }
+    function taxidinput(input) {
+        const inputValue = input.value;
+        const isValid = /^\d{1,13}$/.test(inputValue); // ใช้ regular expression เพื่อตรวจสอบว่ามีเฉพาะตัวเลข 0-9
+        if (!isValid) {
+            $("#TAXID").val("");
+        }
+    }
+</script>
+
+
+
+

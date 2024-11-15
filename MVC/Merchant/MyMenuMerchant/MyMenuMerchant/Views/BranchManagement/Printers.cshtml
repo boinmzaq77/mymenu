@@ -1,0 +1,516 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<body id="Printers">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-4">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["จุดพิมพ์"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["จุดพิมพ์"]</li>
+                        </ul>
+                        <a class="breadcrumb-btn button-add text-center layout-add" asp-controller="BranchManagement" asp-action="PrintersAdd" id="btnAddPrinter"><img class="img-icon-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการ"]</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-12 mb-2">
+                <div class="card box-card border-0 rounded">
+                    <div class="card-body ">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold font-size mb-0">@Localizer["รายการจุดพิมพ์"] <span class="size-small font-weight-bold ms-2" id="count"> @Localizer["จำนวนทั้งหมด"] x</span> <span class="size-small font-weight-bold" style="margin-left: -5;">/5</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-2">
+                                <div class="table-responsive">
+                                    <table class="table" id="PrintsPoint" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-number">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ชื่อจุดพิมพ์"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["การพิมพ์ใบเสร็จ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["การพิมพ์ใบส่งครัว"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["วิธีตัดใบรายการ"]</th>
+                                                <th scope="col" class="size-th-edit"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*ModalBranchsInfo*@
+@*    <div class="modal fade bd-example-modal-lg" id="ModalBranchsInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <div class="d-flex flex-row mb-2">
+                        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0">แก้ไขโต๊ะ</h5></div>
+                    </div>
+                </div>
+                <form id="save">
+
+
+                    <div class="modal-body">
+                        <div class="col-12 pt-2">
+                            <div class="form-group">
+                                <label class="font-weight-bold color-name-head" for="TableName">ชื่อโต๊ะ</label>
+                                <input type="text" class="form-control" name="FoodTableNO" id="TableID" hidden>
+                                <input type="text" class="form-control" name="FoodTableName" id="TableName" placeholder="ชื่อโต๊ะ">
+                            </div>
+                        </div>
+                        <div class="col-md-12  mb-2">
+                            <div class="d-flex justify-content-end">
+                                <div>
+                                    <button type="submit" class="btn-save" id="SaveProfile">บันทึก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>*@
+
+
+
+
+     @*ModalBranchsInfo*@
+    <div class="modal fade bd-example-modal-lg" id="ModalBranchsInfo" tabindex="-1" role="dialog" aria-labelledby="ModalBranchsInfo" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <div class="d-flex flex-row mb-2">
+                        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0">@Localizer["รายละเอียดจุดพิมพ์"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                   <div class="row mx-2">
+                        <div class="col-12 px-0 mb-2">
+                            <p class="mb-0 text-head-p">@Localizer["ชื่อจุดพิมพ์ :"]</p>
+                            <p class="mb-0 text-list-p" id="nameprint"></p>
+                        </div>
+                        <div class="col-6 px-0 mb-2">
+                            <p class="mb-0 text-head-p">@Localizer["ประเภทเครื่องพิมพ์ :"]</p>
+                            <p class="mb-0 text-list-p" id="typeprint"></p>
+                        </div>
+                        <div class="col-6 px-0 mb-2">
+                            <p class="mb-0 text-head-p">@Localizer["ขนาดกระดาษ :"]</p>
+                            <p class="mb-0 text-list-p" id="sizeprint"></p>
+                        </div>
+                        <div class="col-6 px-0 mb-2">
+                            <p class="mb-0 text-head-p" id="txttypeprint">@Localizer["IP Address :"]</p>
+                            <p class="mb-0 text-list-p" id="ipprint"></p>
+                        </div>
+                        <div class="col-6 px-0 mb-2">
+                            <p class="mb-0 text-head-p" id="txtport">@Localizer["Port Number :"]</p>
+                            <p class="mb-0 text-list-p" id="portprint"></p>
+                        </div>
+                        <div class="col-12 px-0 mb-2">
+                            <div class="row">
+                                <div class="col-6 col-md-6 col-xl-4 mb-1">
+                                    <p class="mb-0 text-head-p">@Localizer["การพิมพ์ใบเสร็จอัตโนมัติ :"]</p>
+                                </div>
+                                <div class="col-6 col-md-6 col-xl-8 mb-1">
+                                    <p class="mb-0 text-list-status" id="autoprint">On</p>
+                                </div>
+                                <div class="col-6 col-md-6 col-xl-4">
+                                    <p class="mb-0 text-head-p">@Localizer["การพิมพ์ใบส่งครัวอัตโนมัติ :"]</p>
+                                </div>
+                                <div class="col-6 col-md-6 col-xl-8">
+                                    <p class="mb-0 text-list-status" id="autosent">Off</p>
+                                </div>
+                            </div>
+                          
+                        </div>
+                        <div class="col-12 px-0">
+                            <p class="mb-0 text-head-p">@Localizer["ประเภทการตัดใบรายการใบส่งครัว"]</p>
+                            <p class="mb-0 text-list-p" id="typecut">@Localizer["ตัดรายออเดอร์"]</p>
+                        </div>
+                        <div class="col-12 px-0">
+                            <hr />
+                        </div>
+                        <div class="col-12 px-0">
+                            <p class="mb-2 text-head-p">@Localizer["กลุ่มสินค้าตามจุดพิมพ์ :"]</p>
+                        </div>
+                        <div class="col-12 px-0">
+                            <div class="row mx-2" id="listcat">
+                                
+
+                            </div>
+                        </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*ModalPrintersDelete*@
+    <div class="modal fade " id="ModalPrintersDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5  text-h-delete" id="namedelete"></h5>
+                    <div class=" d-flex justify-content-center mr-4 ml-4 mb-3">
+                        <input id="iddelete" value="" hidden />
+                        <button type="button" class="font-weight-bold btn  button-modal-delete" onclick="fnDelete()">@Localizer["ลบ"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namepostnotsuccess">@Localizer["ไม่สามารถแก้ไขจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<form hidden id="EditPrinter" asp-action="PrintersEdit">
+    <input name="print" id="printersedit" value="" />
+</form>
+<script>
+    var role;
+    function sentdata(d) {
+
+        var data = $('#PrintsPoint').DataTable().row(d).data();
+        console.log(data);
+        var test = JSON.stringify(data);
+        $("#printersedit").val(test);
+        $("#EditPrinter").submit();
+    }
+    function SetDetail(d) {
+        $('#nameprint').text("");
+        $("#ipprint").text("");
+        $("#portprint").text("");
+        $('#listcat').html("");
+        $('#typeprint').text("");
+        $('#sizeprint').text("");
+        $('#autoprint').text("");
+        $('#autosent').text("");
+        $('#typecut').text("");
+        $('#txttypeprint').text("");
+        $('#txtport').text("");
+
+        var data = $('#PrintsPoint').DataTable().row(d).data();
+        console.log(data);
+        if (data.printerMain==1){
+            $('#nameprint').html(data.PrinterName + '<small class= "ml-3 text-list-status" >' + @Html.Raw(Json.Serialize(@Localizer["จุดพิมพ์หลัก"].Value))  +  '</small>');
+        }else{
+            $('#nameprint').text(data.PrinterName);
+        }
+        var merchantid = $.cookie('merchantid');
+        var branchid = $.cookie("branch");
+        
+        var textcat = '';
+        $.each(data.Categories, function (key, value) {
+            textcat += '<div class="col-6" ><p class="mb-0 text-list-p" > <i class="fa fa-square me-3 icon-type-size" > </i> ' + value.CategoryName + '</p></div>';
+        });
+        $('#listcat').html(textcat);
+        
+        $('#sizeprint').text(data.PaperSize+" mm.");
+        //$('#ipprint').text(data.ipAdress);
+        //$('#portprint').text(data.port);
+        $('#autoprint').text(data.AutoPrintCheckBill==0 ? 'Off':'On' );
+        $('#autosent').text(data.AutoSendKitchen == 0 ? 'Off' : 'On');
+        var typecut = '';
+        if (data.CustingPaperMode == 'O') {
+            typecut = @Html.Raw(Json.Serialize(@Localizer["ตัดรายออเดอร์"].Value)) ;
+        } else if (data.CustingPaperMode == 'C') {
+            typecut = @Html.Raw(Json.Serialize(@Localizer["ตัดรายหมวดหมู่"].Value));
+        } else {
+            typecut = @Html.Raw(Json.Serialize(@Localizer["ตัดรายสินค้า"].Value));
+        }
+        $('#typecut').text(typecut);
+
+        var texttype = '';
+        var txttyperprint = '';
+        var txtport = ''
+        var ipport = GetlocalstoragePrinter(merchantid, branchid, data.PrinterNO);
+        //alert(JSON.stringify( ipport));
+        if (ipport != null) {
+            if (data.PrinterType == 'D') {
+                texttype = @Html.Raw(Json.Serialize(@Localizer["Printer Driver"].Value));
+            } else if (data.PrinterType == 'W') {
+                texttype = @Html.Raw(Json.Serialize(@Localizer["IP Address"].Value));
+                txttyperprint = @Html.Raw(Json.Serialize(@Localizer["IP Address :"].Value));
+                txtport = @Html.Raw(Json.Serialize(@Localizer["Port Number :"].Value));
+                $('#ipprint').text(ipport.ip);
+                $('#portprint').text(ipport.port);
+            } else {
+                texttype = @Html.Raw(Json.Serialize(@Localizer["Bluetooth"].Value));
+                txttyperprint = @Html.Raw(Json.Serialize(@Localizer["Bluetooth Name :"].Value));
+                txtport = "";
+                $('#ipprint').text(ipport.btname);
+                $('#portprint').text("");
+            }
+            $('#typeprint').text(texttype);
+            $('#txttypeprint').text(txttyperprint);
+            $('#txtport').text(txtport);
+        } else {
+            $('#typeprint').text(@Html.Raw(Json.Serialize(@Localizer["IP Address"].Value)));
+            //$('#typeprint').text(texttype);
+            $('#ipprint').text(@Html.Raw(Json.Serialize(@Localizer["ยังไม่ได้ระบุ"].Value)));
+        }
+
+        // $('#ipprint').text(ipport.ipAdress);
+        // $('#portprint').text(ipport.port);
+
+    }
+    $(document).ready(function () {
+        role = "@ViewBag.role";
+        SetPrinter();
+        $("#save").on("submit", function (e) {
+            var dataString = $(this).serialize();
+
+            // alert(dataString); return false;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditTable", "BranchManagement")",
+                data: dataString,
+                success: function (message) {
+                    window.location.href = "@Url.Action("TableManagement", "BranchManagement")";
+                }, error: function (message) {
+                    //alert(message.responseText);
+                    $('#ModalPostnotSuccessError').modal('show');
+                    if (message.responseText == "Update Fail") {
+                        $('#namepostnotsuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    } else if (message.responseText == "Insert CategoryOnPrinter Fail") 
+                    {
+
+                    }
+                    else {
+                        $('#namepostnotsuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+
+            });
+            e.preventDefault();
+        });
+
+        var table = $('#PrintsPoint').DataTable({
+            ajax: {
+                url: "@Url.Action("GetDataPrints", "BranchManagement")",
+                dataSrc: ''
+            },
+            stateSave: false,
+            columns: [
+                { data: 'PrintID' },
+                { data: { PrinterName: 'PrinterName', PrinterMain: 'PrinterMain' } },
+                { data: 'AutoPrintCheckBill' },
+                { data: 'AutoSendKitchen' },
+                { data: 'CustingPaperMode' },
+                { data: 'PrintID' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text = "<p class='p-padding-table'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text="";
+                    var row = (meta.row + meta.settings._iDisplayStart + 1);
+                    
+                    if (row == 1) {
+                        text = "<p class='p-padding-table pb-0'>" + data.PrinterName + "</p><p class='p-padding-table pt-0 test-status-main' >" + @Html.Raw(Json.Serialize(@Localizer["จุดพิมพ์หลัก"].Value))  +"</p>";
+                    }else{
+                        text = "<p class='p-padding-table'>" + data.PrinterName + "</p>";
+                    }
+                    
+                    return text;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text = "";
+                    if (data==0) {
+                        text = "<p class='p-padding-table'>" + @Html.Raw(Json.Serialize(@Localizer["ไม่อัตโนมัติ"].Value))  + "</p>";
+                    }else{
+                        text = "<p class='p-padding-table'>"+  @Html.Raw(Json.Serialize(@Localizer["อัตโนมัติ"].Value)) +"</p>";
+                    }
+                    
+                    return text;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var text = "";
+                    if (data == 0) {
+                        text = "<p class='p-padding-table'>" + @Html.Raw(Json.Serialize(@Localizer["ไม่อัตโนมัติ"].Value))  + "</p>";
+                    } else {
+                        text = "<p class='p-padding-table'>" +  @Html.Raw(Json.Serialize(@Localizer["อัตโนมัติ"].Value)) + "</p>";
+                    }
+                    return text;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                    
+                    var text = "";
+                    if (data == 'O') {
+                        text = "<p class='p-padding-table'> " +  @Html.Raw(Json.Serialize(@Localizer["ตัดรายออเดอร์"].Value)) + " </p>";
+                    } else if (data == 'C') {
+                        text = "<p class='p-padding-table'>" +  @Html.Raw(Json.Serialize(@Localizer["ตัดรายหมวดหมู่"].Value)) + "</p>";
+                    }else{
+                        text = "<p class='p-padding-table'>" +  @Html.Raw(Json.Serialize(@Localizer["ตัดรายสินค้า"].Value)) + "</p>";
+                    }
+                    return text;
+                },
+            }, {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                    var btnedit ="";
+                    var row = (meta.row + meta.settings._iDisplayStart + 1);
+                    if (row == 1) {
+                        btnedit += "<div class='group-btn-table'><button type='button' class='btn btn-table btn-green-info mr-2'  data-toggle='modal' data-target='#ModalBranchsInfo' onclick='SetDetail(" + meta.row + ")'  ><img class='size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button><a class='btn btn-table btn-blue-edit mr-2'  onclick='sentdata(" + meta.row + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></a>"; 
+                        //Role ตามสิทธิ์ 
+                        if (role.toLowerCase() == "owner" || role.toLowerCase() == "admin" || role.toLowerCase() == "manager") {
+                            btnedit += "<button type='button' class='btn btn-table btn-red-delete-hidden' data-toggle='modal' data-target='#ModalPrintersDelete' onclick='btnDelete(" + meta.row + ")' disabled><img class='size-img-list-menu' src ='/mymenumerchant/images/Delete20.png' /></button>";
+                        }
+                        btnedit += "</div>";
+                    } else {
+                        btnedit += "<div class='group-btn-table'><button type='button' class='btn btn-table btn-green-info mr-2'  data-toggle='modal' data-target='#ModalBranchsInfo' onclick='SetDetail(" + meta.row + ")' ><img class='size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button><a class='btn btn-table btn-blue-edit mr-2'  onclick='sentdata(" + meta.row + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></a>";
+                        //Role ตามสิทธิ์
+                        if (role.toLowerCase() == "owner" || role.toLowerCase() == "admin" || role.toLowerCase() == "manager") {
+                            btnedit += "<button type='button' class='btn btn-table btn-red-delete' data-toggle='modal' data-target='#ModalPrintersDelete' onclick = 'btnDelete(" + meta.row + ")'> <img class='size-img-list-menu' src = '/mymenumerchant/images/Delete20.png' /> </button>";
+                        } btnedit += "</div > ";
+                    }
+                    //var btnedit = "<div class='group-btn-table'><button type='button' class='btn btn-green-info mr-2' onclick='Opendetail(" + data + ")'><img class='size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button><a class='btn btn-blue-edit mr-2'  onclick='sentdata(" + data + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></a><button type='button' class='btn btn-red-delete' data-toggle='modal' data-target='#ModalMenuDelete' onclick='btnDelete(" + meta.row + ")'><img class='size-img-list-menu' src ='/mymenumerchant/images/Delete20.png' /></button></div>";
+                    return btnedit;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-0'>" +  @Html.Raw(Json.Serialize(@Localizer["ยังไม่มีจุดพิมพ์"].Value)) + " </p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" +  @Html.Raw(Json.Serialize(@Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" +  @Html.Raw(Json.Serialize(@Localizer["Loading.."].Value)) + "</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            "initComplete": function (settings, json) {
+                $('#count').text(@Html.Raw(Json.Serialize(Localizer["จำนวนทั้งหมด"].Value)) + ' ' + table.data().count());
+                var maxprinter = table.data().count();
+                var btn = document.getElementById("btnAddPrinter");
+                if (maxprinter >= 5) {
+                    $("#btnAddPrinter").attr('style', 'opacity:0.5');
+                    btn.style.pointerEvents = "none";
+                    btn.style.cursor = "default";
+                } else {
+                    $("#btnAddPrinter").attr('style', 'opacity:1');
+                    btn.style.pointerEvents = "auto";
+                    btn.style.cursor = "pointer";
+                }
+            },
+        });
+        var tables = $('#PrintsPoint').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+    });
+
+    function btnDelete(id) {
+        var data = $('#PrintsPoint').DataTable().row(id).data();
+        $('#iddelete').val(data.PrinterNO);
+        $('#namedelete').text(@Html.Raw(Json.Serialize(@Localizer["คุณต้องการลบจุดพิมพ์"].Value)) + " " +'"'+ data.PrinterName +'"'+ " "+ @Html.Raw(Json.Serialize(@Localizer["ใช่หรือไม่?"].Value)) );
+    }
+    function fnDelete() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeletePrinter", "BranchManagement")",
+            data: {
+                id: $('#iddelete').val(),
+            },
+            success: function (message) {
+                location.reload();
+            }, error: function (message) {
+                $('#ModalPostnotSuccessError').modal('show');
+                $('#namepostnotsuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถลบจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"])));
+            }
+        });
+    }
+    //function Opendetail(id) {
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: "@Url.Action("GetPrintsPointDetail", "BranchManagement")",
+    //        data: {
+    //            id: id
+    //        },
+    //        dataType: 'json',
+    //        success: function (message) {
+    //            $('#nameitem').text(message.itemName);
+    //            $('#priceitem').html(' ฿ ' + message.price);
+    //            $('#pricesell').html(' ฿ ' + message.sellingPrice);
+    //            $('#detailitem').html(message.itemDetail);
+    //            var cat = message.categoryName + ((message.subCategoryName != '') ? ' <samp class= "color-green"> > </samp> ' + message.subCategoryName : '');
+    //            $('#divcatagory').html(cat);
+    //            var option = '';
+    //            $.each(message.optionitems, function (i, item) {
+    //                option += '<p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ' + item.optionName + '</p>'
+    //            });
+    //            $('#divoption').html(option);
+
+
+    //            var extra = '';
+    //            $.each(message.extraitems, function (i, item) {
+    //                extra += '<p class="card-text color-text-list font-weight-bold" > <i class="fa fa-square me-3 icon-type-size" > </i>' + item.extraName + '</p >'
+    //            });
+    //            $('#divextra').html(extra);
+
+    //            var branch = '';
+
+    //            $.each(message.itemonBranches, function (i, item) {
+    //                if (item.status == 'A') {
+    //                    branch += '<p class="card-text color-text-list font-weight-bold" > <i class="fa fa-square me-3 icon-type-size" > </i>' + item.branchName + '</p >'
+    //                }
+    //            });
+    //            branch = (branch == '') ? "ไม่มีสาขาที่เปิดใช้งาน" : branch;
+    //            $('#divbranch').html(branch);
+    //            $('#imgitem').attr('src', message.picturePath);
+    //            //var url = $('#btnedititem').attr("href");
+    //            //var date = $("#date").val();
+    //            //url = url.replace("dummyid", message.itemID);
+    //            $("#btnedititem").attr("href", "/ManageMenu/MenuEdit/" + message.itemID);
+
+    //            $('#ModalMenuinfo').modal('toggle');
+    //        }, error: function (message) {
+    //            alert(message.responseText);
+    //        }
+
+    //    });
+    //}
+
+</script>

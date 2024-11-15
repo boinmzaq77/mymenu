@@ -1,0 +1,189 @@
+﻿<style>
+    .font-qrcodee-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9!important;
+    }
+
+    .img-qrcodee-bold {
+        filter: invert(80%) sepia(3%) saturate(3565%) hue-rotate(107deg) brightness(86%) contrast(97%);
+    }
+</style>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="QRCodeGenerate">
+<div class="container">
+    <div class="form-row">
+        <div class="col-md-12 mb-2 ">
+            <div class="row ">
+                <div class="col-12 header-group">
+                        <h2 class="font-weight-bold menu-header">@Localizer["สร้าง QR Code"]</h2>
+                    <ul class="breadcrumb mb-2">
+                        <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["สร้าง QR Code"]</li>
+                    </ul>
+                        <a class="breadcrumb button-add text-center layout-add mb-2" asp-controller="QRCodeGenerate" asp-action="QRCodeGenerateAdd"><img class="img-icon-add" src="/mymenumerchant/images/Add.png" /> @Localizer["สร้าง QR Code"]</a>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-10 mb-2 search">
+                                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["Search"]" style="height: 45px;" autocomplete="off">
+                        </div>
+                        <div class="col-2 mb-2 btn-group dropdown-order list-menu">
+                              <button type="button" class="btn btn-secondary dropdown-toggle input-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-sliders me-3"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right">
+                                    <p class="dropdown-header font-weight-bold  me-5"> @Localizer["เลือกฟิลเตอร์"] <small class="me-5"></small> </p>
+                                    <div class="dropdown-header">
+                                        <div class=" form-check">
+                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                            <label class="form-check-label" for="exampleCheck1">@Localizer["รายการรอดำเนินการ"]</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-header">
+                                        <div class=" form-check">
+                                            <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                                            <label class="form-check-label" for="exampleCheck2">@Localizer["รายการทั้งหมด"]</label>
+                                        </div>
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="col-md-12 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-2 ">
+                                <div class="d-flex">
+                                        <div class="mr-auto p-0 layout-text-head"><label class="font-weight-bold mb-4 font-size">@Localizer["รายการ QR Code"] <small class="size-small font-weight-bold layout-all ms-2" id="totalnumber"> @Localizer["จำนวนทั้งหมด"] 2</small></label>  </div>
+                                        <div class=" p-2"><button class="btn btn-print "><i class="fa fa-print me-3"></i>@Localizer["พิมพ์"]</button></div>
+                                        <div class=" p-2 layout-btn-p"><button type="button" class="btn btn-refresh" id="ButtonRefresh"><i class="fa fa-refresh me-3"></i>@Localizer["รีเฟรช"]</button></div>
+                                </div>
+                            </div>
+                           
+                            <div class="col-md-12 mb-2">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableQRCode" style="width:100%" >
+                                       <thead>
+                                            <tr>
+                                                <th scope="col">ลำดับ</th>
+                                                    <th scope="col" class="size-th-date">@Localizer["วันที่"]</th>
+                                                    <th scope="col" class="size-th-time">@Localizer["เวลา"]</th>
+                                                    <th scope="col" class="size-th-type">@Localizer["ประเภทออเดอร์"]</th>
+                                                    <th scope="col" class="size-th-table">@Localizer["โต๊ะ"]</th>
+                                                    <th scope="col" class="size-th-details">@Localizer["รูปภาพ QR Code"]</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<form hidden id="EditCatagory" asp-action="CategoryEdit">
+    <input name="category" id="CategoryModel" value="" />
+</form>
+<script>
+    var table;
+    $(document).ready(function () {
+    table = $('#TableQRCode').DataTable({
+            ajax: {
+                url: "@Url.Action("GetQRCodeData")",
+                dataSrc: ''                
+            },
+        columns: [
+            { data: 'typeOrder' },
+            { data: 'date' },
+            { data: 'time' },
+            { data: 'typeOrder' },
+            { data: 'foodTable' },
+            { data: 'qRCodeImage' },
+        ],
+        columnDefs: [{
+            targets: [0],
+            render: function(data, type, full, meta) {     
+                    var text0 = "";
+                text0 = "<div class='form-check color-check'>"+
+                            "<input type='checkbox' class='form-check-input' id='"+data+"'>"+
+                            "<label class='form-check-label' for='"+data+"'>"+(meta.row + meta.settings._iDisplayStart + 1)+"</label>"+
+                        "</div>";
+                return text0;
+            },
+        },{
+            targets: [1],
+            render: function(data, type, full, meta) {
+                var text1 = "";
+                text1 = "<p>"+data+"</p>";
+                return text1;
+            },
+        },{
+            targets: [2],
+            render: function(data, type, full, meta) {
+                var text2 = "";
+                text2 = "<p>"+data+"</p>";
+                return text2;
+            },
+        },{
+            targets: [3],
+            render: function(data, type, full, meta) {
+                var text3 = "";
+                text3 = "<p>"+data+"</p>";
+                return text3;
+            },
+        },{
+            targets: [4],
+            render: function(data, type, full, meta) {
+                var text4 = "";
+                text4 = "<p>"+data+"</p>";
+                return text4;
+            },
+        },{
+            targets: [5],
+            render: function(data, type, full, meta) {
+                var text5 = "";
+                    text5 = "<button type='button' class='btn btn-size-details'> @Localizer["รูป QR Code"] <i class='ms-2 fa fa-angle-right font-weight-bold'></i></button>";
+                return text5;
+            },
+        },
+        ],
+        "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีรายการสร้าง QR Code"]</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+            },
+        searching: true,
+        paging: true,
+        ordering: false,
+        info: false,
+
+    });
+
+       
+        $('#totalnumber').text(table.data().count());
+
+    $('#SearchTable').on( 'keyup', function () {
+        tables.search( this.value ).draw();
+    });
+
+    $('#ButtonRefresh').on('click', function() {
+        $('#TableQRCode').DataTable().ajax.reload();
+    });
+
+    
+});
+
+
+
+   
+    
+</script>

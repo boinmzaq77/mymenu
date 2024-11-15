@@ -1,0 +1,160 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using MyMenu.ORM.Master;
+@model Branch
+<body id="BranchEdit">
+    <div class="container mb-5">
+        <form id="save">
+            <div class="form-row">
+                <div class="col-12 mb-2 ">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h1 class="font-weight-bold menu-header">@Localizer["แก้ไขข้อมูลสาขา"]</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-md-12 ">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head font-18">@Localizer["ข้อมูลสาขา"]</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 ">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head" for="BrancId">@Localizer["รหัสสาขา"]</label>
+                                            <input type="text" class="form-control" id="BrancId" placeholder="@Localizer["รหัสสาขา"]" value="@Model.BranchID" readonly>
+                                            <input type="text" name="BranchID" maxlength="255" hidden value="@Model.BranchID" />
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head" for="BrancName">@Localizer["ชื่อสาขา"]</label>
+                                            <input type="text" class="form-control" name="BranchName" id="BrancName" placeholder="@Localizer["ชื่อสาขา"]" value="@Model.BranchName">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head" for="BrancTime">@Localizer["เวลาเปิดทำการ"]</label>
+                                            <input type="text" class="form-control" id="BrancTime" name="OpeningHours" placeholder="@Localizer["เวลาเปิดทำการ"]" value="@Model.OpeningHours">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head" for="BrancDescription">@Localizer["รายละเอียดที่อยู่"]</label>
+                                            <textarea type="text" class="form-control" id="BrancDescription" name="Address" placeholder="@Localizer["รายละเอียดที่อยู่"]" rows="3">@Model.Address1</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div>
+                            <button type="submit" class="btn-save" id="Save">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script>
+
+        $(document).ready(function () {
+
+            $("#save").on("submit", function (e) {
+                var dataString = $(this).serialize();
+                console.log(dataString);
+                // alert(dataString); return false;
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("EditBranch", "Merchant")",
+                    data: dataString,
+                    success: function (message) {
+                    window.location.href = "@Url.Action("Index", "BranchManagement")";
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+
+                });
+                e.preventDefault();
+            });
+        });
+
+
+    var loadFileBackGround = function (event) {
+        var BackGround = document.getElementById('backgroundimg');
+        BackGround.src = URL.createObjectURL(event.target.files[0]);
+        BackGround.onload = function () {
+            URL.revokeObjectURL(BackGround.src)
+        }
+        //var backgroundimg = document.getElementById("backgroundimg");
+        if (BackGround.src != "/images/BackGroundShop.png") {
+            document.getElementById("btnimg").style.display = "none";
+            document.getElementById("btnimgedit").style.display = "inline";
+            document.getElementById("btnimgdel").style.display = "inline";
+        }
+    }
+    var loadFileProFile = function (event) {
+        var ProFile = document.getElementById('profileimg');
+        ProFile.src = URL.createObjectURL(event.target.files[0]);
+        ProFile.onload = function () {
+            URL.revokeObjectURL(ProFile.src)
+        }
+    }
+
+    var ProfileName = document.getElementById("ProfileName");
+    //function ChangeProfile() {
+
+    //        if (ProfileName.value == "") {
+    //            document.getElementById('SaveProfile').disabled = true;
+    //        } else {
+    //            document.getElementById('SaveProfile').disabled = false;
+    //        }
+    //    }
+
+    function SetProFile() {
+        var backgroundimg = document.getElementById("backgroundimg");
+        if (backgroundimg.src != "/images/BackGroundShop.png") {
+            document.getElementById("btnimg").style.display = "none";
+            document.getElementById("btnimgedit").style.display = "inline";
+            document.getElementById("btnimgdel").style.display = "inline";
+        }
+    }
+
+    function resetbackground() {
+        var resetimg = document.getElementById("btnreset");
+        var backgroundimg = document.getElementById("backgroundimg");
+        var editbackgroundimg = document.getElementById("editbackgroundinput");
+        var backgroundinput = document.getElementById("backgroundinput");
+
+
+        backgroundimg.src="/mymenumerchant/images/BackGroundShop.png";
+        editbackgroundimg.value = "";
+        backgroundinput.value = ""
+        if (backgroundimg.src != "mymenumerchant/images/BackGroundShop.png") {
+            document.getElementById("btnimg").style.display = "inline";
+            document.getElementById("btnimgedit").style.display = "none";
+            document.getElementById("btnimgdel").style.display = "none";
+        }
+
+    }
+    
+
+</script>
+

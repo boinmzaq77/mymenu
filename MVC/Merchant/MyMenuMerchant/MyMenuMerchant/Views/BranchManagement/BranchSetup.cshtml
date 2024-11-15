@@ -1,0 +1,389 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using MyMenu.ORM.Master;
+@model Branch
+<form id="save">
+    <body id="BranchSetup">
+        <div class="container">
+            <div class="form-row">
+                <div class="col-12  mb-2">
+                    <div class="row">
+                        <div class="col-12 header-group">
+                            <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["ตั้งค่าสาขา"]</h2>
+                            <ul class="breadcrumb ">
+                                <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                                <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                                <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["ตั้งค่าสาขา"]</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                @{
+                    bool statusCheck = false;
+                }
+                <div class="col-12 mb-3 ">
+                    <div class="card rounded-body border-0">
+                        <div class="card-body pt-3">
+                            <div class="container-ml">
+                                <div class="col-12 mb-3">
+                                    <p class="text-header">@Localizer["ประเภทการสั่งอาหาร"]</p>
+                                </div>
+
+                                <div class="col-12 ">
+                                    <div class="row" >
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                @if (Model.OrderOptionType == 'A')
+                                                {
+                                                    statusCheck = true;
+                                                }
+                                                <input class="form-check-input" type="radio" name="OrderOptionType" id="OrderOptionType1" value="A" checked="@statusCheck" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'") />
+                                                <label class="form-check-label" for="OrderOptionType1">
+                                                    @Localizer["สั่งกลับบ้าน และทานที่ร้าน"]
+                                                </label>
+                                                @{
+                                                    statusCheck = false;
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                @if (Model.OrderOptionType == 'T')
+                                                {
+                                                    statusCheck = true;
+                                                }
+                                                <input class="form-check-input" type="radio" name="OrderOptionType" id="OrderOptionType2" value="T" checked="@statusCheck" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'") />
+                                                <label class="form-check-label" for="OrderOptionType2">
+                                                    @Localizer["สั่งกลับบ้าน"]
+                                                </label>
+                                                @{
+                                                    statusCheck = false;
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                @if (Model.OrderOptionType == 'D')
+                                                {
+                                                    statusCheck = true;
+                                                }
+                                                <input class="form-check-input" type="radio" name="OrderOptionType" id="OrderOptionType3" value="D" checked="@statusCheck" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'") />
+                                                <label class="form-check-label" for="OrderOptionType3">
+                                                    @Localizer["ทานที่ร้าน"]
+                                                </label>
+                                                @{
+                                                    statusCheck = false;
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @* <div class="col-12 ">
+                                <div class="row">
+                                <div class="col-6">
+                                <p class="font-weight-bold">สั่งกลับบ้าน</p>
+                                </div>
+                                <div class="col-6">
+                                <div class=" input-group-prepend  d-flex justify-content-start">
+                                <label class="switch">
+                                @if (Model.OrderOptionType=='A' ||Model.OrderOptionType=='T'  )
+                                {
+                                <input type="checkbox" id="cbtakehome" checked>
+                                }else
+                                {
+                                <input type="checkbox" id="cbtakehome" >
+                                }
+
+                                <span class="slider round"></span>
+                                </label>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="col-12">
+                                <div class="row">
+                                <div class="col-6">
+                                <p class="font-weight-bold">ทานที่ร้าน</p>
+                                </div>
+                                <div class="col-6">
+                                <div class=" input-group-prepend  d-flex justify-content-start">
+                                <label class=" switch">
+                                @if (Model.OrderOptionType == 'A' || Model.OrderOptionType == 'D')
+                                {
+                                <input type="checkbox" id="cbinrest" checked>
+                                }
+                                else
+                                {
+                                <input type="checkbox" id="cbinrest" >
+                                }
+                                <span class="slider round"></span>
+                                </label>
+                                </div>
+                                </div>
+                                </div>
+                                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3 ">
+                    <div class="card rounded-body border-0">
+                        <div class="card-body pt-3">
+                            <div class="container-ml">
+                                <div class="col-12">
+                                    <p class="text-header">@Localizer["QR Code การสั่งอาหาร"]</p>
+                                </div>
+                                <div class="col-12">
+                                    <label class="font-weight-bold color-name-head" for="VatType">@Localizer["ประเภท QR Code สำหรับลูกค้าสั่งอาหาร"]</label>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-xl-6">
+                                    @*ปรับ*@
+                                    <select class="form-control form-select" aria-label=".form-select-lg example" id="QrCodeGenerateType" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                        @if (Model.QrCodeGenerateType == 'S')
+                                        {
+                                            <option value="S" selected>QR Code Static</option>
+                                            <option value="D">QR Code Dynamic</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="S" selected>QR Code Static</option>
+                                            <option value="D" selected>QR Code Dynamic</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3 ">
+                    <div class="card rounded-body border-0">
+                        <div class="card-body pt-3">
+                            <div class="container-ml">
+                                <div class="col-12">
+                                    <p class="text-h2-header">@Localizer["การแจ้งเตือน"]</p>
+                                </div>
+                                <div class="col-12 ">
+                                    <div class="row mt-3">
+                                        <div class="col-6">
+                                            <p class="font-weight-bold">@Localizer["เปิดการแจ้งเตือน LINE Notify"]</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class=" input-group-prepend  d-flex justify-content-start">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="CheckboxPrintCheckBill"  disabled>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p class="font-weight-bold">@Localizer["เปิด-ปิด การเรียกพนักงาน"]</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class=" input-group-prepend  d-flex justify-content-start">
+                                                <label class=" switch">
+                                                    @if (Model.CallStaff == 1)
+                                                    {
+                                                        <input type="checkbox" id="Checkboxcall" checked @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" id="Checkboxcall" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                    }
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* <div class="col-12 mb-3 "> //ย้ายไปหน้า Service Charge
+                    <div class="card rounded-body border-0">
+                        <div class="card-body pt-3">
+                            <div class="container-ml">
+                                <div class="col-12">
+                                    <p class="text-header mb-0">@Localizer["ค่าบริการ (Service Charge)"]</p>
+                                    <p class="text-header-info">@Localizer["*ค่าบริการจะถูกคำนวณเฉพาะออเดอร์ทานที่ร้านเท่านั้น"]</p>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="ServicechargeRate">@Localizer["ค่าบริการ"] %</label>
+                                                <input type="text" id="ServicechargeRate" class="form-control text-count examine reset-name" maxlength="5" placeholder="%" value="@Model.ServicechargeRate" oninput="ServiceChargeInput()" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="ServicechargeRate">@Localizer["รูปแบบการคำนวณค่าบริการ"]</label>
+                                                <select class="form-control form-select" aria-label=".form-select-lg example" id="ServicechargeType" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                    @if (Model.ServicechargeType == 'A')
+                                                    {
+                                                        <option value="A" selected>@Localizer["หลังหักส่วนลด"]</option>
+                                                        <option value="B">@Localizer["ก่อนหักส่วนลด"]</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="A">@Localizer["หลังหักส่วนลด"]</option>
+                                                        <option value="B" selected>@Localizer["ก่อนหักส่วนลด"]</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> *@
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                        {
+                            <div>
+                                <button type="submit" class="btn-save" id="Save">@Localizer["บันทึก"]</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <!--Modal Post not Success-->
+    <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mt-5"></h5>
+                            <h5 class="text-center mb-5 mt-0 " id="namePutnotSuccess">@Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+
+        $("#save").on("submit", function (e) {
+            e.preventDefault();
+            var dataString = $(this).serialize();
+            var OrderOptionType = $('input[name="OrderOptionType"]:checked').val();
+            var CallStaff = $("#Checkboxcall").prop("checked") ? "1" : "0";
+            var QrCodeGenerateType = $("#QrCodeGenerateType").val();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditBranchSetting", "BranchManagement")",
+                data: {
+                    orderoptiontype: OrderOptionType,
+                    callstaff: CallStaff,
+                    qrcodegeneratetype: QrCodeGenerateType,
+                },
+                success: function (message) {
+                    window.location.href = "@Url.Action("Index", "BranchManagement")";
+                }, error: function (message) {
+                    //alert(message.responseText);
+                    if ("FoodTables is using" == message.responseText || "OpenOrders Takeaway is using" == message.responseText) {
+                        $('#ModalPostnotSuccess').modal('show');
+                        $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ เนื่องจากมีโต๊ะที่เปิดใช้งานอยู่ จะต้องทำการปิดโต๊ะก่อน"].Value)));
+                    }
+                    else{
+                        $('#ModalPostnotSuccess').modal('show');
+                    }
+                }
+            });
+
+        });
+    });
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    // // ป้องกันการป้อนอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    // document.getElementById("ServicechargeRate").addEventListener("keypress", function (e) {
+    //     if (e.key.match(/[^0-9]./) && e.key !== "Backspace") {
+    //         e.preventDefault();
+    //     }
+    // });
+
+    // // ป้องกันการกดปุ่มอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    // document.getElementById("ServicechargeRate").addEventListener("keydown", function (e) {
+    //     if (e.key.match(/[^0-9]./) && e.key !== "Backspace") {
+    //         e.preventDefault();
+    //     }
+    // });
+
+    function ServiceChargeInput() {
+        var display = document.getElementById("ServicechargeRate");
+        var currentValue = display.value;
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            $('#ServicechargeRate').val(aaa);
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    display.value = chack[1];
+                }
+            }
+        }
+
+        var integerValue = parseFloat(currentValue);
+        if (isNaN(integerValue)) {
+            display.value = "";
+            return;
+        }
+
+        if (integerValue >= 100) {
+            display.value = "100";
+        } else {
+            var decimalPattern = /^\d+(\.\d{0,2})?$/;
+
+            if (!decimalPattern.test(currentValue)) {
+                display.value = currentValue.slice(0, -1);
+            } else {
+                display.value = display.value;
+            }
+        }
+    }
+
+    function AllIndexOf(txt) {
+        var allIndexOf = [];
+        var index = 0;
+        index = txt.indexOf('.');
+        while (index != -1) {
+            allIndexOf.push(index);
+            index = txt.indexOf('.', index + 1);
+        }
+        return allIndexOf;
+    }
+
+</script>

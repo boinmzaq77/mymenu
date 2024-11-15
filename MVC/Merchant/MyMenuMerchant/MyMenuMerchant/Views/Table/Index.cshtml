@@ -1,0 +1,1348 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.JAM;
+@model List<TableWithOrderModel>;
+@using MyMenuMerchant.Controllers;
+@inject IViewLocalizer Localizer
+
+<style>
+    .font-table-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9 !important;
+    }
+
+    .bg-table {
+        background: #ffffff url(/mymenumerchant/images/MenuTebleC.png) 0px 17px no-repeat;
+        background-size: 24px 24px;
+    }
+</style>
+<body id="Table">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-12  mb-4">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <h2 class="font-weight-bold menu-header">@Localizer["โต๊ะ"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item">@Localizer["โต๊ะ"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body ">
+                        <div class="container p-0">
+                            <div class="form-row">
+                                <div class="col-12 search">
+                                    <div class="form-group mb-0">
+                                        @* <label class="font-weight-bold" for="SearchTable">@Localizer["ค้นหาโต๊ะ"]</label> *@
+                                        <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["ค้นหาโต๊ะ"]" style="height: 45px;" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-12" id="accordion">
+                                    <div class="card border-0">
+
+
+                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-6 col-lg-6 mb-2">
+                                                        @*  <button type="button" data-toggle="modal" data-target="#ModalInfo" onclick="OnClickModalInfo(1111)">ModalInfo</button>*@
+                                                        <div class="card card-border-search">
+                                                            <div class="card-body py-0">
+                                                                <div class="form-group mb-0">
+                                                                    <label class="font-weight-bold">@Localizer["ประเภทออเดอร์"]</label>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input checkbok-search" id="checkorder1" onchange="fillter()">
+                                                                                <label class="form-check-label font-weight-bold">@Localizer["ทานที่ร้าน"]</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input checkbok-search" id="checkorder2" onchange="fillter()">
+                                                                                <label class="form-check-label font-weight-bold">@Localizer["สั่งกลับบ้าน"]</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-6 col-lg-6 mb-2">
+                                                        <div class="card card-border-search">
+                                                            <div class="card-body py-0">
+                                                                <div class="form-group mb-0">
+                                                                    <label class="font-weight-bold">@Localizer["สถานะของโต๊ะ"]</label>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input checkbok-search" id="checktable1" onchange="fillter()">
+                                                                                <label class="form-check-label font-weight-bold">@Localizer["รอดำเนินการ"]</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input checkbok-search" id="checktable2" onchange="fillter()">
+                                                                                <label class="form-check-label font-weight-bold">@Localizer["รอเสิร์ฟ"]</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input checkbok-search" id="checktable3" onchange="fillter()">
+                                                                                <label class="form-check-label font-weight-bold">@Localizer["เสิร์ฟครบ"]</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input checkbok-search" id="checktable4" onchange="fillter()">
+                                                                                <label class="form-check-label font-weight-bold">@Localizer["รอคิดเงิน"]</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-header btn-card-header p-0" id="headingOne">
+                                            <h5 class="mb-0">
+                                                <button id="btnSOne" class="btn btn-link p-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    <i id="iSOne" class="color-angle fa fa-angle-up"></i>
+                                                </button>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="card border-0">
+                    <div class="card-body p-3">
+                        <div class="container px-0">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="display-flex-center mb-3">
+                                        <div class="p-0"><label class="font-weight-bold  font-size">@Localizer["โต๊ะ"] <small class="size-small font-weight-bold layout-all ms-2 " id="count"> @Localizer["จำนวนทั้งหมด"] @Model.Count</small></label>  </div>
+                                        @*<button type="button" class="btn btn-table-order font-weight-bold ">เปิดโต๊ะสำหรับสั่งกลับบ้าน</button>*@
+                                        <div class="p-0">
+                                            <select class="form-select custom-select my-1 mr-sm-2 form-select-table" id="SortTable" onchange="fillter()">
+                                                <option value="1">เรียงลำดับค่าเริ่มต้น</option>
+                                                <option value="2">เรียงตามชื่อ ก-ฮ</option>
+                                                <option value="3">เรียงตามชื่อ ฮ-ก</option>
+                                                <option value="4">เรียงจากเวลาเก่าที่สุด</option>
+                                                <option value="5">เรียงจากเวลาใหม่ที่สุด</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 nocontent" style="text-align:center;display:none">
+                                    <p>@Localizer["ไม่พบข้อมูล"]</p>
+                                </div>
+
+
+                                <div class="col-12" style="padding:0px;margin:0px;">
+                                    <div class="form-row item-table" id="defaultshow" style="padding:0px;margin:0px;">
+
+                                        @* E : ว่าง , D : ว่างแบบ ไดนามิกแสดงปุ่มเปิดโต๊ะ
+                                        P : Pending (Default) เมื่อเปิดโต๊ะ;
+                                        W : Waiting Served รอเสิร์ฟ;
+                                        S : Served Complete เสิร์ฟครบ;
+                                        B : Waiting billคิดเงิน;
+                                        F : Finish คิดเงืนและจบ process แล้ว ; *@
+
+                                        @* แก้ไขใหม่ *@
+                                        @for (int i = 0; i < Model.Count; i++)
+                                        {
+                                            switch (Model[i].Status.ToString().ToLower())
+                                            {
+                                                case "d":
+                                                case "e":
+                                                    @* ปกติ *@
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_@Model[i].FoodTableNO" data-statustable="@Model[i].Status" data-openorderstype="@Model[i].OpenOrdersType" data-nametable="@Model[i].FoodTableName">
+                                                        <div class="card card-h-items">
+                                                            <div class="card-header card-header-no-table">
+                                                                <p class="mb-0 font-weight-bold table-name-text">@Model[i].FoodTableName</p>
+                                                            </div>
+                                                            <div class="card-body card-body-no-table">
+                                                                @if (Model[i].Status.ToString().ToLower() == "d")
+                                                                {
+                                                                    <div class="no-table">
+                                                                        <button type="button" class="btn btn-opentable-color font-weight-bold btnopentable" onclick="OnTableQRCode(event,@Model[i].FoodTableNO);">@Localizer["เปิดโต๊ะ"]</button>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="no-table-Static">
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    break;
+                                                case "p":
+                                                    @* รอดำเนินการ แบบปิดโต๊ะได้ : 0 ออเดอร์ *@
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_@Model[i].FoodTableNO" data-statustable="@Model[i].Status" data-openorderstype="@Model[i].OpenOrdersType" data-nametable="@Model[i].FoodTableName">
+                                                        <div class="card card-h-items">
+                                                            <div class="card-header card-header-table card-header-table-orange pb-2" id="click_@Model[i].OpenOrdersID" onclick="OnTables(@Model[i].countOrder,'@Model[i].OpenOrdersID');">
+                                                                <p class="mb-0 font-weight-bold table-name-text">@Model[i].FoodTableName</p>
+                                                                <div class="w-100">
+                                                                    <div class="order-flex">
+                                                                        <p class="mb-2 font-weight-bold" id="countorder_@Model[i].OpenOrdersID">@Model[i].countOrder @Localizer["ออเดอร์"]</p>
+                                                                        <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model[i].DateCreated)</p>
+                                                                    </div>
+                                                                    <div class="order-money-flex">
+                                                                        <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model[i].OpenOrdersID">@TableController.ConvertToCurrency(@Model[i].Total ?? 0)</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body card-body-table card-body-table-orange pt-0">
+                                                                <div class="order-button-flex-rl">
+                                                                    <div class="grid-1">
+                                                                        <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model[i].OpenOrdersID" data-openorderid="@Model[i].OpenOrdersID" data-foodtableno="@Model[i].FoodTableNO" data-foodtablename="@Model[i].FoodTableName" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                                                                        <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model[i].OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                                                                        <button type="button" class="btn btn-table-color-cancel openmenu" id="btnclosetable_@Model[i].OpenOrdersID" data-toggle="modal" data-target="#ModalTableDelete" onclick="SetClose('@Model[i].OpenOrdersID','@Model[i].FoodTableName')">@Localizer["ปิดโต๊ะ"]</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    break;
+                                                case "w":
+                                                    @* รอเสิร์ฟ แบบมี ออเดอร์ *@
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_@Model[i].FoodTableNO" data-statustable="@Model[i].Status" data-openorderstype="@Model[i].OpenOrdersType" data-nametable="@Model[i].FoodTableName">
+                                                        <div class="card card-h-items">
+                                                            <div class="card-header card-header-table card-header-table-yellow pb-2" id="click_@Model[i].OpenOrdersID" onclick="OnTables(@Model[i].countOrder,'@Model[i].OpenOrdersID');">
+                                                                <p class="mb-0 font-weight-bold table-name-text">@Model[i].FoodTableName</p>
+                                                                <div class="w-100">
+                                                                    <div class="order-flex">
+                                                                        <p class="mb-2 font-weight-bold" id="countorder_@Model[i].OpenOrdersID">@Model[i].countOrder @Localizer["ออเดอร์"]</p>
+                                                                        <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model[i].DateCreated)</p>
+                                                                    </div>
+                                                                    <div class="order-money-flex">
+                                                                        <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model[i].OpenOrdersID">@TableController.ConvertToCurrency(@Model[i].Total ?? 0)</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body card-body-table card-body-table-yellow pt-0">
+                                                                <div class="order-button-flex-l">
+                                                                    <div class="grid-1">
+                                                                        <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model[i].OpenOrdersID" data-openorderid="@Model[i].OpenOrdersID" data-foodtableno="@Model[i].FoodTableNO" data-foodtablename="@Model[i].FoodTableName" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                                                                        <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model[i].OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    break;
+                                                case "s":
+                                                    @* เสิร์ฟครบ *@
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_@Model[i].FoodTableNO" data-statustable="@Model[i].Status" data-openorderstype="@Model[i].OpenOrdersType" data-nametable="@Model[i].FoodTableName">
+                                                        <div class="card card-h-items">
+                                                            <div class="card-header card-header-table card-header-table-green pb-2" id="click_@Model[i].OpenOrdersID" onclick="OnTables(@Model[i].countOrder,'@Model[i].OpenOrdersID');">
+                                                                <p class="mb-0 font-weight-bold table-name-text">@Model[i].FoodTableName</p>
+                                                                <div class="w-100">
+                                                                    <div class="order-flex">
+                                                                        <p class="mb-2 font-weight-bold" id="countorder_@Model[i].OpenOrdersID">@Model[i].countOrder @Localizer["ออเดอร์"]</p>
+                                                                        <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model[i].DateCreated)</p>
+                                                                    </div>
+                                                                    <div class="order-money-flex">
+
+                                                                        <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model[i].OpenOrdersID">@TableController.ConvertToCurrency(@Model[i].Total ?? 0)</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body card-body-table card-body-table-green pt-0">
+                                                                <div class="order-button-flex-l">
+                                                                    <div class="grid-1">
+                                                                        <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model[i].OpenOrdersID" data-openorderid="@Model[i].OpenOrdersID" data-foodtableno="@Model[i].FoodTableNO" data-foodtablename="@Model[i].FoodTableName" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                                                                        <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model[i].OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    break;
+                                                case "b":
+                                                    @* รอคิดเงิน *@
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_@Model[i].FoodTableNO" data-statustable="@Model[i].Status" data-openorderstype="@Model[i].OpenOrdersType" data-nametable="@Model[i].FoodTableName">
+                                                        <div class="card card-h-items">
+                                                            <div class="card-header card-header-table card-header-table-blue pb-2" id="click_@Model[i].OpenOrdersID" onclick="OnTables(@Model[i].countOrder,'@Model[i].OpenOrdersID');">
+                                                                <p class="mb-0 font-weight-bold table-name-text">@Model[i].FoodTableName</p>
+                                                                <div class="w-100">
+                                                                    <div class="order-flex">
+                                                                        <p class="mb-2 font-weight-bold" id="countorder_@Model[i].OpenOrdersID">@Model[i].countOrder @Localizer["ออเดอร์"]</p>
+                                                                        <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model[i].DateCreated)</p>
+                                                                    </div>
+                                                                    <div class="order-money-flex">
+
+                                                                        <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model[i].OpenOrdersID">@TableController.ConvertToCurrency(@Model[i].Total ?? 0)</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body card-body-table card-body-table-blue pt-0">
+                                                                <div class="order-button-flex-rl">
+                                                                    <div class="grid-1">
+                                                                        <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model[i].OpenOrdersID" data-openorderid="@Model[i].OpenOrdersID" data-foodtableno="@Model[i].FoodTableNO" data-foodtablename="@Model[i].FoodTableName" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                                                                        <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model[i].OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                                                                        <button type="button" class="btn btn-table-color-check openmenu" data-openorderid="@Model[i].OpenOrdersID" onclick="btnPayment(this)">@Localizer["คิดเงิน"]</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    break;
+                                                default:
+                                                    @* ปกติ *@
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_@Model[i].FoodTableNO" data-statustable="@Model[i].Status" data-openorderstype="@Model[i].OpenOrdersType" data-nametable="@Model[i].FoodTableName">
+                                                        <div class="card card-h-items">
+                                                            <div class="card-header card-header-no-table">
+                                                                <p class="mb-0 font-weight-bold table-name-text">@Model[i].FoodTableName</p>
+                                                            </div>
+                                                            <div class="card-body card-body-no-table">
+                                                                @if (Model[i].Status.ToString().ToLower() == "d")
+                                                                {
+                                                                    <div class="no-table">
+                                                                        <button type="button" class="btn btn-opentable-color font-weight-bold btnopentable" onclick="OnTableQRCode(event,@Model[i].FoodTableNO);">@Localizer["เปิดโต๊ะ"]</button>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="no-table-Static">
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    break;
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*ModalMenu*@
+    <div class="modal fade bd-example-modal-lg" id="ModalMenu" tabindex="-1" role="dialog" aria-labelledby="ModalMenu" aria-hidden="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-item modal-dialog-centered modal-lg " role="document">
+            <div class="modal-content " id="modalitem">
+            </div>
+        </div>
+    </div>
+
+    @*ModalDetailsMenu*@
+    <div class="modal fade bd-example-modal-mb border-modal-details-menu" id="ModalDetailsMenu" tabindex="1" role="dialog" aria-labelledby="ModalDetailsMenu" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered modal-mb modal-dialog-scrollable" role="document">
+            <div class="modal-content" style="min-height: calc(100% - 0rem);" id="modaldetailitem">
+            </div>
+        </div>
+    </div>
+
+    @*ModalCartDetailsMenu*@
+    <div class="modal fade bd-example-modal-lg cart-details-menu modal-pr-4" id="ModalCartDetailsMenu" tabindex="-1" role="dialog" aria-labelledby="ModalMenu" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-item modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content" style="min-height: calc(100% - 0rem);" id="modalcart">
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableDelete *@
+    <div class="modal fade " id="ModalTableDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold" id="modalclosetable"> คุณต้องการ ปิดโต๊ะ 1 หรือไม่?</h5>
+                    <div class=" d-flex justify-content-center">
+                        <input id="idclose" value="" hidden />
+                        <button type="button" class="font-weight-bold btn button-modal-delete" onclick="Clear()">@Localizer["ปิดโต๊ะ"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableNoOrder *@
+    <div class="modal fade " id="ModalTableNoOrder" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["ยังไม่มีออเดอร์"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableCloseMenu *@
+    <div class="modal fade " id="ModalTableCloseMenu" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["คุณต้องการออกจากหน้าสั่งสินค้าใช่หรือไม่ ?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-delete" onclick="ClearMenu()">@Localizer["ออก"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal" onclick="ClearDetailsMenu()">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert"></h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableMove *@
+    <div class="modal fade " id="ModalTableMove" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold" id="txtmodaltableMove"> @Localizer["คุณต้องการย้ายโต๊ะ"]   @Localizer["ไปยังโต๊ะอื่นใช่หรือไม่?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <input id="idclose" value="" hidden />
+                        <button type="button" class="font-weight-bold btn button-modal-move" onclick="TableClear('ModalTableMove')" data-toggle="modal" data-target="#ModalSetMoveTable">@Localizer["ย้ายโต๊ะ"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalSetMoveTable *@
+    <div class="modal fade bd-example-modal-lg" id="ModalSetMoveTable" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-move-table">
+                    <div class="d-flex flex-row mb-2">
+                        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal close-move-table" data-dismiss="modal" aria-label="Close" onclick="TableSetClose('ModalSetMoveTable');"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch-modal mb-0">@Localizer["เลือกโต๊ะที่ต้องการย้าย"]</h5></div>
+                    </div>
+                </div>
+                <input type="text" id="setMoveOpenOrdertID" value="" hidden />
+                <form class="modal-body p-0 margin-10" id="FormModalSetMoveTable" onchange="MyMoveTable();">
+                    <div class="form-row " id="divShowdata">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            if ((Model[i].Status.ToString().ToLower() == "e") || (Model[i].Status.ToString().ToLower() == "d"))
+                            {
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-3">
+                                    <div class="form-check box-lists">
+                                        <div class="row-lists">
+                                            <label class="form-check-label box-label font-boxs-label" for="table_@Model[i].FoodTableNO" id="labeltable_@Model[i].FoodTableNO">
+                                                @Model[i].FoodTableName
+                                            </label>
+                                            <input class="" type="radio" name="tables" id="table_@Model[i].FoodTableNO" value="@Model[i].FoodTableNO" hidden>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </form>
+                <div class="modal-branch modal-footer">
+                    <button type="button" class="btn btn-save-branch" id="SubmitSetMoveTables" data-dismiss="modal" aria-label="Close" onclick="fnMoveTable()" disabled>@Localizer["บันทึก"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModalTableMoveSuccess *@
+    <div class="modal fade " id="ModalTableMoveSuccess" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold"> @Localizer["ย้ายโต๊ะสำเร็จ"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <input id="idclose" value="" hidden />
+                        <button type="button" class="font-weight-bold btn button-modal-move" onclick="fnReload()" data-dismiss="modal">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-sticky">
+        <div class="footer-showtable">
+            <div class="row row-w100">
+                <div class="media">
+                    <div class="media-body layout-body ">
+                        <p class="mb-0">@Localizer["สถานะของโต๊ะ"]</p>
+                        <div class="info-lists">
+                            <div class="info-text-box">
+                                <div class="info-flex">
+                                    <div class="info-box-orange"></div>
+                                    <p class="mb-0">@Localizer["รอดำเนินการ"]</p>
+                                </div>
+                                <p class="mb-0" id="tablestatusPending">0</p>
+                            </div>
+                            <div class="info-text-box">
+                                <div class="info-flex">
+                                    <div class="info-box-yellow"></div>
+                                    <p class="mb-0">@Localizer["รอเสิร์ฟ"]</p>
+                                </div>
+                                <p class="mb-0" id="tablestatusWaitting">0</p>
+                            </div>
+                            <div class="info-text-box">
+                                <div class="info-flex">
+                                    <div class="info-box-green"></div>
+                                    <p class="mb-0">@Localizer["เสิร์ฟครบ"]</p>
+                                </div>
+                                <p class="mb-0" id="tablestatusServe">0</p>
+                            </div>
+                            <div class="info-text-box">
+                                <div class="info-flex">
+                                    <div class="info-box-sky"></div>
+                                    <p class="mb-0">@Localizer["รอคิดเงิน"]</p>
+                                </div>
+                                <p class="mb-0" id="tablestatusBilling">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+<form hidden id="Qrcodejsonform" asp-action="TableQRCode">
+    <input name="json" id="Qrcodejson" value="" />
+</form>
+
+<form id="ToPayment" asp-action="PaymentProcess" method="post" hidden>
+    <input type="text" name="transtring" id="tranmodel" />
+</form>
+
+<input id="datelast" value="" hidden />
+@if (!string.IsNullOrEmpty(TempData["UserMessage"]?.ToString()))
+{
+    @await Html.PartialAsync("ErrorModels")
+}
+<script>
+    function GetTableloop() {
+        if ($('#datelast').val() != "undefined") {
+            $.ajax({
+                type: "GET",
+                async: false,
+                data: {
+                    date: $('#datelast').val()
+                },
+                url: "@Url.Action("GetTableloop", "Table")",
+                success: function (message) {
+                    //alert(message);
+                    var xx = message.length;
+                    if (message.length != 0) {
+                        var xxx = message.sort((a, b) => new Date(b.dateModified).getTime() - new Date(a.dateModified).getTime())[0];
+                        if (xxx != undefined) {
+                            $('#datelast').val(xxx.dateModified);
+                            //console.log(xxx.dateModified);
+                        } else {
+                            $('#datelast').val("undefined");
+                        }
+
+                        message.forEach(function (value, i) {
+                            $.ajax({
+                                url: "@Url.Action("Table", "Table")",
+                                type: "GET",
+                                data: {
+                                    data: JSON.stringify(value),
+                                },
+                                success: function (message) {
+                                    //console.log(message)
+                                    //console.log(value)
+                                    $('#tableid_' + value.foodTableNO).html(message);
+
+                                }, error: function (message) {
+                                    $('#ModalPostnotSuccessError').modal('show');
+                                    $('#namealert').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถปิดโต๊ะได้"].Value)));
+                                }
+                            });
+
+                        });
+                    }
+                    // var model = JSON.parse(message);
+                    // console.log(message)
+
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+            });
+        }
+        // $('#TableOrder').DataTable().ajax.reload();
+    }
+    var sortModel = [];
+    var _role;
+    var autoserve;
+    var tempsortModel = [];
+
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        autoserve = '@ViewBag.auto';
+        _role = _role.toLowerCase();
+        var data = @Json.Serialize(Model);
+
+        var xxx = data.sort((a, b) => new Date(b.dateModified).getTime() - new Date(a.dateModified).getTime())[0];
+
+        //console.log(data);
+        if (xxx != undefined) {
+            $('#datelast').val(xxx.dateModified)
+            console.log(xxx.dateModified)
+        } else {
+            $('#datelast').val("undefined")
+        }
+        setInterval(GetTableloop, 5000);
+        sortModel = SetModellist();
+        CountTableStatus();
+
+    @if (!string.IsNullOrEmpty(TempData["UserMessage"]?.ToString()))
+    {
+        var message = TempData["UserMessage"];
+
+        <text>
+                ErrorShow('@Html.Raw(message)');
+        </text>
+    }
+            localStorage.removeItem('order');
+        localStorage.removeItem('chooseopenorderid');
+
+
+        $('#SearchTable').on('keyup', function () {
+            fillter();
+            //tables.search(this.value).draw();
+        });
+
+        if (_role == "editor" || _role == "invoice" || _role == "officer") {
+            document.getElementsByClassName('btnopentable')
+            $('.btnopentable').addClass("btn-hidden-open-table"); /* setAttribute("class", "btn-hidden-open-table"); */
+            $('.btn-table-color-delete').addClass("btn-hidden-open-table");
+        }
+    });
+
+    function additem(a) {
+        var id = $(a).data("openorderid");
+        localStorage.setItem("chooseopenorderid", id);
+        $('#modalitem').load("@Url.Action("ModalMenu", "Table")");
+    }
+
+    function Clear() {
+        e.preventDefault();  // stop the links default behavior\
+        var id = $(this).data("openorderid");
+        localStorage.setItem("chooseopenorderid", id);
+        $('#modalitem').load("@Url.Action("ModalMenu", "Table")");
+    }
+
+    function Clear() {
+        var id = $('#idclose').val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Closetable", "Table")",
+            data: {
+                OpenOrdersID: id,
+            },
+            success: function (message) {
+                location.reload();
+            }, error: function (message) {
+                $('#ModalPostnotSuccessError').modal('show');
+                $('#namealert').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถปิดโต๊ะได้"].Value)));
+            }
+        });
+    }
+
+    function SetClose(id, foodtablename) {
+        $('#idclose').val(id);
+        var tablename = foodtablename;
+        $('#modalclosetable').text("@Localizer["คุณต้องการปิดโต๊ะ"] " + '"' + tablename + '"' + " @Localizer["หรือไม่ ?"]");
+    }
+
+    function Opencart(event) {
+        var listitemchoose = JSON.parse(localStorage.getItem("order"));
+        // console.log(listitemchoose);
+        if (listitemchoose == null) {
+            listitemchoose = [];
+        }
+
+        event.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ModalCart", "Table")",
+            data: {
+                lstorder: listitemchoose,
+            },
+            success: function (message) {
+                $('#modalcart').html(message);
+                $('#ModalCartDetailsMenu').modal('show');
+                event.preventDefault();
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function OnTables(sumorder, id) {
+        if (sumorder != 0) {
+            window.location.href = "@Url.Action("TableDetails", "Table")?id=" + id;
+        } else {
+            $('#ModalTableNoOrder').modal('show')
+        }
+    }
+
+    function OnTableQRCode(e, id) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Opentable", "Table")",
+            data: {
+                tableno: id,
+            },
+            success: function (message) {
+                // console.log(message);
+                var jsonopentable = JSON.parse(message);
+                //console.log(jsonopentable);
+                if (jsonopentable.generateCode != null) {
+                    $('#Qrcodejson').val(message);
+                    $("#Qrcodejsonform").submit();
+                } else {
+                    location.reload();
+                }
+            }, error: function (message) {
+                //alert(message.responseText);
+                $('#ModalPostnotSuccessError').modal('show');
+                if (message.responseText == "missing table") {
+                    $('#namealert').text("@Localizer["ไม่สามารถเปิดโต๊ะได้ เนื่องจากไม่พบโต๊ะ"]");
+                } else if (message.responseText == "table not ready") {
+                    $('#namealert').text("@Localizer["ไม่สามารถเปิดโต๊ะได้ เนื่องจากโต๊ะยังไม่พร้อมใช้งาน"]");
+                } else {
+                    $('#namealert').text("@Localizer["ไม่สามารถเปิดโต๊ะได้"]");
+                }
+            }
+        });
+    }
+
+    function OnAddOrderNumber() {
+        var number = document.getElementById("textorder");
+        var numberAll = document.getElementById("textorder").innerHTML;
+        sumnumber = parseInt(numberAll) + 1;
+        if (sumnumber <= 1) {
+            number.innerHTML = 1;
+            sumnumber = 1;
+            $('#order').val(sumnumber);
+        } else {
+            number.innerHTML = sumnumber
+            $('#order').val(sumnumber);
+        }
+    }
+
+    function OnDelOrderNumber() {
+        var number = document.getElementById("textorder");
+        var numberAll = document.getElementById("textorder").innerHTML;
+        sumnumber = parseInt(numberAll) - 1;
+        if (sumnumber <= 1) {
+            number.innerHTML = 1;
+            sumnumber = 1;
+            $('#order').val(sumnumber);
+        } else {
+            number.innerHTML = sumnumber
+            $('#order').val(sumnumber);
+        }
+    }
+
+    function OnClickModalInfo(data) {
+        var resettext = '';
+        var textresponse = "@Localizer["คุณต้องการลบ"]" + data + "@Localizer["หรือไม่?"]";
+        var AddtextP = document.getElementById("Addtext");
+        AddtextP.innerHTML = resettext;
+        AddtextP.innerHTML = textresponse;
+        $('#ModalInfo').modal('show');
+    }
+
+    function Close() {
+        $("#ModalDetailsMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function OnSubmit() {
+        $("#ModalDetailsMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function ClearMenu() {
+        localStorage.removeItem('order');
+        localStorage.removeItem('chooseopenorderid');
+        $('#ModalTableCloseMenu').modal('hide');
+        $('#ModalMenu').modal('hide');
+    }
+
+    function ClearDetailsMenu() {
+        $("#ModalTableCloseMenu").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function fillter() {
+        var text = $('#SearchTable').val();
+        $('.divtable').css('display', 'block');
+        var Takehome = document.getElementById("checkorder2").checked;
+        var Dinner = document.getElementById("checkorder1").checked;
+
+        //เพิ่่ม filter ตามย้ายโต๊ะ 12/03/2567
+        var Pending = document.getElementById("checktable1").checked; //P
+        var WaitServed = document.getElementById("checktable2").checked; //W
+        var Success = document.getElementById("checktable3").checked; //S
+        var Charge = document.getElementById("checktable4").checked; //B
+
+        // //----------------------
+        // var lstModel = [];
+        // var listdata = @Html.Raw(Json.Serialize(Model));
+        // //---- Ini New OBJ
+        // for (var i = 0; i < listdata.length; i++) {
+        //     lstModel.push({
+        //         merchantID: listdata[i].merchantID,
+        //         branchID: listdata[i].branchID,
+        //         foodTableNO: listdata[i].foodTableNO,
+        //         foodTableName: listdata[i].foodTableName,
+        //         customerName: listdata[i].customerName,
+        //         customerMobile: listdata[i].customerMobile,
+        //         openOrdersID: listdata[i].openOrdersID,
+        //         openOrdersType: listdata[i].openOrdersType,
+        //         status: listdata[i].status,
+        //         total: listdata[i].total,
+        //         countOrder: listdata[i].countOrder,
+        //         dateCreated: listdata[i].dateCreated,
+        //         dateModified: listdata[i].dateModified
+        //     });
+        // }
+
+        var lstModel = [];
+        lstModel = SetModellist();
+
+        sortModel = [];
+        var sort = document.getElementById('SortTable').value;
+
+        switch (sort) {
+            case "1":
+                sortModel = lstModel
+                    .slice().sort(function (a, b) {
+                        return a.foodTableNo - b.foodTableNo;
+                    });
+                break;
+            case "2":
+                sortModel = lstModel
+                    .slice().sort(function (a, b) {
+                        return a.foodTableName.localeCompare(b.foodTableName);
+                    });
+                break;
+            case "3":
+                sortModel = lstModel
+                    .slice().sort(function (a, b) {
+                        return b.foodTableName.localeCompare(a.foodTableName);
+                    });
+                break;
+            case "4":
+                sortModel = lstModel
+                    .slice() // สำเนาของอาร์เรย์เพื่อป้องกันการแก้ไขข้อมูลต้นฉบับ
+                    .sort(function (a, b) {
+                        // ตรวจสอบหากโต๊ะว่าง
+                        var aEmpty = a.openOrdersType == null;
+                        var bEmpty = b.openOrdersType == null;
+
+                        // เรียงลำดับโต๊ะตามเงื่อนไขที่กำหนด
+                        if (aEmpty && !bEmpty) {
+                            return 1; // โต๊ะที่เป็น null ไปท้ายสุด
+                        } else if (!aEmpty && bEmpty) {
+                            return -1; // โต๊ะที่ไม่เป็น null ไปด้านหน้า
+                        } else {
+                            // เรียงตามเวลาเปิดโต๊ะและชื่อโต๊ะ
+                            return a.dateModified.localeCompare(b.dateModified) || a.foodTableName.localeCompare(b.foodTableName);
+                        }
+                    });
+
+                break;
+            case "5":
+                sortModel = lstModel
+                    .slice().sort(function (a, b) {
+                        // หากโต๊ะว่างให้ไปท้ายสุด
+                        var aEmpty = a.openOrdersType === null;
+                        var bEmpty = b.openOrdersType === null;
+                        if (aEmpty && !bEmpty) {
+                            return 1;
+                        } else if (!aEmpty && bEmpty) {
+                            return -1;
+                        } else {
+                            // เรียงตามเวลาล่าสุดที่เปิดโต๊ะ
+                            var timeComparison = new Date(b.dateModified) - new Date(a.dateModified);
+                            if (timeComparison !== 0) {
+                                return timeComparison;
+                            } else {
+                                // เรียงตามชื่อโต๊ะและค่าเริ่มต้น
+                                return a.foodTableName.localeCompare(b.foodTableName);
+                            }
+                        }
+                    });
+                break;
+            default:
+                sortModel = lstModel
+                    .slice().sort(function (a, b) {
+                        return a.foodTableNo - b.foodTableNo;
+                    });
+                break;
+        }
+
+        CountTableStatus();
+        var OpenOrdersType = $(this).data("openorderstype");
+
+        sortModel = sortModel.filter(function (x) {
+            var a = true;
+            if (Takehome && Dinner && x.openOrdersType == "") { a = false; }
+            else if (Takehome && Dinner && x.openOrdersType != "") { }
+            else if (Takehome && x.openOrdersType != 'T') { a = false; }
+            else if (Dinner && x.openOrdersType != 'D') { a = false; }
+
+            if (a == true) {
+                a = false;
+                if ((Pending && x.status == "P") || (WaitServed && x.status == "W") || (Success && x.status == "S") || (Charge && x.status == "B")) { a = true; }
+                else if ((!Pending && !WaitServed && !Success && !Charge)) { a = true; }
+            }
+            if (text != '' && a == true) {
+                var val = x.foodTableName.search(text);
+                if (val == -1) { a = false; }
+            }
+            return a;
+        });
+
+        var txtshow = "";
+        for (var i = 0; i < sortModel.length; i++) {
+            switch (sortModel[i].status.toLowerCase()) {
+                case "d":
+                case "e":
+    @* ปกติ *@
+                        txtshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_' + sortModel[i].foodTableNO + '" data-statustable="' + sortModel[i].status + '" data-openorderstype="' + sortModel[i].openOrdersType + '" data-nametable="' + sortModel[i].foodTableName + '">';
+                    txtshow += '<div class="card card-h-items">';
+                    txtshow += '<div class="card-header card-header-no-table">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-name-text">' + sortModel[i].foodTableName + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="card-body card-body-no-table">';
+                    if (sortModel[i].status.toLowerCase() == "d") {
+                        txtshow += '<div class="no-table">';
+                        txtshow += '<button type="button" class="btn btn-opentable-color font-weight-bold btnopentable" onclick="OnTableQRCode(event,' + sortModel[i].foodTableNO + ');">' + @Html.Raw(Json.Serialize(@Localizer["เปิดโต๊ะ"].Value))  + '</button>';
+                        txtshow += '</div>';
+                    }
+                    else {
+                        txtshow += '<div class="no-table-Static">';
+                        txtshow += '</div>';
+                    }
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    break;
+                case "p":
+                    //รอดำเนินการ แบบปิดโต๊ะได้ : 0 ออเดอร์
+                    txtshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_' + sortModel[i].foodTableNO + '" data-statustable="' + sortModel[i].status + '" data-openorderstype="' + sortModel[i].openOrdersType + '" data-nametable="' + sortModel[i].foodTableName + '">';
+                    txtshow += '<div class="card card-h-items">';
+                    txtshow += '<div class="card-header card-header-table card-header-table-orange pb-2" id="click_' + sortModel[i].openOrdersID + '" onclick="OnTables(' + sortModel[i].countOrder + ',' + sortModel[i].openOrdersID + ');">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-name-text"> ' + sortModel[i].foodTableName + '</p>';
+                    txtshow += '<div class="w-100">';
+                    txtshow += '<div class="order-flex">';
+                    txtshow += '<p class="mb-2 font-weight-bold" id="countorder_' + sortModel[i].openOrdersID + '">' + sortModel[i].countOrder + '   ' + @Html.Raw(Json.Serialize(Localizer["ออเดอร์"].Value)) +  '</p>';
+                    txtshow += '<p class="mb-2 font-weight-bold">' + formatTime(sortModel[i].dateCreated) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="order-money-flex">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-text-money" id="grandtotal_' + sortModel[i].openOrdersID + '">' + roundToTwo(sortModel[i].total ?? 0) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += ' </div>';
+                    txtshow += '<div class="card-body card-body-table card-body-table-orange pt-0">';
+                    txtshow += '<div class="order-button-flex-rl">';
+                    txtshow += '<div class="grid-1">';
+                    txtshow += '<button type="button" class="btn btn-table-color-delete" id="btnmovetable_' + sortModel[i].openOrdersID + 'data-openorderid="' + sortModel[i].openOrdersID + '"data-foodtableno="' + sortModel[i].foodTableNO + '" data-foodtablename="' + sortModel[i].foodTableName + '"  onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>';
+                    txtshow += '<button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="' + sortModel[i].openOrdersID + '" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>';
+                    txtshow += '<button type="button" class="btn btn-table-color-cancel openmenu" id="btnclosetable_' + sortModel[i].openOrdersID + '" data-toggle="modal" data-target="#ModalTableDelete" onclick="SetClose(' + "'" + sortModel[i].openOrdersID + "'" + ',' + "'" + sortModel[i].foodTableName + "'" + ')" > ' + @Html.Raw(Json.Serialize(Localizer["ปิดโต๊ะ"].Value)) + '</button>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    break;
+                case "w":
+                    //รอเสิร์ฟ แบบมี ออเดอร์
+                    txtshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_' + sortModel[i].foodTableNO + '" data-statustable="' + sortModel[i].status + '" data-openorderstype="' + sortModel[i].openOrdersType + '" data-nametable="' + sortModel[i].foodtablename + '">';
+                    txtshow += '<div class="card card-h-items" >';
+                    txtshow += '<div class="card-header card-header-table card-header-table-yellow pb-2" id = "click_' + sortModel[i].openOrdersID + '" onclick="OnTables(' + sortModel[i].countOrder + ',' + "'" + sortModel[i].openOrdersID + "'" + ');">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-name-text" >' + sortModel[i].foodTableName + '</p>';
+                    txtshow += '<div class="w-100" >';
+                    txtshow += '<div class="order-flex" >';
+                    txtshow += '<p class="mb-2 font-weight-bold" id="countorder_' + sortModel[i].openOrdersID + '">' + sortModel[i].countOrder + '   ' + @Html.Raw(Json.Serialize(Localizer["ออเดอร์"].Value)) +  '</p>';
+                    txtshow += '<p class="mb-2 font-weight-bold">' + formatTime(sortModel[i].dateCreated) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="order-money-flex" >';
+                    txtshow += '<p class="mb-0 font-weight-bold table-text-money" id="grandtotal_' + sortModel[i].openOrdersID + '" >' + roundToTwo(sortModel[i].total ?? 0) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="card-body card-body-table card-body-table-yellow pt-0" >';
+                    txtshow += '<div class="order-button-flex-l" >';
+                    txtshow += '<div class="grid-1" >';
+                    txtshow += '<button type="button" class="btn btn-table-color-delete" id="btnmovetable_' + sortModel[i].openOrdersID + 'data-openorderid="' + sortModel[i].openOrdersID + '" data-foodtableno="' + sortModel[i].foodTableNO + '" data-foodtablename="' + sortModel[i].foodTableName + '" onclick="OnClickModalMoveTable(this)"> <img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /> </button>';
+                    txtshow += '<button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="' + sortModel[i].openOrdersID + '" onclick="additem(this)"> <img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /> </button>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    break;
+                case "s":
+                    //เสิร์ฟครบ
+                    txtshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_' + sortModel[i].foodTableNO + '" data-statustable="' + sortModel[i].status + '" data-openorderstype="' + sortModel[i].openOrdersType + '" data-nametable="' + sortModel[i].foodTableName + '" >';
+                    txtshow += '<div class="card card-h-items" >';
+                    txtshow += '<div class="card-header card-header-table card-header-table-green pb-2" id="click_' + sortModel[i].openOrdersID + '" onclick="OnTables(' + sortModel[i].countOrder + ',' + "'" + sortModel[i].openOrdersID + "'" + ');">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-name-text" >' + sortModel[i].foodTableName + '</p>';
+                    txtshow += '<div class="w-100" >';
+                    txtshow += '<div class="order-flex" >';
+                    txtshow += '<p class="mb-2 font-weight-bold" id="countorder_' + sortModel[i].openOrdersID + '">' + sortModel[i].countOrder + '    ' + @Html.Raw(Json.Serialize(Localizer["ออเดอร์"].Value)) +  '</p>';
+                    txtshow += '<p class="mb-2 font-weight-bold" >' + formatTime(sortModel[i].dateCreated) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="order-money-flex">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-text-money" id="grandtotal_' + sortModel[i].openOrdersID + '" >' + roundToTwo(sortModel[i].total ?? 0) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="card-body card-body-table card-body-table-green pt-0" >';
+                    txtshow += '<div class="order-button-flex-l" >';
+                    txtshow += '<div class="grid-1" >';
+                    txtshow += '<button type="button" class="btn btn-table-color-delete" id="btnmovetable_' + sortModel[i].openOrdersID + 'data-openorderid="' + sortModel[i].openOrdersID + '" data-foodtableno="' + sortModel[i].FoodTableNO + '" data-foodtablename="' + sortModel[i].foodTableName + '" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>';
+                    txtshow += '<button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="' + sortModel[i].openOrdersID + '" onclick="additem(this)" > <img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /> </button>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    break;
+                case "b":
+                    //รอคิดเงิน
+                    txtshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_' + sortModel[i].foodTableNO + '" data-statustable="' + sortModel[i].status + '" data-openorderstype="' + sortModel[i].openOrdersType + '" data-nametable="' + sortModel[i].foodTableName + '">';
+                    txtshow += '<div class="card card-h-items" >';
+                    txtshow += '<div class="card-header card-header-table card-header-table-blue pb-2" id="click_' + sortModel[i].openOrdersID + '" onclick="OnTables(' + sortModel[i].countOrder + ',' + "'" + sortModel[i].openOrdersID + "'" + ');" >';
+                    txtshow += '<p class="mb-0 font-weight-bold table-name-text" >' + sortModel[i].foodTableName + '</p>';
+                    txtshow += '<div class="w-100" >';
+                    txtshow += '<div class="order-flex" >';
+                    txtshow += '<p class="mb-2 font-weight-bold" id="countorder_' + sortModel[i].openOrdersID + '" >' + sortModel[i].countOrder + '    ' + @Html.Raw(Json.Serialize(Localizer["ออเดอร์"].Value)) + '</p>';
+                    txtshow += '<p class="mb-2 font-weight-bold" >' + formatTime(sortModel[i].dateCreated) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="order-money-flex" >';
+                    txtshow += '<p class="mb-0 font-weight-bold table-text-money" id="grandtotal_' + sortModel[i].openOrdersID + '">' + roundToTwo(sortModel[i].Total ?? 0) + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="card-body card-body-table card-body-table-blue pt-0" >';
+                    txtshow += '<div class="order-button-flex-rl" >';
+                    txtshow += '<div class="grid-1" >';
+                    txtshow += '<button type="button" class="btn btn-table-color-delete" id="btnmovetable_' + sortModel[i].openOrdersID + 'data-openorderid="' + sortModel[i].openOrdersID + '"data-foodtableno="' + sortModel[i].foodTableNO + '"data-foodtablename="' + sortModel[i].foodTableName + '" onclick="OnClickModalMoveTable(this)"> <img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /> </button>';
+                    txtshow += '<button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="' + sortModel[i].openOrdersID + '" onclick="additem(this)"> <img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /> </button>';
+                    txtshow += '<button type="button" class="btn btn-table-color-check openmenu">' + @Html.Raw(Json.Serialize(Localizer["คิดเงิน"].Value)) +  '</button>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    break;
+                default:
+                    // ปกติ
+                    txtshow += '<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 divtable" id="tableid_' + sortModel[i].foodTableNO + '" data-statustable="' + sortModel[i].status + '" data-openorderstype="' + sortModel[i].openOrdersType + '" data-nametable="' + sortModel[i].foodTableName + '">';
+                    txtshow += '<div class="card card-h-items">';
+                    txtshow += '<div class="card-header card-header-no-table">';
+                    txtshow += '<p class="mb-0 font-weight-bold table-name-text">' + sortModel[i].foodTableName + '</p>';
+                    txtshow += '</div>';
+                    txtshow += '<div class="card-body card-body-no-table">';
+                    if (sortModel[i].status.toLowerCase() == "d") {
+                        txtshow += '<div class="no-table">';
+                        txtshow += '<button type="button" class="btn btn-opentable-color font-weight-bold btnopentable" onclick="OnTableQRCode(event,' + sortModel[i].foodTableNO + ');">' + @Html.Raw(Json.Serialize(@Localizer["เปิดโต๊ะ"].Value))  + '</button>';
+                        txtshow += '</div>';
+                    }
+                    else {
+                        txtshow += '<div class="no-table-Static">';
+                        txtshow += '</div>';
+                    }
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    txtshow += '</div>';
+                    break;
+            }
+        }
+
+        $("#defaultshow").html(txtshow);
+        $('#count').text("@Localizer["จำนวนทั้งหมด"] " + sortModel.length);
+    }
+
+    function fillter2() {
+        $('.divtable').children().hide();
+    }
+
+    function formatTime(date) {
+        var aaaa = new Date(date + 'Z');
+        var d = new Date(aaaa),
+            hour = '' + d.getHours(),
+            minunte = '' + d.getMinutes(),
+            second = '' + d.getSeconds();
+
+        if (hour.length < 2)
+            hour = '0' + hour;
+        if (minunte.length < 2)
+            minunte = '0' + minunte;
+        if (second.length < 2)
+            second = '0' + second;
+
+
+        var bbb = [hour, minunte, second].join(':');
+        return bbb;
+    }
+
+    function TableClear(id) {
+        $('#' + id).modal('hide');
+        $("#" + id).modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+
+    function TableSetClose(id) {
+        $('#' + id).modal('hide');
+        const radioButtons = document.querySelectorAll("#FormModalSetMoveTable input[type='radio']");
+        for (let i = 0; i < radioButtons.length; i++) {
+            var aaa = radioButtons[i].id;
+            var bbb = aaa.replace('table_', '');
+            var namebranch = document.getElementById("table_" + (bbb) + "");
+            var namelabelbranch = document.getElementById("labeltable_" + (bbb) + "");
+            if (namebranch?.checked == true) {
+                namelabelbranch.classList.remove("on-radio-branch");
+            }
+        }
+        document.getElementById('SubmitSetMoveTables').disabled = true;
+        $('#setMoveOpenOrdertID').val("");
+    }
+
+    function MyMoveTable() {
+        const radioButtons = document.querySelectorAll("#FormModalSetMoveTable input[type='radio']");
+        for (let i = 0; i < radioButtons.length; i++) {
+            var aaa = radioButtons[i].id;
+            var bbb = aaa.replace('table_', '');
+            var namebranch = document.getElementById("table_" + (bbb) + "");
+            var namelabelbranch = document.getElementById("labeltable_" + (bbb) + "");
+            if (namebranch?.checked == true) {
+                namelabelbranch.classList.add("on-radio-branch");
+            } else {
+                namelabelbranch.classList.remove("on-radio-branch");
+            }
+        }
+        ChangeSetMoveTables();
+    }
+    function ChangeSetMoveTables() {
+        //var DefaultTable = "option2";
+        var DefaultTable = "";
+        var ChackTable = $('#FormModalSetMoveTable input[type="radio"][name="tables"]:checked').attr('value');
+        if (DefaultTable == ChackTable) {
+            document.getElementById('SubmitSetMoveTables').disabled = true;
+        } else {
+            document.getElementById('SubmitSetMoveTables').disabled = false;
+        }
+    }
+
+    function fnMoveTable() {
+        var _FoodTableNO = $('#FormModalSetMoveTable input[type="radio"][name="tables"]:checked').attr('value');
+        var _OpenOrdersID = $('#setMoveOpenOrdertID').val();
+
+        //ajax movetable
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("MoveTable", "Table")",
+            data: {
+                OpenOrdersID: _OpenOrdersID,
+                FoodTableNO: _FoodTableNO,
+            },
+            success: function (message) {
+                //console.log(message);
+                $('#ModalTableMoveSuccess').modal('show');
+            }, error: function (message) {
+                alert(message.responseText);
+                $('#ModalPostnotSuccessError').modal('show');
+                $('#namealert').text(@Html.Raw(Json.Serialize(@Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+            }
+        });
+    }
+
+    $('#btnSOne').on('click', function () {
+        var chackclass = document.getElementById('iSOne')
+        $('#iSOne').toggleClass('');
+        if (chackclass.classList.contains('fa-angle-up')) {
+            chackclass.classList.remove("fa-angle-up")
+            chackclass.classList.add("fa-angle-down");
+        } else {
+            chackclass.classList.remove("fa-angle-down")
+            chackclass.classList.add("fa-angle-up");
+        }
+    });
+
+    function CountTableStatus() {
+        const countPending = sortModel.filter(item => item.status.toLowerCase() == 'p').length;
+        $('#tablestatusPending').text(countPending);
+
+        const countWaitting = sortModel.filter(item => item.status.toLowerCase() == 'w').length;
+        $('#tablestatusWaitting').text(countWaitting);
+
+        const countServe = sortModel.filter(item => item.status.toLowerCase() == 's').length;
+        $('#tablestatusServe').text(countServe);
+
+        const countBilling = sortModel.filter(item => item.status.toLowerCase() == 'b').length;
+        $('#tablestatusBilling').text(countBilling);
+    }
+
+    
+    function CountTableStatusNewStatus(newstatus, OpenOrdersID_newstatus) {
+       
+        if (tempsortModel.length == 0 ) {
+            tempsortModel = SetModellist();
+        }
+
+        var OpenOrdersID_oldtatus = '';
+        var index = tempsortModel.findIndex(item => item.openOrdersID == OpenOrdersID_newstatus);
+        if (index !== -1) {
+            OpenOrdersID_oldtatus = tempsortModel[index].status;
+
+            if (OpenOrdersID_oldtatus.toLowerCase() == newstatus.toLowerCase()) {
+                return false; 
+            }
+            tempsortModel[index].status = newstatus.toUpperCase();
+        }
+
+        const countPending = tempsortModel.filter(item => item.status.toLowerCase() == 'p').length;
+        $('#tablestatusPending').text(countPending);
+
+        const countWaitting = tempsortModel.filter(item => item.status.toLowerCase() == 'w').length;
+        $('#tablestatusWaitting').text(countWaitting);
+
+        const countServe = tempsortModel.filter(item => item.status.toLowerCase() == 's').length;
+        $('#tablestatusServe').text(countServe);
+
+        const countBilling = tempsortModel.filter(item => item.status.toLowerCase() == 'b').length;
+        $('#tablestatusBilling').text(countBilling);
+    }
+
+    function OnClickModalMoveTable(a) {
+        var id = $(a).data("openorderid");
+        $('#setMoveOpenOrdertID').val(id);
+
+        var foodtableno = $(a).data("foodtableno");
+        var foodtablename = $(a).data("foodtablename");
+        var textresponse = '@Localizer["คุณต้องการย้ายโต๊ะ"]' + ' ' + '"' + foodtablename + '"' + ' ' + '@Localizer["ไปยังโต๊ะอื่นใช่หรือไม่?"]';
+        $('#txtmodaltableMove').text(textresponse);
+        $('#ModalTableMove').modal('show');
+    }
+
+    function fnReload() {
+        location.reload(true);
+    }
+
+    function btnPayment(a) {
+        //get table detail
+        var _openorderId = $(a).data("openorderid");
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetTableDetail", "Table")",
+            data: {
+                OpenOrdersID: _openorderId,
+            },
+            success: function (message) {
+                //openOrderWithDetails
+                var openOrderWithDetails = message;
+                console.log(openOrderWithDetails);
+
+                var jsonorder = JSON.stringify(openOrderWithDetails);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CaltranBefore", "Table")",
+                    data: {
+                        id: jsonorder,
+                    },
+                    success: function (message) {
+                        //tranmodel
+                        var tranmodel = JSON.parse(message);
+                        console.log(tranmodel);
+                        Tranmodel = message;
+                        $("#tranmodel").val(message);
+                        $("#ToPayment").submit();
+
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+                });
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function SetModellist() {
+        //----------------------
+        var lstModel = [];
+        var listdata = @Html.Raw(Json.Serialize(Model));
+        //---- Ini New OBJ
+        for (var i = 0; i < listdata.length; i++) {
+            lstModel.push({
+                merchantID: listdata[i].merchantID,
+                branchID: listdata[i].branchID,
+                foodTableNO: listdata[i].foodTableNO,
+                foodTableName: listdata[i].foodTableName,
+                customerName: listdata[i].customerName,
+                customerMobile: listdata[i].customerMobile,
+                openOrdersID: listdata[i].openOrdersID,
+                openOrdersType: listdata[i].openOrdersType,
+                status: listdata[i].status,
+                total: listdata[i].total,
+                countOrder: listdata[i].countOrder,
+                dateCreated: listdata[i].dateCreated,
+                dateModified: listdata[i].dateModified
+            });
+        }
+        return lstModel;
+    }
+
+</script>
+

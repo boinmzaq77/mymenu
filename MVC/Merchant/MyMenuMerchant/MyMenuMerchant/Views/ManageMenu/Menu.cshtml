@@ -1,0 +1,604 @@
+﻿@*@model List< MyMenu.JAM.MenuItem>*@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<body id="Menu">
+    <div class="container mb-5">
+        <div class="form-row">
+            <div class="col-md-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group mb-2">
+                        <a asp-controller="ManageMenu" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["เมนูอาหาร"]</h2>
+                        <ul class="breadcrumb mb-2">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="ManageMenu" asp-action="Index">@Localizer["จัดการเมนูอาหาร"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["เมนูอาหาร"]</li>
+                        </ul>
+                        <a class="breadcrumb button-add text-center layout-add mb-2" asp-controller="ManageMenu" asp-action="MenuAdd" id="btnAddMenu"><img class="img-icon-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มเมนูอาหาร"]</a>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-8 col-xl-10 col-lg-10 col-md-9 col-sm-8  mb-2 search">
+                                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["Search"]" style="height: 45px;" autocomplete="off">
+                            </div>
+                            <div class="col-4 col-xl-2 col-lg-2 col-md-3 col-sm-4 mb-2 btn-group dropdown-order list-menu">
+                                <button type="button" class="btn btn-Import input-lg font-weight-bold" id="btnImportMenu">
+                                    @* disabled *@
+                                    <img class="size-import" src="/mymenumerchant/images/Upload1.png" /> @Localizer["นำเข้าข้อมูล"]
+                                </button>
+                            </div>
+
+                            @* <div class="col-4 col-xl-2 col-lg-2 col-md-3 col-sm-4 mb-2 btn-group dropdown-order list-menu">
+                            <button type="button" class="btn btn-Import input-lg font-weight-bold" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                            <img class="size-import" src="/mymenumerchant/images/Import.png" /> @Localizer["นำเข้าข้อมูล"]
+                            </button>
+                            </div> *@
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-5">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold mb-0 font-size">@Localizer["รายการเมนูอาหาร"]  <span class="size-small font-weight-bold ms-2" id="count"> @Localizer["จำนวนทั้งหมด"] 0</span> <span class="size-small font-weight-bold" style="margin-left: -2px;"> /1,000</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 ">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableMenus" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ชื่อเมนู"]</th>
+                                                <th scope="col" class="size-th-number text-right">@Localizer["ราคาปกติ"]</th>
+                                                <th scope="col" class="size-th-number text-right">@Localizer["ราคาขาย"]</th>
+                                                <th scope="col" class="size-th-category text-center">@Localizer["สาขาที่เปิดขาย"]</th>
+                                                <th scope="col" class="size-th-category text-center">@Localizer["รายละเอียดเมนู"]</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*ModalMenuinfo*@
+        <div class="modal fade bd-example-modal-lg" id="ModalMenuinfo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="d-flex flex-row">
+                            <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                            <div class="p-2"><h5 class="text-branch">@Localizer["รายละเอียดเมนู"]</h5></div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-5 col-xl-3 col-lg-3 col-md-4 col-sm-5 mb-3">
+                                    <img id="imgitem" class="img-info-menu" src="/mymenumerchant/images/BackGroundShop.png" />
+                                </div>
+                                <div class="col-7 col-xl-9 col-lg-9 col-md-8 col-sm-7 mb-3">
+                                    <div class="row">
+                                        <div class="col-12 padding-l-3">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold color-headmenu" for="nameitem">@Localizer["ชื่อเมนู :"]</label>
+                                                <p id="nameitem" class="font-weight-bold color-text-list">อเมริกาโน่</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 padding-l-3">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold color-headmenu" for="priceitem">@Localizer["ราคาปกติ :"]</label>
+                                                <p id="priceitem" class="font-weight-bold color-text-list">อเมริกาโน่</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 padding-l-3">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold color-headmenu" for="pricesell">@Localizer["ราคาขาย :"]</label>
+                                                <p id="pricesell" class="font-weight-bold color-text-list">฿ 50.00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="col-12" id="detailitemhidden1">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-headmenu" for="detailitem">@Localizer["รายละเอียดเมนู :"]</label>
+                                        @* <p class="font-weight-bold color-text-list">อเมริกาโน่เย็น เป็นกาแฟผสมน้ำ ทางร้านจะไม่ใส่ไซรัปให้</p> *@
+                                        <p id="detailitem">อเมริกาโน่เย็น เป็นกาแฟผสมน้ำ ทางร้านจะไม่ใส่ไซรัปให้</p>
+                                    </div>
+                                </div>
+                                <hr id="detailitemhidden2" />
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold color-headmenu" for="detailitem">@Localizer["หมวดหมู่ :"]</label>
+                                        <p class="font-weight-bold color-text-list" id="divcatagory"> กาแฟ <samp class="color-green">></samp> กาแฟย่อย</p>
+                                    </div>
+                                </div>
+                                <hr />
+
+                                <div class="col-12 mb-3" id="Optionhidden1">
+                                    <div class="d-flex flex-row">
+                                        <div class="p-1"><label class="font-weight-bold color-headmenu">@Localizer["Option (ตัวเลือก) :"]</label></div>
+                                    </div>
+                                    <div class="container" id="divoption">
+                                        <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ระดับความหวาน</p>
+                                        <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ไซส์</p>
+                                    </div>
+                                </div>
+                                <hr id="Optionhidden2" />
+
+                                <div class="col-12 mb-3" id="Extrahidden1">
+                                    <div class="d-flex flex-row">
+                                        <div class="p-1"><label class="font-weight-bold color-headmenu">@Localizer["Extra (ตัวเลือกเสริม) :"]</label></div>
+                                    </div>
+                                    <div class="container" id="divextra">
+                                        <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ท็อปปิ้ง เครื่องดื่ม</p>
+                                    </div>
+                                </div>
+                                <hr id="Extrahidden2" />
+
+                                <div class="col-12 mb-5">
+                                    <div class="d-flex flex-row">
+                                        <div class="p-1"><label class="font-weight-bold color-headmenu">@Localizer["สาขาที่เปิดขาย :"]</label></div>
+                                    </div>
+                                    <div class="container" id="divbranch">
+                                        <p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> </p>
+                                    </div>
+                                </div>
+                                @*                                <div class="col-md-12 ">
+                                <div class="d-flex justify-content-end">
+                                <div class="p-2">
+                                <a class="btn modal-btn-size-edit" id="btnedititem" asp-controller="ManageMenu" asp-action="MenuEdit" asp-route-id="dummyid"><i class="fa fa-edit"></i> แก้ไข</a>
+                                </div>
+                                <div class="p-2">
+                                <a class="btn modal-btn-size-delete" data-toggle="modal" data-target="#ModalMenuDelete"><i class="fa fa-trash-o"></i> ลบ</a>
+                                </div>
+                                </div>
+                                </div>*@
+                            </div>
+                        </div>
+
+                        @*                    <h5 class="text-center mb-5 my-5 ">ยืนยันการลบรายการ</h5>
+                        <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">ยกเลิก</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-delete">ลบ</button>
+                        </div>*@
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        @*ModalMenuDelete*@
+        <div class="modal fade " id="ModalMenuDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ยืนยันการลบรายการ"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <input id="iddelete" value="" hidden />
+                            <button type="button" class="font-weight-bold btn button-modal-delete" onclick="fnDelete()">@Localizer["ลบ"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Modal Post not Success*@
+        <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center mt-4 mb-4">
+                                <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบสินค้าได้ เนื่องจากมีการใช้งานอยู่"]</h5>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @*ModalImportItem*@
+        <div class="modal fade bd-example-modal-lg" id="ModalImportItem" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="d-flex flex-row">
+                            <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                            <div class="p-2"><h5 class="text-branch">@Localizer["การนำเข้าข้อมูล"]</h5></div>
+                        </div>
+                    </div>
+                    <div class="modal-body layout-model">
+                        <div class="modal-m-text mt-3 mb-4">
+                            <div class="row text-center ">
+                                <div class="col-6 flex-center">
+                                    <button type="button" class="btn text-center btn-Import-data" onclick="btnDownloadFileImport()">
+                                        @Localizer["ดาวน์โหลดตัวอย่างไฟล์นำเข้า .csv"]
+                                    </button>
+                                </div>
+                                <div class="col-6 flex-center">
+                                    <button type="button" class="btn text-center btn-Upload-data" id="btnimportItem">
+                                        @Localizer["อัปโหลดไฟล์ข้อมูล .csv"]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="media h-50">
+                                <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                                <div class="media-body layout-body">
+                                    <p class="color-header-help p-margin" >@Localizer["การนำเข้าข้อมูล"] <samp class="color-sub-help">@Localizer["จะต้องอัปโหลดไฟล์ .csv และข้อมูลกลุ่มสินค้า, ตัวเลือก, ตัวเลือกเสริม จะต้องตรงกับข้อมูลที่มีในระบบด้วย จึงจะสามารถอัปโหลดข้อมูลสินค้าได้"]</samp> </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-help">
+                <div class="row">
+                    <div class="media h-50">
+                        <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                        <div class="media-body layout-body">
+                            <p class="color-header-help p-margin">@Localizer["เมนูอาหาร"] <samp class="color-sub-help">@Localizer["จะเป็นการสร้างเมนูที่เป็นส่วนกลาง สามารถเลือกขายเมนูอาหารตามสาขาได้ โดยจะ Default ให้เปิดขายทุกสาขา, ร้านค้าสามารถเพิ่มสินค้าได้สูงสุด 1,000 รายการ"]</samp> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+</body>
+<script>
+
+    var _role;
+    var count = 1;
+    var offset = 0;
+    $(document).ready(function () {
+        var $mytable = $("#TableMenus");
+        var page = 1;
+         //initial number of rows
+        var max = 100; //max number of rows (just for demo)
+        var start = 0;
+        $(window).bind('scroll resize fetchmore', function () {
+            var viewportHeight = window.innerHeight;
+            var scrolltop = $(window).scrollTop();
+            var bottomOfTable = $mytable.offset().top + $mytable.outerHeight();
+
+            //console.log(viewportHeight, scrolltop, bottomOfTable);
+
+            if ($(window).scrollTop() + viewportHeight >= bottomOfTable) {
+                if (count == max && start == 1) {
+                    //console.log("Fetch more data!");'
+                    max +=100;
+                    load_more();
+                    $(window).trigger("fetchmore"); //keep triggering this event until we've filled the viewport
+                }
+            }
+        });
+
+        function load_more(e) {
+            //fetch more data here
+            
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("GetMenuItemoffset", "ManageMenu")",
+                data: {
+                    offset: offset+1
+                },
+                dataType: 'json',
+                success: function (message) {
+                    offset++;
+                    console.log(message.itemModel);
+                    count += message.itemModel.length
+                    message.itemModel.forEach((item) => {
+                        console.log(item)
+                        var table = $('#TableMenus').DataTable();
+                        table.row.add({
+                            "itemName": item.itemName,
+                            "itemName": item.itemName,
+                            "price": item.price,
+                            "sellingPrice": item.sellingPrice,
+                            "sellAllBranch": item.sellAllBranch,
+                            "itemID": item.itemID,
+                           
+                            
+                        }
+                        ).draw(false);
+                        // $('#datelastnoti').val(item.ticksNumber);
+                        // xax = 0;
+
+                    });
+                    $('#count').text("@Localizer["จำนวนทั้งหมด"] " + table.rows().count());
+                    e.preventDefault();
+
+                    alert(message);
+                    
+                }, error: function (message) {
+                    //alert(message.responseText);
+                }
+
+            });
+            // for (var i = 0; i <= 1; i++) {
+                
+            // }
+        }
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+
+        var table = $('#TableMenus').DataTable({
+            ajax: {
+                url: "@Url.Action("GetMenuItem", "ManageMenu")",
+                dataSrc: 'itemModel'
+            },
+            processing: false,
+            serverSide: false,
+            stateSave: false,
+            columns: [
+                { data: 'itemName', },
+                { data: 'itemName' },
+                { data: 'price' },
+                { data: 'sellingPrice' },
+                { data: 'sellAllBranch' },
+                { data: 'itemID' },
+
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    // console.log(data)
+                    var text1 = "";
+                    text1 = "<p class='p-padding-table'>" + data + "</p>";
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text2 = "";
+                    //text2 = "<p class='p-padding-table'>" + parseFloat(data).toLocaleString() + "</p>";
+                    text2 = "<p class='p-padding-table text-right'>" + roundToTwo(data) + "</p>";
+                    return text2;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var text3 = "";
+                    // text3 = "<p class='p-padding-table'>" + parseFloat(data).toLocaleString() + "</p>";
+                    text3 = "<p class='p-padding-table text-right'>" + roundToTwo(data) + "</p>";
+                    return text3;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                    var text4 = "";
+                    text4 = "<p class='p-padding-table text-center'>" + data + " สาขา" + "</p>";
+                    return text4;
+                },
+            }, {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                    var text5 = "";
+                    var disibleedit = "";
+                    var disibledelete = "";
+                    if (_role == "editor" || _role == "invoice" || _role == "officer" || _role == "cashier") {
+                        if (_role != "editor") {
+                            disibleedit = "block-a";
+                        }
+                        disibledelete = "block-a";
+                    }
+                    text5 = "<div class='group-btn-table'><button type='button' class='btn btn-green-info mr-2' onclick='Opendetail(" + data + ")'><img class='size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button><button class='btn btn-blue-edit mr-2 " + disibleedit + "'   onclick='sentdata(" + data + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></button><button type='button' class='btn btn-red-delete " + disibledelete + "' data-toggle='modal' data-target='#ModalMenuDelete '  onclick='btnDelete(" + meta.row + ")'><img class='size-img-list-menu' src ='/mymenumerchant/images/Delete20.png' /></button></div>";
+                    //text5 = "<a class='icon-detail' onclick='Opendetail("+data+")' ><img class='img-detail' src='/mymenumerchant/images/Detail.png'/></a>";
+                    return text5;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีรายการเมนูอาหาร"].Value)) + "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value)) + "</p><br/><br/><br/><br/>",
+
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            visible: false,
+            targets: 0,
+            "pageLength": 100,
+            "initComplete": function (settings, json) {
+                start = 1;
+                count = table.data().count();
+                $('#count').text(@Html.Raw(Json.Serialize(Localizer["จำนวนทั้งหมด"].Value)) + ' ' + table.data().count());
+
+                //var count = table.data().count();
+                var btn = document.getElementById("btnAddMenu");
+                if (count >= 1000) {
+                    btn.style.opacity = "0.5";
+                    btn.style.pointerEvents = "none";
+                    btn.style.cursor = "default";
+                } else {
+                    btn.style.opacity = "1";
+                    btn.style.pointerEvents = "auto";
+                    btn.style.cursor = "pointer";
+                }
+            },
+        });
+
+        var tables = $('#TableMenus').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+
+        if (_role == "invoice" || _role == "officer" || _role == "cashier") {
+            $("#btnAddMenu").addClass("block-a");
+        }
+
+        $('#btnImportMenu').click(function () {
+            $('#ModalImportItem').modal('show');
+        });
+
+        $('#btnimportItem').click(function () {
+            btnimportfile();
+            window.location = '@Url.Action("ImportMenu", "ManageMenu")';
+        });
+
+    });
+
+    function Opendetail(id) {
+
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("GetDtailItem", "ManageMenu")",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (message) {
+                $('#nameitem').text(message.itemName);
+                $('#priceitem').html(' ฿ ' + roundToTwo(message.price));
+                $('#pricesell').html(' ฿ ' + roundToTwo(message.sellingPrice));
+                if (message.itemDetail == '' || message.itemDetail == null) {
+                    $('#detailitemhidden1').css('display', 'none');
+                    $('#detailitemhidden2').css('display', 'none');
+                } else {
+                    $('#detailitemhidden1').css('display', 'block');
+                    $('#detailitemhidden2').css('display', 'block');
+                    $('#detailitem').html(message.itemDetail);
+                }
+
+                var cat = message.categoryName + ((message.subCategoryName != '') ? ' <samp class= "color-green"> > </samp> ' + message.subCategoryName : '');
+                $('#divcatagory').html(cat);
+
+                if (message.optionitems.length == 0) {
+                    $('#Optionhidden1').css('display', 'none');
+                    $('#Optionhidden2').css('display', 'none');
+                } else {
+                    $('#Optionhidden1').css('display', 'block');
+                    $('#Optionhidden2').css('display', 'block');
+                    var option = '';
+                    $.each(message.optionitems, function (i, item) {
+                        option += '<p class="card-text color-text-list font-weight-bold"><i class="fa fa-square me-3 icon-type-size"></i> ' + item.optionName + '</p>'
+                    });
+                    $('#divoption').html(option);
+                }
+
+                if (message.extraitems.length == 0) {
+                    $('#Extrahidden1').css('display', 'none');
+                    $('#Extrahidden2').css('display', 'none');
+                } else {
+                    $('#Extrahidden1').css('display', 'block');
+                    $('#Extrahidden2').css('display', 'block');
+                    var extra = '';
+                    $.each(message.extraitems, function (i, item) {
+                        extra += '<p class="card-text color-text-list font-weight-bold" > <i class="fa fa-square me-3 icon-type-size" > </i>' + item.extraName + '</p >'
+                    });
+                    $('#divextra').html(extra);
+                }
+
+                var branch = '';
+
+                $.each(message.itemonBranches, function (i, item) {
+                    if (item.status == 'A') {
+                        branch += '<p class="card-text color-text-list font-weight-bold" > <i class="fa fa-square me-3 icon-type-size" > </i>' + item.branchName + '</p >'
+                    }
+                });
+                branch = (branch == '') ? "ไม่มีสาขาที่เปิดใช้งาน" : branch;
+                $('#divbranch').html(branch);
+
+                var strpath = '';
+                if (message.picturePath === null || message.picturePath === '') {
+                    strpath = '/mymenumerchant/images/ItemDefault.png'
+                } else {
+                    strpath = message.picturePath;
+                }
+                $('#imgitem').attr('src', strpath);
+                //var url = $('#btnedititem').attr("href");
+                //var date = $("#date").val();
+                //url = url.replace("dummyid", message.itemID);
+                $("#btnedititem").attr("href", "/ManageMenu/MenuEdit/" + message.itemID);
+
+                $('#ModalMenuinfo').modal('toggle');
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function sentdata(id) {
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("GetDtailItem", "ManageMenu")",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (message) {
+                window.location.href = "@Url.Action("MenuEdit", "ManageMenu")" + "?id=" + message.itemID;
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+
+    function btnDelete(id) {
+        var data = $('#TableMenus').DataTable().row(id).data();
+        // console.log(data);
+        $('#iddelete').val(data.itemID);
+        $('#namedelete').text(@Html.Raw(Json.Serialize(Localizer["คุณต้องการลบ สินค้า"].Value)) + " " + '"' + data.itemName + '"' + " " + @Html.Raw(Json.Serialize(Localizer["หรือไม่?"].Value)) );
+    }
+
+    function fnDelete() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteItem", "ManageMenu")",
+            data: {
+                id: $('#iddelete').val(),
+            },
+            success: function (message) {
+                location.reload();
+            }, error: function (message) {
+                $('#ModalMenuDelete').modal().hide();
+                $('#ModalPostnotSuccess').modal('show');
+                if (message.responseText == 'Item is Use') {
+                    $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถลบเมนูอาหารได้ เนื่องจากมีการใช้งานอยู่"].Value)));
+                } else {
+                    $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถลบได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+            }
+        });
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+</script>

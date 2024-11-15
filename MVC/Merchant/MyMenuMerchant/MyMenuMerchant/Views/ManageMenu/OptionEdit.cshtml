@@ -1,0 +1,477 @@
+﻿﻿@using MyMenu.JAM;
+@using MyMenuMerchant.Controllers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model OptionModel
+<body id="OptionEdit">
+    <div class="container">
+        <form id="editOption" onkeyup="OptionEditTables()">
+            <div class="form-row">
+                <div class="col-12  mb-2">
+                    <div class="row ">
+                        <div class="menu-header-flex">
+                            <div class="header-group">
+                                <a asp-controller="ManageMenu" asp-action="Option"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                                <h2 class="font-weight-bold menu-header">@Localizer["แก้ไข Option"]</h2>
+                            </div>
+                            <div class="">
+                                <button type="button" class="btn btn-delete-subcategory font-weight-bold " data-toggle="modal" data-target="#EditModalOptionDelete"><i class="fa fa-trash-o"></i> @Localizer["ลบ Option1"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*        <div class="col-md-12  mb-3">
+                <div class="row ">
+                <div class="col-auto">
+                <a asp-controller="ManageMenu" asp-action="Option"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                </div>
+                <div class="col-md-auto">
+                <h1  class="font-weight-bold menu-header">แก้ไข Option</h1>
+                </div>
+                </div>
+                </div>*@
+
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+
+                                <div class="form-row">
+                                    <div class="col-md-12 " hidden>
+                                        <div class="d-flex flex-row-reverse">
+                                            <div class="p-2">
+                                                <a class="btn btn-delete-OptionEdit font-weight-bold " data-toggle="modal" data-target="#EditModalOptionDelete"><i class="fa fa-trash-o"></i> @Localizer["ลบ Option"]</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="CategoryName">@Localizer["ชื่อ Option"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text"
+                                                       class="form-control examine text-count"
+                                                       data-merchantid="@Model.MerchantID"
+                                                       data-operationtype="@Model.OperationType"
+                                                       data-optionid="@Model.OptionID"
+                                                       id="OptionName" maxlength="30" onchange="EditTablesthis(this)"
+                                                       placeholder="ชื่อ Option" value="@Model.OptionName">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="card border">
+                                            <div class="card-body">
+                                                <div class="form-row">
+                                                    <div class="col-md-12">
+                                                        <table id="TablesNember">
+                                                            <tr class="size-tr-tables head">
+                                                                <td class="size-tables-name input-option-size">
+                                                                    <label class="font-weight-bold flex-list-name">@Localizer["ชื่อ Option ย่อย"]<small class="color-list-number font-weight-bold ml-2">@Localizer["เพิ่มได้สูงสุด 30 รายการ"]</small></label>
+                                                                </td>
+                                                                <td class="size-tables-name input-option-size">
+                                                                    <label class="font-weight-bold input-option-size">@Localizer["ราคา"]</label>
+                                                                </td>
+                                                            </tr>
+
+                                                            @for (var i = 1; i < Model.OptionDetailModels.Count + 1; i++)
+                                                            {
+                                                                <tr id="@("row" + i.ToString())" class="size-tr-tables body1">
+                                                                    <td class="size-tables-name input-option-size">
+                                                                        <div class="input-text pr-3">
+                                                                            <input type="text"
+                                                                                   data-optiondetailno="@Model.OptionDetailModels[i-1].OptionDetailNO"
+                                                                                   data-optionid="@Model.OptionDetailModels[i-1].OptionID"
+                                                                                   data-optiondetailname="@Model.OptionDetailModels[i-1].OptionDetailName"
+                                                                                   data-price="@Model.OptionDetailModels[i-1].Price"
+                                                                                   data-operationtype="Default"
+                                                                                   class="form-control text-count examine reset-name"
+                                                                                   id="TableName_@i" name="TableName_@i" maxlength="250" onchange="EditTablesthis(this)"
+                                                                                   placeholder="@Localizer["ชื่อ Option ย่อย"]" value="@Model.OptionDetailModels[i-1].OptionDetailName">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="size-tables-name input-price-size">
+                                                                        <div class="input-text pr-3">
+                                                                            <input type="text" data-operationtype="Default" onchange="EditTablesthis(this)" class="form-control text-count examine reset-price optionprice" oninput="OptionInput(this)" id="TablePrice_@i" name="TablePrice_@i" maxlength="25" placeholder="฿00.00" value="@ManageMenuController.ConvertToCurrency(Model.OptionDetailModels[i-1].Price) ">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="size-tables-delete" id="@("country_row" + i.ToString())">
+                                                                        <button type="button" data-optiondetailno="@Model.OptionDetailModels[i-1].OptionDetailNO" class="form-control btn-delete reset-delete" id="TableDelete_@i" name="TableDelete_@i" onclick="delete_row('@i','@Model.OptionDetailModels[i-1].OptionDetailNO')"><i class="fa fa-trash-o"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="col-md-12 mt-3">
+                                                        <button type="button" class="btn-add-subcategory font-weight-bold" onclick="AddLists();"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่ม Option ใหม่"]</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="col-md-12  mb-2 pr-0 mt-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <button type="submit" class="btn-save" id="SaveOption" disabled="disabled">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br />
+
+
+        @* EditModalOptionDelete *@
+        <div class="modal fade " id="EditModalOptionDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการลบ Option"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-delete" onclick="fnDeleteOption()">@Localizer["ลบ"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal Post not Success *@
+    <div class="modal fade" id="ModalPostnotSuccessOption" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบ Option ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+   @*  Modal Post not Success *@
+    <div class="modal fade" id="ModalPostnotSuccessSubOption" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert"></h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin">@Localizer["Option (ตัวเลือก)"] <samp class="color-sub-help">@Localizer["เป็นตัวเลือกเพิ่มเติมที่บังคับเลือก สามารถเลือกได้ 1 รายการ ตัวอย่างเช่น ระดับความหวาน, ขนาดสินค้า"]</samp> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+</body>
+<script>
+    var _role;
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+        $("#editOption").on("submit", function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+            let Optiondetailmodel = [];
+            $('#TablesNember tr.body1').each(function (index, item) {
+                var tr = $(this);
+                var optiondetailname = $(this).find('.examine.reset-name').val();
+                var optiondetailno = $(this).find('.examine.reset-name').data("optiondetailno");
+                var price = $(this).find('.examine.reset-price').val();
+                var optionid = $(this).find('.examine.reset-name').data("optionid");
+
+                var operationtypename = $(this).find('.examine.reset-name').data("operationtype");
+                var operationtypeprice = $(this).find('.examine.reset-price').data("operationtype");
+
+                var operationtype = (operationtypename == "Default" && operationtypeprice == "Default") ? "Default" : "Update";
+
+                if (optionid == null) operationtype = "Create";
+                if (operationtypename == "Delete") operationtype = "Delete";
+
+                var assoFile = {
+                    optiondetailname: optiondetailname,
+                    optiondetailno: optiondetailno,
+                    price: price,
+                    operationtype: operationtype,
+                    optionid: optionid
+                };
+                Optiondetailmodel.push(assoFile)
+
+            });
+
+            var optionmodel =
+            {
+                optiondetailmodels: Optiondetailmodel,
+                optionid: $("#OptionName").data("optionid"),
+                merchantid: $("#OptionName").data("merchantid"),
+                optionname: $("#OptionName").val(),
+                operationtype: $("#OptionName").data("operationtype")
+
+            }
+            //console.log(optionmodel);
+            $.ajax({
+                url: "@Url.Action("OptionEditSave", "ManageMenu")",
+                data: optionmodel,
+                //dataType: 'json',
+                type: 'POST',
+                success: function (message) {
+                    window.location.href = "@Url.Action("Option", "ManageMenu")";
+                }, error: function (message) {
+                    if (message.responseText == "Dublicate OptionName") {
+                        $('#ModalPostnotSuccessSubOption').modal('show');
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขตัวเลือกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    } else {
+                        $('#ModalPostnotSuccessSubOption').modal('show');
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขตัวเลือกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+            });
+        });
+        if (_role == "editor") {
+            $("#deletecat").addClass("block-a");
+        }
+    });
+    function EditTablesthis(a) {
+        var tr = $(a).data('operationtype');
+        var tr2 = $(a).data('operationtype', "Update");
+    };
+    function OptionEditTables() {
+        document.getElementById('SaveOption').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveOption').disabled = true;
+            }
+        });
+    }
+
+    function AddLists() {
+        var tables = document.getElementById("TablesNember");
+        var tablessuboption_id = (tables.rows.length);
+
+        if (tablessuboption_id <= 30) {
+            var rowid = tablessuboption_id;
+            var row = tables.insertRow(tablessuboption_id).outerHTML =
+                "<tr id='row" + tablessuboption_id + "' class='size-tr-tables body1'>" +
+                "<td  class='size-tables-name input-option-size'>" +
+                "<div class='input-text pr-3'>" +
+                "<input type='text' class='form-control text-count examine reset-name' id='TableName_" + rowid + "' name='TableName_" + rowid + "' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่"].Value))  + ' ' + rowid + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-name input-price-size'>" +
+                "<div class='input-text pr-3'>" +
+                "<input type='text' class='form-control text-count examine reset-price optionprice' oninput='OptionInput(this)' id='TablePrice_" + rowid + "' name='TablePrice_" + rowid + "' maxlength='25' placeholder='฿00.00'>" +
+                "</div>" +
+                "</td>" +
+                "<td class='size-tables-delete' >" +
+                "<button type='button' class='form-control btn-delete reset-delete' id='TableDelete_" + rowid + "' name='TableDelete_" + rowid + "' onclick='delete_row(&apos;" + rowid + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+
+            if (tablessuboption_id == 30) {
+                var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold');
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].style.opacity = '0.5';
+                    elements[i].style.pointerEvents = "none";
+                    elements[i].style.cursor = "default";
+                }
+            }
+
+        } else {
+            return false;
+        }
+
+        document.getElementById('SaveOption').disabled = true;
+
+    }
+    function delete_row(no, id) {
+        if (id != null) {
+            $('#row' + no).hide();
+            $('#TableName_' + no).data('operationtype', 'Delete');
+            $('#TableName_' + no).addClass('delete');
+            $('#TablePrice_' + no).addClass('delete');
+
+            //ถ้ามีการลบที่เคยสร้างจะต้องเปิดปุ่ม
+            document.getElementById('SaveOption').disabled = false;
+            var inputtext = document.querySelectorAll(".examine");
+            var num =0;
+            for (var i = 0; i < inputtext.length ; i++ ) {
+                if (!inputtext[i].classList.contains('delete')) {
+                    num++;
+                }
+            }
+
+            if (num >= 3) {
+                document.getElementById('SaveOption').disabled = false;
+            }else{
+                document.getElementById('SaveOption').disabled = true;
+            }
+        }
+        else {
+
+            document.getElementById("row" + no + "").outerHTML = "";
+            reset_id(no);
+            //ถ้ามีการลบที่เคยสร้างจะต้องเปิดปุ่ม
+            document.getElementById('SaveOption').disabled = false;
+            var inputtext = document.querySelectorAll(".examine");
+            var num = 0;
+            for (var i = 0; i < inputtext.length; i++) {
+                if (!inputtext[i].classList.contains('delete')) {
+                    num++;
+                }
+            }
+
+            if (num >= 3) {
+                document.getElementById('SaveOption').disabled = false;
+            } else {
+                document.getElementById('SaveOption').disabled = true;
+            }
+        }
+    }
+
+    function reset_id(no) {
+        var tables = document.getElementById("TablesNember");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var prices = tables.getElementsByClassName("reset-price");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            if (i > 0) {
+                rows[i].setAttribute("id", "row" + i + "");
+            }
+        }
+
+        if (rows.length <= 30) {
+            var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.opacity = '1';
+                elements[i].style.pointerEvents = "auto";
+                elements[i].style.cursor = "pointer";
+            }
+        }
+
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableName_" + (i + 1) + "");
+            names[i].setAttribute("name", "TableName_" + (i + 1) + "");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่"])) + ' ' + (i + 1) + "");
+        }
+        for (var i = 0; i < prices.length; i++) {
+            prices[i] = i;
+            prices[i].setAttribute("id", "TablePrice_" + (i + 1) + "");
+            prices[i].setAttribute("name", "TablePrice_" + (i + 1) + "");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            if (deletes[i].getAttribute("data-optiondetailno") == null) {
+                deletes[i] = i;
+                deletes[i].setAttribute("id", "TableDelete_" + (i + 1) + "");
+                deletes[i].setAttribute("name", "TableDelete_" + (i + 1) + "");
+                deletes[i].setAttribute("onclick", "delete_row('" + (i + 1) + "');");
+            }
+        }
+    }
+
+    function fnDeleteOption() {
+        var OptionID = @Model.OptionID;
+        console.log(OptionID);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteOption", "ManageMenu")",
+            data: {
+                id: OptionID,
+            },
+            success: function (message) {
+                window.location.href = "@Url.Action("Option", "ManageMenu")";
+            }, error: function (message) {
+                //alert(message.responseText);
+                $('#EditModalOptionDelete').modal().hide();
+                $('#ModalPostnotSuccessOption').modal('show');
+            }
+        });
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+
+    function OptionInput(arg) {
+        var id = arg.getAttribute('id');
+        var currentValue = arg.value.trim();
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            arg.value = aaa;
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    arg.value = chack[1];
+                }
+            }
+        }
+
+        var integerValue = parseFloat(currentValue);
+        if (isNaN(integerValue)) {
+            arg.value = "";
+            return;
+        }
+
+        if (integerValue >= 1000000000000) {
+            arg.value = "9,999,999,999,999";
+        } else {
+            arg.value = numberWithCommas(arg.value.trim());
+        }
+    }
+
+</script>
+
+
+
+

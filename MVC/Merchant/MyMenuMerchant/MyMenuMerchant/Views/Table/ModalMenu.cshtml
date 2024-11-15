@@ -1,0 +1,426 @@
+﻿@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.ORM.Master;
+@model List<Category>;
+@inject IViewLocalizer Localizer
+<style>
+    .p-card-item-flex{
+        display:flex;
+    }
+    
+</style>
+<div class="modal-header">
+    <div class="d-flex flex-row mb-2">
+        <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" onclick="checkclosemenu()"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+        <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0 font-weight-bold">@Localizer["เลือกเมนูอาหารเพิ่ม"]</h5></div>
+    </div>
+    <button type="button" class="btn btn-cart-menu"  onclick="Opencart(event)"><img class="img-cart-menu" src="/mymenumerchant/images/CartButton.png" /></button>
+</div>
+<div class="modal-body p-0">
+    <div class="card-body p-0">
+        <div class="col-12 mb-3 px-0">
+            <div class="modal-header-table  mx-4 my-3">
+                <div class="form-row">
+                    <label class="font-weight-bold mb-0 font-size16 color-header-dack">@Localizer["หมวดหมู่"]</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 px-0 landing-inner-content">
+            <div class="nav nav-pills wrapper-modal mb-0 mx-3" role="tablist" id="Wraooer">
+                @*Menu หลัก*@
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    if (i==0)
+                    {
+                        <a class="nav-item nav-link active button-item-modal choosecate" id="pills_MenuOut_tab1" data-toggle="pill" href="" data-idcate="@Model[i].CategoryID">@Model[i].CategoryName</a>
+
+                    }else
+                    {
+                        <a class="nav-item nav-link button-item-modal choosecate" id="pills_MenuOut_tab1" data-toggle="pill" href="" data-idcate="@Model[i].CategoryID">@Model[i].CategoryName</a>
+                    }
+                }
+            </div>
+            <div class="tab-content">
+                @*Menu ย่อย*@
+                <div class="tab-pane fade show active" id="Pills_ListMenu1" >
+                    <div class="nav nav-pills sub-wrapper-modal mx-3 mt-1" role="tablist"  id="forsubcate">
+                        @*Menu หลัก*@
+                        <a class="nav-item nav-link sub-button-item-modal" data-toggle="pill" href="">กาแฟA2</a>
+                    </div>
+                    <div class="tab-content px-3 pt-3 pb-1 bg-menu-time" style="overflow-y: auto;height: 100px;">
+                        @*Menu ย่อย*@
+                        <div class="modal-body-item">
+                        </div>
+                        <div class="tab-pane fade show active" id="pills_menu1" role="tabpanel" aria-labelledby="Pills_MenuIn_tab11">
+                            <div class="form-itme-menu-row">
+                                <div class="form-itme-menu" id="foritem">
+                                    
+                                    @*item*@
+                                    @*<div class="mx-1 mb-2 detailitem" data-id="1">
+                                        <div class="card border-item w-item-card border-0 media-item">
+                                            <img class="align-item card-img-top img-item-modal border-0" src="/images/Test/img15.png" alt="Card image cap">
+                                            <div class=" card-body-item card-body  w-item-card-body px-2 py-1">
+                                                <div class="p-card-item">
+                                                    <p class="card-text mb-0 font-weight-bold p-text-item">อเมริกาโน่sdasdasdasdasds</p>
+                                                    <p class="card-text text-right font-weight-bold p-number-item">50.00</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mx-1 mb-2 detailitem" data-id="1">
+                                        <div class="card border-item w-item-card media-item">
+                                            <img class="align-item card-img-top img-item-modal border-0" src="/images/Test/img16.png" alt="Card image cap">
+                                            <div class=" card-body-item card-body  w-item-card-body px-2 py-1">
+                                                <div class="p-card-item">
+                                                    <p class="card-text mb-0 font-weight-bold p-text-item">อเมริกาโน่</p>
+                                                    <p class="card-text text-right font-weight-bold p-number-item">50.00</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mx-1 mb-2 detailitem" data-id="1">
+                                        <div class="card border-item w-item-card media-item">
+                                            <img class=" align-itemcard-img-top img-item-modal" src="/images/Test/img17.png" alt="Card image cap">
+                                            <div class="card-body-item card-body  w-item-card-body px-2 py-1">
+                                                <div class="p-card-item">
+                                                    <p class="card-text mb-0 font-weight-bold p-text-item">อเมริกาโน่</p>
+                                                    <p class="card-text text-right font-weight-bold p-number-item">50.00</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mx-1 mb-2 detailitem" data-id="1">
+                                        <div class=" card border-item w-item-card media-item">
+                                            <img class="align-item card-img-top img-item-modal" src="/images/Test/img18.png" alt="Card image cap">
+                                            <div class="card-body-item card-body w-item-card-body px-2 py-1">
+                                                <div class="p-card-item">
+                                                    <p class="card-text mb-0 font-weight-bold p-text-item">อเมริกาโน่</p>
+                                                    <p class="card-text text-right font-weight-bold p-number-item">50.00</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                    
+
+                                </div>
+                            </div>
+
+                        </div>
+                        @*<div class="tab-pane fade" id="pills_menu2" role="tabpanel" aria-labelledby="Pills_MenuIn_tab12">
+                            รายการ กาแฟ Menu 2
+                        </div>
+                        <div class="tab-pane fade" id="pills_menu3" role="tabpanel" aria-labelledby="pills_menu_tab13">
+                            รายการ กาแฟ Menu 3
+                        </div>
+                        <div class="tab-pane fade" id="pills_menu4" role="tabpanel" aria-labelledby="Pills_MenuIn_tab14">
+                            รายการ กาแฟ Menu 4
+                        </div>
+                        <div class="tab-pane fade" id="pills_menu5" role="tabpanel" aria-labelledby="Pills_MenuIn_tab15">
+                            รายการ กาแฟ Menu 5
+                        </div>*@
+                    </div>
+
+                </div>
+                @*<div class="tab-pane fade" id="Pills_ListMenu2" role="tabpanel" aria-labelledby="pills_MenuOut_tab2">
+                    2
+                </div>
+                <div class="tab-pane fade" id="Pills_ListMenu3" role="tabpanel" aria-labelledby="pills_MenuOut_tab3">
+                    3
+                </div>
+                <div class="tab-pane fade" id="Pills_ListMenu4" role="tabpanel" aria-labelledby="pills_MenuOut_tab4">
+                    4
+                </div>
+                <div class="tab-pane fade" id="Pills_ListMenu5" role="tabpanel" aria-labelledby="pills_MenuOut_tab5">
+                    5
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer footer-layout-flex-btn">
+    <p class=" mb-0">@Localizer["จำนวนที่เลือก"] <small class="modal-color-green mb-0 font-size16 ml-1" id="textcountitem">2</small></p>
+    <button type="button" class="btn btn-modal-color" onclick="SubmitOrderAll()" data-dismiss="modal">@Localizer["ตกลง"]</button>
+</div>
+<div class="modal fade" id="ModalOrder" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <p class="text-ordernotcomplete-color modal-m-text ">@Localizer["สั่งอาหารไม่สำเร็จ"]</p>
+                        <p class="text-ordernotcomplete-down-color modal-m-text">@Localizer["กรุณาลองใหม่อีกครั้ง"]</p>
+                    </div>
+                </div>
+                <div class="col-12 p-0">
+                    <button type="button" class="btn-lg btn-block btn-order-notcomplete font-weight-400" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    
+    $(document).ready(function () {
+        // console.log("test");
+        var test = @Json.Serialize(Model);
+        // console.log(test);
+        GetSubcateanditem(@Model[0].CategoryID);
+        let itemall = [] ;
+        $('#ModalMenu').modal('show');
+        $('.choosecate').on("click", function (e) {
+            e.preventDefault();
+            var id = $(this).data("idcate");
+            GetSubcateanditem(id);
+        });
+
+
+
+        // $('.detailitem').on("click", function (e) {
+            
+        //     var id = $(this).data("id");
+        //     e.preventDefault();  // stop the links default behavior
+        //     $('#modaldetailitem').load('@Url.Action("ModalDetailsMenu", "Table")?id=' + id);
+
+        //     //$('#ModalDetailsMenu').modal('show');
+        // });
+        const slider = document.querySelector('.wrapper-modal');
+        let mouseDown = false;
+        let startX, scrollLeft;
+
+        let startDragging = function (e) {
+            mouseDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        };
+        let stopDragging = function (event) {
+            mouseDown = false;
+        };
+
+        slider.addEventListener('mousemove', (e) => {
+            e.preventDefault();
+            if (!mouseDown) { return; }
+            const x = e.pageX - slider.offsetLeft;
+            const scroll = x - startX;
+            slider.scrollLeft = scrollLeft - scroll;
+        });
+        slider.addEventListener('mousedown', startDragging, false);
+        slider.addEventListener('mouseup', stopDragging, false);
+        slider.addEventListener('mouseleave', stopDragging, false);
+
+        const subslider = document.querySelector('.sub-wrapper-modal');
+        let submouseDown = false;
+        let substartX, subscrollLeft;
+
+        let substartDragging = function (e) {
+            submouseDown = true;
+            substartX = e.pageX - subslider.offsetLeft;
+            subscrollLeft = subslider.scrollLeft;
+        };
+        let substopDragging = function (event) {
+            submouseDown = false;
+        };
+
+        subslider.addEventListener('mousemove', (e) => {
+            e.preventDefault();
+            if (!submouseDown) { return; }
+            const sx = e.pageX - subslider.offsetLeft;
+            const subscroll = sx - substartX;
+            subslider.scrollLeft = subscrollLeft - subscroll;
+        });
+        subslider.addEventListener('mousedown', substartDragging, false);
+        subslider.addEventListener('mouseup', substopDragging, false);
+        subslider.addEventListener('mouseleave', substopDragging, false);
+
+    });
+    onclick = "clickitem(event, 24)"
+    function clickitem(e, id) {
+        e = e || window.event;
+        e.preventDefault();
+        $('#modaldetailitem').load('@Url.Action("ModalDetailsMenu", "Table")?id=' + id);
+        
+    }
+    function Test(id) {
+        
+        var search = itemall;
+        if (id != 0) {
+            search = itemall.filter(function (item) {
+                return item.subCategoryID === id;
+            });
+
+        }
+        
+        var listitem = "";
+        if (search.length == 0){
+            listitem += '<div class="layout-item-null" >';
+            listitem += '<p class="text-item-null"> @Localizer["หมวดหมู่นี้ ยังไม่มีสินค้า"]</p>';
+            listitem += '</div>';
+            $("#foritem").html(listitem);
+        }else{
+            $.each(search, function (i, item) {
+                listitem += '<div class="mx-1 mb-2 detailitem" onclick = "clickitem(event,' + item.itemID + ')" >';
+                listitem += '<div class="card border-item w-item-card border-0 media-item" >';
+                if (item.picturePath == null || item.picturePath == '') {
+                    listitem += '<img class="align-item card-img-top img-item-modal border-0" src="/mymenumerchant/images/ItemDefault.png" alt = "Card image cap" >';
+                } else {
+                    listitem += '<img class="align-item card-img-top img-item-modal border-0" src = "' + item.picturePath + '" alt = "Card image cap" >';
+                }
+                listitem += '<div class=" card-body-item card-body  w-item-card-body px-2 py-1 border-0" >';
+                listitem += '<div class="p-card-item" >';
+                listitem += '<div class="p-card-item-flex" >';
+                listitem += '<p class="card-text mb-0 font-weight-bold mr-2 " id="' + item.itemID + '_test" style="display:none"> 1x </p>';
+                listitem += '<p class="card-text mb-0 font-weight-bold text-list-items " >' + item.itemName + '</p>';
+                listitem += '</div>';
+                listitem += '<p class="card-text text-right font-weight-bold p-number-item" > ' + roundToTwo(item.sellingPrice)  + ' </p>';
+                listitem += ' </div> </div> </div> </div>';
+            });
+            $("#foritem").html(listitem);
+            set();
+        }
+
+        
+    }
+    function GetSubcateanditem(id) {
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "@Url.Action("GetItemMenu", "Table")",
+            data: {
+                categoryid: id,
+            },
+            success: function (array) {
+                var listsubcate = "";
+                if (listsubcate == "") {
+                    listsubcate += "<a class='nav-item nav-link sub-button-item-modal active subcate' onclick='Test(0)'  data-toggle='pill' href=''>ทั้งหมด</a>";
+                }
+                $.each(array.subCategory, function (i, item) {
+                    listsubcate += "<a class='nav-item nav-link sub-button-item-modal subcate' onclick='Test(" + item.subCategoryID + ")'  data-toggle='pill' href=''>" + item.subCategoryName + "</a>";
+                });
+                $("#forsubcate").html(listsubcate);
+                itemall = array.items;
+                var listitem = "";
+                if (array.items.length == 0) {
+                    listitem += '<div class="layout-item-null" >';
+                    listitem += '<p class="text-item-null"> @Localizer["หมวดหมู่นี้ ยังไม่มีสินค้า"]</p>';
+                    listitem += '</div>';
+                    $("#foritem").html(listitem);
+                } else {
+                    $.each(array.items, function (i, item) {
+                        listitem += '<div class="mx-1 mb-2 detailitem" onclick = "clickitem(event,' + item.itemID + ')" >';
+                        listitem += '<div class="card border-item w-item-card border-0 media-item" >';
+                        if (item.picturePath == null || item.picturePath == '') {
+                            listitem += '<img class="align-item card-img-top img-item-modal border-0" src="/mymenumerchant/images/ItemDefault.png" alt = "Card image cap" >';
+                        } else {
+                            listitem += '<img class="align-item card-img-top img-item-modal border-0" src = "' + item.picturePath + '" alt = "Card image cap" >';
+                        }
+                        listitem += '<div class=" card-body-item card-body  w-item-card-body px-2 py-1 border-0" >';
+                        listitem += '<div class="p-card-item" >';
+                        listitem += '<div class="p-card-item-flex" >';
+                        listitem += '<p class="card-text mb-0 font-weight-bold mr-2 " id="' + item.itemID + '_test" style="display:none"></p>';
+                        listitem += '<p class="card-text mb-0 font-weight-bold " >' + item.itemName + '</p>';
+                        listitem += '</div>';
+                        listitem += '<p class="card-text text-right font-weight-bold p-number-item" > ' + roundToTwo(item.sellingPrice)  + ' </p>';
+                        listitem += ' </div> </div> </div> </div>';
+                    });
+                    $("#foritem").html(listitem);
+                    set();
+                }
+                //console.log(message);
+                //window.location.href = "@Url.Action("MenuBranch", "BranchManagement")";
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+    function set() {
+        var listitemchoose = JSON.parse(localStorage.getItem("order"));
+         //console.log(listitemchoose);
+        if (listitemchoose == null) {
+            listitemchoose = [];
+        }
+      
+        var result = [];
+        listitemchoose.reduce(function (res, value) {
+            if (!res[value.itemID]) {
+                res[value.itemID] = { Id: value.itemID, qty: 0 };
+                result.push(res[value.itemID])
+            }
+            res[value.itemID].qty += value.itemQuantity;
+            return res;
+        }, {});
+        // console.log(result);
+        
+        $(".card-text.mb-0.font-weight-bold.mr-2").css("display", "none");
+
+        var count = 0 ; 
+        $.each(listitemchoose, function (i, value) {
+
+            const result2 = result.find(({ Id }) => Id === value.itemID);
+            //console.log("result2"+result2);
+            $('#' + value.itemID + '_test').text(result2.qty+"x");
+            $('#' + value.itemID + '_test').css("display", "block");
+            $('#' + value.itemID + '_test').css("color", "#7CBFA7");
+            count += value.itemQuantity << 0;
+        });
+
+        $('#textcountitem').text(count);
+        
+    }
+    function SubmitOrderAll() {
+        //console.log("testt");
+        var dataString = localStorage.getItem("order");
+        var chooseopenorderid = localStorage.getItem("chooseopenorderid");
+        if (dataString!=null) { 
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("PostOrder", "Table")",
+                data: {
+                    value: dataString,
+                    id: chooseopenorderid
+                },
+                success: function (message) {
+                    var model = JSON.parse(message);
+                    //localStorage.clear();
+                    //console.log(model)
+                    localStorage.removeItem('order');
+                    localStorage.removeItem('chooseopenorderid');
+                    if (model.Status == "W") {
+                        $('#status_' + chooseopenorderid).html('<img class="img-size-order mr-1 mb-2" src = "/mymenumerchant/images/Order_WaitServe.png" /><p class="mb-2 font-weight-bold state-color-yellow" > @Localizer["รอเสิร์ฟ"] </p>');
+
+                    } else {
+                        $('#status_' + chooseopenorderid).html('<img class="img-size-order mr-1 mb-2" src = "/mymenumerchant/images/Order_Served.png" /><p class="mb-2 font-weight-bold state-color-green" > @Localizer["เสิร์ฟครบ"] </p>');
+
+                    }
+                    $('#countorder_' + chooseopenorderid).text(model.OrderModels.length + " @Localizer["ออเดอร์"]");
+                    $('#click_' + chooseopenorderid).removeAttr('onclick');
+
+                    $('#click_' + chooseopenorderid).attr('onClick', 'OnTables(' + model.OrderModels.length+',"'+chooseopenorderid+'")');
+                    $('#grandtotal_' + chooseopenorderid).text(roundToTwo(model.GrandTotal));
+
+                    // $('#btncheckbill_' + chooseopenorderid).css("display", "");
+                    // $('#btnclosetable_' + chooseopenorderid).css("display", "none");
+                    
+                    //เพิ่มเพื่อกรณีเพิ่มสินค้าที่หน้า TableDetail เมื่อกดดูออเดอร์จะไม่มีออเดอร์มาแสดง ให้ reload เพื่อให้ค่าถูกต้องและแสดงข้อมูล
+                    var url = window.location.href.split('?')[0];
+                    if (url.indexOf("TableDetails") > -1) {
+                        location.reload(true);
+                    }
+                }, error: function (message) {
+                    jQuery.noConflict();
+                    $('#ModalOrder').modal('show');
+                }
+            });
+        }
+    }
+    function closemodel() {
+        $('#ModalOrder').modal().hide();
+    }
+    function checkclosemenu() {
+        console.log("Menu");
+        $('#ModalTableCloseMenu').modal('show');
+    }
+
+</script>

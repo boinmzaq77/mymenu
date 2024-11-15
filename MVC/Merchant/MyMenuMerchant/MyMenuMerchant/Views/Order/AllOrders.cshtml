@@ -1,0 +1,820 @@
+﻿
+@{
+    ViewData["Title"] = "AllOrders";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="AllOrders">
+    <button id="addRow" hidden>Add new row</button>
+    <button id="editRow" hidden>Add new row</button>
+    <input id="datelast" value="" hidden />
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="Order" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["ออเดอร์ทั้งหมด"]</h2>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <div class="card border-0">
+                            <div class="card-body ">
+                                <div class="container px-2">
+                                    <div class="form-row">
+                                        <div class="col-12 search">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="SearchTable">@Localizer["ค้นหาออเดอร์"]</label>
+                                                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["วันที่, ประเภทออเดอร์, จำนวนรายการ, ราคารวม, สถานะออเดอร์"]" style="height: 45px;" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-xl-6 col-lg-6 mb-2">
+                                            <div class="card">
+                                                <div class="card-body ">
+                                                    <div class="form-group mb-0">
+                                                        <label class="font-weight-bold">@Localizer["ประเภทออเดอร์"]</label>
+                                                        <div class="row">
+                                                            <div class="col-6 col-md-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck1" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["ทานที่ร้าน"]</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 col-md-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck2" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["สั่งกลับบ้าน"]</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-xl-6 col-lg-6 mb-2">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="form-group mb-0">
+                                                        <label class="font-weight-bold">@Localizer["สถานะออเดอร์"]</label>
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck3" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["เสิร์ฟครบ"]</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck4" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["รอเสิร์ฟ"]</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input checkbok-search" id="exampleCheck5" onchange="fillter()">
+                                                                    <label class="form-check-label font-weight-bold">@Localizer["ยกเลิก"]</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body pb-0 mb-0">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="d-flex-head">
+                                        <div class="p-0 layout-text-head"><label class="font-weight-bold mb-4 font-size">@Localizer["ออเดอร์ทั้งหมด"]<small class="size-small font-weight-bold layout-all ms-2 " id="count"> @Localizer["จำนวนทั้งหมด"] 0</small></label>  </div>
+                                        @*<div class="ml-auto"><button type="button" class="btn btn-print"><img class="size-print" src="/mymenumerchant/images/Print.png" /></button></div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 mb-0">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-scroll" id="TableOrder" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                               @* <th scope="col" class="size-th-input"></th>*@
+                                                <th scope="col" class="size-th-date">@Localizer["วันที่"]</th>
+                                                <th scope="col" class="size-th-type">@Localizer["ประเภทออเดอร์"]</th>
+                                                <th scope="col" class="size-th-table">@Localizer["โต๊ะ"]</th>
+                                                <th scope="col" class="size-th-number text-center">@Localizer["จำนวนรายการ"]</th>
+                                                <th scope="col" class="size-th-paynumber text-right">@Localizer["ราคารวม"]</th>
+                                                <th scope="col" class="size-th-status pl-4">@Localizer["สถานะออเดอร์"]</th>
+                                                <th scope="col" class="size-th-input"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bd-example-modal-lg" id="ModalOrderDetails" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content" id="modaldetailorder">
+                    
+                </div>
+            </div>
+        </div>
+        @*<div class="modal fade bd-example-modal-lg" id="ModalOrderDetails" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                        <div class="container-fluid">
+                            <div class="layout-head-list1">
+                                <p class="menu-header p-pad">2022100000115</p>
+                                <a class=" btn btn-modal-size font-weight-bold" data-dismiss="modal">กลับ</a>
+                            </div>
+                            <div class="layout-head-list1">
+                                <div class="form-row p-margin-list1"><p class="p-margin-list1">ออเดอร์: </p><p class="ms-1 color-order font-weight-bold p-margin-list1">2022100000115</p></div>
+                                <p class="p-margin-list1">10/4/2565 10:54</p>
+                            </div>
+                            <div class="layout-head-list1">
+                                <div class="form-row p-margin-list1"><p class="p-margin-list1">ประเภทออเดอร์: </p><p class=" font-weight-bold p-margin-list1">ทานที่ร้าน</p></div>
+                                <div class="form-row"><p class="p-margin-list1">ชื่อลูกค้า: </p><p class="p-margin-list1 text-cut-name">นายบุณยเกียรติ สุขสำโรง</p></div>
+                            </div>
+                            <div class="layout-head-list1">
+                                <div class="form-row"><p class="p-margin-list1">โต๊ะ: </p><p class="p-margin-list1 font-weight-bold">A1</p></div>
+                                <div class="form-row"><p class="p-margin-list1">เบอร์โทรลูกค้า: </p><p class="p-margin-list1">0861265801</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="modal-body ">
+                            <h5 class="font-weight-bold mb-4">รายการคำสั่งซื้อ</h5>
+                            <div class="col-md-12 mb-2">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableListOrder" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-menu">ชื่อเมนู</th>
+                                                <th scope="col" class="size-th-itemprice">ราคาต่อชิ้น</th>
+                                                <th scope="col" class="size-th-number">จำนวน</th>
+                                                <th scope="col" class="size-th-totalprice">ราคารวม</th>
+                                                <th scope="col" class="size-th-totalprice">จุดพิมพ์</th>
+                                                <th scope="col" class="size-th-note">สถานะเมนู</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-body color-header-text">
+                            <div class="mb-3">
+                                <div>
+                                    <p class="font-weight-bold">ราคารวมทั้งหมด</p>
+                                </div>
+                                <div class="color-background  d-flex justify-content-end ">
+                                    <div class="mx-3">
+                                        <p class="font-weight-bold my-3 p-size">174.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-row font-weight-bold">จำนวนรายการสินค้า: <p class="ms-1 font-weight-bold"> 4</p></div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-body">
+                            <div class=" d-flex justify-content-center ">
+                                <button type="button" class="font-weight-bold btn button-modal-print">พิมพ์</button>
+                                <button type="button" class="font-weight-bold btn ms-3 button-modal-succeed" data-toggle="modal" data-target="#ModalExtraSucceed">สำเร็จ</button>
+                                <button type="button" class="font-weight-bold btn ms-3 button-modal-cancel" data-toggle="modal" data-target="#ModalExtraCancel">ยกเลิก</button>
+                                <button type="button" class="font-weight-bold btn ms-3 button-modal-delete" data-toggle="modal" data-target="#ModalExtraDelete">ลบ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+        @*ModalOrderDelete*@
+        <div class="modal fade " id="ModalOrderDelete" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 ">@Localizer["ยืนยันการลบ คำสั่งซื้อ"]</h5>
+                        <div class=" d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-delete">@Localizer["ใช่"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+    <br />
+    <br />
+    <footer class="footer-help">
+        <div class="row footer-row-flex">
+            <div class="col-2">
+                <div class="img-padding">
+                    <img class="img-help" src="/mymenumerchant/images/Help.png" />
+                </div>
+            </div>
+            <div class="col-10">
+                <p class="font-weight-bold color-header-help  p-margin ml-3">@Localizer["ระบบจะ"] <small class="font-weight-bold color-sub-help ">@Localizer["Clear Order ทุกๆ 24 ชั่วโมง"]</small> </p>
+
+            </div>
+        </div>
+    </footer>
+    @*ModalOrderCancel*@
+    <div class="modal fade " id="ModalOrderCancel" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 ">@Localizer["คุณต้องการยกเลิกออเดอร์นี้หรือไม่"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-order-cancel" onclick="BtnAllC(event)">@Localizer["ใช่"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal" onclick="OrderClose()">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*ModalOrderSucceed*@
+    <div class="modal fade " id="ModalOrderSucceed" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 ">@Localizer["คุณต้องการเปลี่ยนสถานะออเดอร์เป็น"] <small class="color-status-ordersucceed">@Localizer["เสิร์ฟครบ"]</small> @Localizer["ทั้งหมดหรือไม่?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-order-succeed" onclick="BtnAllS(event)">@Localizer["ใช่"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal" onclick="OrderSucceedClose()">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            // hour12: false, // ให้ใช้รูปแบบ 24 ชั่วโมง
+        };
+        var table = $('#TableOrder').DataTable({
+            ajax: {
+                url: "@Url.Action("GetOrder", "Order")",
+                @*//url: "../MyMenuMerchant/data/Menus.txt",*@
+                dataSrc: ''
+            },
+            columns: [
+                @*{ data: 'id'},*@
+                { data: 'dateCreated' },
+                { data: 'openOrdersType'},
+                { data: 'foodTableName'},
+                { data: 'countOrderDetail' },
+                { data: { total: 'total', ordersID: 'ordersID', openOrdersID: 'openOrdersID' }},
+                { data: { status: 'status', ordersID: 'ordersID', openOrdersID: 'openOrdersID' } },
+                { data: 'id'},
+            ],
+            columnDefs: [@*{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var numberdata = (meta.row + meta.settings._iDisplayStart + 1)
+                    var text = '<input type="checkbox" class="form-check-input checkbok-search p-checkbox ml-table" data-id="' + meta.row + '" id="exampleCheck' + numberdata + '">';
+                    return text;
+                },
+            }, *@{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    const d = new Date(data);
+                    //*var text = '<p class="mb-0 p-padding-table">' + d.toLocaleString('en-EN', options);   /*.format() */ + '</p>';
+                    var text = '<p class="mb-0 p-padding-table">' + formatDatefullOrder(d);    /*.format() */ + '</p>';
+                    return text;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text = "";
+                    if (data == "D") {
+                    text = '<p class="mb-0 status-m-color p-padding-table">@Localizer["ทานที่ร้าน"]</p>';
+                    } else {
+                    text = '<p class="mb-0 status-b-color p-padding-table">@Localizer["สั่งกลับบ้าน"]</p>';
+                    }
+                    return text;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text = '';
+                    if(data == null){
+                    text = '<p class="mb-0 p-padding-table">' + '-' + '</p>';
+                    }else{
+                    text = '<p class="mb-0 p-padding-table">' + data + '</p>';
+                    }
+                    
+
+                    return text;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var number = (meta.row + meta.settings._iDisplayStart + 1)
+                    var text = "";
+
+                text = '<p class="mb-0 text-center p-padding-table">' + data + '</p>'
+                    return text;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                var text = '<div id="total' + data.openOrdersID + data.ordersID + '">';
+                text += '<p class="mb-0 text-right p-padding-table">' + roundToTwo(data.total) + '</p>';
+                    text += '</div>';
+                    return text;
+                },
+            },
+            {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                var text = '<div id="status' + data.openOrdersID + data.ordersID + '">';
+                    if (data.status == "C") {
+                    text += '<p class="status-color-cancel mb-0 pl-3 p-padding-table"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_Cancel.png"/>@Localizer["ยกเลิก"]</p>';
+                    } else if (data.status == "W") {
+                    text += '<p class="status-color-pending mb-0 pl-3 p-padding-table"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_WaitServe.png"/>@Localizer["รอเสิร์ฟ"]</p>';
+                    } else if (data.status == "S") {
+                    text += '<p class="status-color-succeed mb-0 pl-3 p-padding-table"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_Served.png"/>@Localizer["เสิร์ฟครบ"]</p>';
+                    } else {
+                    text += '<p class="mb-0 pl-3 p-padding-table">' + data.status + '</p>';
+                    }
+                    text += '</div>';
+                    return text;
+                },
+            }, {
+                targets: [6],
+                render: function (data, type, full, meta) {
+                    var text7 = "";
+                    text7 = "<div class='group-btn-table'><a class='btn btn-table btn-green-info'  onclick='setdata(" + meta.row + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Detail20.png' /></a></div>";
+                    //text7 = "<a class='btn btn-size-details' data-toggle='modal' data-target='#ModalOrderDetails'> ดูรายละเอียดเมนู <i class='ms-2 fa fa-angle-right font-weight-bold'></i></a>";
+                    return text7;
+                },
+            },
+            ],
+            "language": {
+        "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีรายการ"] Order</p><br/><br/><br/><br/>",
+        "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+        "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+
+            },
+            "initComplete": function (settings, json) {
+            $('#count').text("@Localizer["จำนวนทั้งหมด"] " + table.data().count());
+                //console.log(table.data())
+                //alert(JSON.stringify(table.data()))
+                var xxx = table.data().sort((a, b) => new Date(b.dateModified).getTime() - new Date(a.dateModified).getTime())[0];
+            
+            //    console.log(xxx.dateModified)
+                if (xxx != undefined) {
+                    $('#datelast').val(xxx.dateModified)
+                    console.log(xxx.dateModified)
+                }else{
+                    $('#datelast').val("undefined")
+                }
+            setInterval(GetDataTableAuto, 5000);
+            },
+            //'order' : [[0, 'desc']],
+            sort:false,
+            searching: true,
+            paging: false,
+            info: false
+
+            
+            //$("#TableOrder .sorting").remove();
+        });
+       
+
+        //$('#TableOrder tbody').on('click', 'tr td:not(:nth-child(1))', function ()
+        //{
+        //    var tr = $(this).closest('tr');
+        //    var value = $(tr).find('input:first').data('id');
+        //    var data = $('#TableOrder').DataTable().row(value).data();
+        //    console.log(data);
+        //    $.ajax({
+        //        type: "GET",
+        //        async: false,
+        //        data: {
+        //            openordersid: data.openOrdersID,
+        //            ordersid: data.ordersID,
+        //        },
+        //        url: "@Url.Action("OrderDetail", "Order")",
+        //        success: function (message) {
+        //            $("#modaldetailorder").html(message);
+        //            $("#ModalOrderDetails").modal('show');
+        //        }, error: function (message) {
+        //            alert(message.responseText);
+        //        }
+        //    });
+           
+
+        //});
+
+
+        $(".btn-dropdown-status-order-served").on('click', function (event) {
+            var id = $(this).data("id");
+            $("#order_waitserve" + id).addClass("opacity-status-chack");
+        });
+        $(".btn-dropdown-status-order-cancel").on('click', function (event) {
+            var id = $(this).data("id");
+            $("#order_waitserve" + id).addClass("opacity-status-chack");
+        });
+
+        $('#addRow').on('click', function () {
+
+            var table = $('#TableOrder').DataTable();
+            table.row.add({
+                "id": "10",
+                "dateModified": "<p class='sub-text-overflow'> <i class='fa fa-square me-3 icon-type-size'> </i>asdasdsadasds</p>",
+                "openOrdersType": "ทานที่ร้าน",
+                "foodTableName": "A1",
+                "countOrderDetail": "2022100000210",
+                "total": "100.00",
+                "statuss": "1",
+                
+            }).draw();
+            
+        });
+        $('#editRow').on('click', function () {
+            var table = $('#TableOrder').DataTable();
+        });
+
+        //var table2 = $('#TableListOrder').DataTable({
+        //    ajax: '/mymenumerchant/data/OrdersList.txt',
+        //    processing: false,
+        //    serverSide: false,
+        //    stateSave: false,
+        //    columns: [
+        //        { data: { name: 'name', namelist1: 'namelist1', namelist2: 'namelist2', namelist3: 'namelist3', namelist4: 'namelist4', namelist5: 'namelist5', pricelist1: 'pricelist1', pricelist2: 'pricelist2', pricelist3: 'pricelist3', pricelist4: 'pricelist4', pricelist5: 'pricelist5' } },
+        //        { data: 'itemprice' },
+        //        { data: 'number' },
+        //        { data: 'totalprice' },
+        //        { data: 'note' },
+
+        //    ],
+        //    columnDefs: [{
+        //        targets: [0],
+        //        render: function (data, type, full, meta) {
+
+        //            if (data.namelist1 == "undefined" || data.namelist1 == "" || data.namelist1 == null) {
+        //                data.namelist1 = "";
+        //            }
+        //            if (data.namelist2 == "undefined" || data.namelist2 == "" || data.namelist2 == null) {
+        //                data.namelist2 = "";
+        //            }
+        //            if (data.namelist3 == "undefined" || data.namelist3 == "" || data.namelist3 == null) {
+        //                data.namelist3 = "";
+        //            }
+        //            if (data.namelist4 == "undefined" || data.namelist4 == "" || data.namelist4 == null) {
+        //                data.namelist4 = "";
+        //            }
+        //            if (data.namelist5 == "undefined" || data.namelist5 == "" || data.namelist5 == null) {
+        //                data.namelist5 = "";
+        //            }
+
+        //            if (data.pricelist1 == "undefined" || data.pricelist1 == "" || data.pricelist1 == null) {
+        //                data.pricelist1 = "";
+        //            } else {
+        //                data.pricelist1 = "+" + data.pricelist1;
+        //            }
+        //            if (data.pricelist2 == "undefined" || data.pricelist2 == "" || data.pricelist2 == null) {
+        //                data.pricelist2 = "";
+        //            } else {
+        //                data.pricelist2 = "+" + data.pricelist2;
+        //            }
+        //            if (data.pricelist3 == "undefined" || data.pricelist3 == "" || data.pricelist3 == null) {
+        //                data.pricelist3 = "";
+        //            } else {
+        //                data.pricelist3 = "+" + data.pricelist3;
+        //            }
+        //            if (data.pricelist4 == "undefined" || data.pricelist4 == "" || data.pricelist4 == null) {
+        //                data.pricelist4 = "";
+        //            } else {
+        //                data.pricelist4 = "+" + data.pricelist4;
+        //            }
+        //            if (data.pricelist5 == "undefined" || data.pricelist5 == "" || data.pricelist5 == null) {
+        //                data.pricelist5 = "";
+        //            } else {
+        //                data.pricelist5 = "+" + data.pricelist5;
+        //            }
+        //            text0 = "<p class='text-listmenu'>" + data.name + "</p>" +
+        //                "<div class='layout-listmenu-test'>" +
+        //                "<p class='layout-listmenu'>" + data.namelist1 + "</p>" +
+        //                "<p class='layout-listnumber'>" + data.pricelist1 + "</p>" +
+        //                "</div>" +
+        //                "<div class='layout-listmenu-test'>" +
+        //                "<p class='layout-listmenu'>" + data.namelist2 + "</p>" +
+        //                "<p class='layout-listnumber'>" + data.pricelist2 + "</p>" +
+        //                "</div>" +
+        //                "<div class='layout-listmenu-test'>" +
+        //                "<p class='layout-listmenu'>" + data.namelist3 + "</p>" +
+        //                "<p class='layout-listnumber'>" + data.pricelist3 + "</p>" +
+        //                "</div>" +
+        //                "<div class='layout-listmenu-test'>" +
+        //                "<p class='layout-listmenu'>" + data.namelist4 + "</p>" +
+        //                "<p class='layout-listnumber'>" + data.pricelist4 + "</p>" +
+        //                "</div>" +
+        //                "<div class='layout-listmenu-test'>" +
+        //                "<p class='layout-listmenu'>" + data.namelist5 + "</p>" +
+        //                "<p class='layout-listnumber'>" + data.pricelist5 + "</p>" +
+        //                "</div>";
+        //            return text0;
+        //        },
+        //    }, {
+        //        targets: [1],
+        //        render: function (data, type, full, meta) {
+        //            var text1 = "";
+        //            text1 = "<p>" + data + "</p>";
+        //            return text1;
+        //        },
+        //    }, {
+        //        targets: [2],
+        //        render: function (data, type, full, meta) {
+        //            var text2 = "";
+        //            text2 = "<p>" + data + "</p>";
+
+        //            return text2;
+        //        },
+        //    }, {
+        //        targets: [3],
+        //        render: function (data, type, full, meta) {
+        //            var text3 = "";
+        //            text3 = "<p>" + data + "</p>";
+        //            return text3;
+        //        },
+        //    }, {
+        //        targets: [4],
+        //        render: function (data, type, full, meta) {
+        //            var text4 = "";
+        //            text4 = "<p>" + data + "</p>";
+        //            return text4;
+        //        },
+        //    },
+        //    ],
+        //    "language": {
+        //        "emptyTable": "<p class='colot-no-data mt-5 mb-5'>ยังไม่มีรายการสั้งซื้อ</p><br/><br/><br/><br/>",
+        //        "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>ไม่พบข้อมูล</p><br/><br/><br/><br/>",
+        //        "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>Loading..</p><br/><br/><br/><br/>",
+
+        //    },
+        //    searching: false,
+        //    paging: false,
+        //    ordering: false,
+        //    info: false,
+        //});
+        var tables = $('#TableOrder').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+
+        //table.column(1).search('director').column(2).search('london').draw();
+
+        $('#ButtonRefresh').on('click', function () {
+            $('#TableOrder').DataTable().ajax.reload();
+        });
+
+    $('#ModalOrderDetails').on('hidden.bs.modal', function () {
+
+        table.ajax.reload();
+    });
+    function GetDataTableAuto(){
+        
+        if ($('#datelast').val() != "undefined"){
+            $.ajax({
+                type: "GET",
+                async: false,
+                data: {
+                    date: $('#datelast').val()
+                },
+                url: "@Url.Action("GetOrderLoop", "Order")",
+                success: function (message) {
+                    //alert(message);
+                var model = JSON.parse(message);
+                //console.log(model)
+                model.forEach((item) => {
+
+                        if ($("#status" + item.openOrdersID + item.ordersID).length == 0) {
+                            var table = $('#TableOrder').DataTable();
+
+                            var currentData = table.rows().data().toArray();
+                            //console.log(currentData)
+                            currentData.unshift(item);
+                            table.clear();
+                            table.rows.add(currentData);
+                            table.draw();
+
+                        } else {
+                            var text = '';
+                            if (item.status == "C") {
+                                text += '<p class="status-color-cancel mb-0 pl-3 p-padding-table"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_Cancel.png"/>@Localizer["ยกเลิก"]</p>';
+                            } else if (item.status == "W") {
+                                text += '<p class="status-color-pending mb-0 pl-3 p-padding-table"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_WaitServe.png"/>@Localizer["รอเสิร์ฟ"]</p>';
+                            } else if (item.status == "S") {
+                                text += '<p class="status-color-succeed mb-0 pl-3 p-padding-table"><img class="order-size-table mr-2" src="/mymenumerchant/images/Order_Served.png"/>@Localizer["เสิร์ฟครบ"]</p>';
+                            } else {
+                                text += '<p class="mb-0 pl-3 p-padding-table">' + item.status + '</p>';
+                            }
+                            $("#status" + item.openOrdersID + item.ordersID).html(text);
+                            var text2 = '';
+                            text2 += '<p class="mb-0 text-right p-padding-table">' + roundToTwo(item.total) + '</p>';
+                            $("#total" + item.openOrdersID + item.ordersID).html(text2);
+                        }
+                    });
+                    //    console.log(model)
+                    var xxx = model.sort((a, b) => new Date(b.dateModified).getTime() - new Date(a.dateModified).getTime())[0];
+                    //console.log(xxx.dateModified)
+
+                    $('#datelast').val(xxx.dateModified)
+                    var tables = $('#TableOrder').DataTable();
+                    $('#count').text("@Localizer["จำนวนทั้งหมด"] " + table.data().count());
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+            });
+        }
+           
+
+            // $('#TableOrder').DataTable().ajax.reload();
+           
+
+    }
+        
+
+    });
+
+    function setdata(data) {
+        var data = $('#TableOrder').DataTable().row(data).data();
+
+        $.ajax({
+            type: "GET",
+            async: false,
+            data: {
+                openordersid: data.openOrdersID,
+                ordersid: data.ordersID,
+            },
+            url: "@Url.Action("OrderDetail", "Order")",
+            success: function (message) {
+                $("#modaldetailorder").html(message);
+                $("#ModalOrderDetails").modal('show');
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function fillter() {
+        var tables = $('#TableOrder').DataTable();
+        var dinner = document.getElementById("exampleCheck1").checked;
+        var take = document.getElementById("exampleCheck2").checked;
+        var kob = document.getElementById("exampleCheck3").checked;
+        var wait = document.getElementById("exampleCheck4").checked;
+        var cancle = document.getElementById("exampleCheck5").checked;
+        var text1 = '';
+        var text2 = '';
+        if (dinner) {
+            if (text1 == '') {
+                text1 = '@Localizer["ทานที่ร้าน"]'
+            } else {
+                text1 += '|@Localizer["ทานที่ร้าน"]'
+            }
+        }
+        if (take) {
+            if (text1 == '') {
+                text1 = '@Localizer["สั่งกลับบ้าน"]'
+            } else {
+                text1 += '|@Localizer["สั่งกลับบ้าน"]'
+            }
+           
+        }
+        if (kob) { 
+            if (text2 == '') {
+                text2 = '@Localizer["เสิร์ฟครบ"]'
+            }else {
+                text2 += '|@Localizer["เสิร์ฟครบ"]'
+            }
+        }
+        if (wait) {
+            if (text2 == '') {
+                text2 = '@Localizer["รอเสิร์ฟ"]'
+            } else {
+                text2 += '|@Localizer["รอเสิร์ฟ"]'
+            } 
+        }
+        if (cancle) { 
+            if (text2 == '') {
+                text2 = '@Localizer["ยกเลิก"]'
+            } else {
+                text2 += '|@Localizer["ยกเลิก"]'
+            } 
+        }
+        //tables.column(6).search(fill3).search(fill4).search(fill5).draw();
+        tables.column(1).search(text1, true, false).column(5).search(text2, true, false).draw();
+        
+    }
+    function OrderClose() {
+        $("#ModalOrderCancel").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+    function OrderSucceedClose() {
+        $("#ModalOrderSucceed").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+    }
+    function BtnAllS(event) {
+        var order =
+        {
+            openOrdersID: $("#OpenOrdersID").val(),
+            ordersID: $("#OrdersID").val(),
+            status: "S"
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditStatusOrder", "Order")",
+            data: order,
+            success: function (message) {
+                event.preventDefault();
+                $('.inputstatus').each(function () {
+                    var status = $(this).val(); 
+                    if (status=="W") {
+                        var id = $(this).data("id");
+                        $("#exampleRadios1_" + id).prop("checked", true);
+                        $(this).val("S");
+                        $("#order_waitserve_" + id).text("เสิร์ฟครบ");
+                    }
+                });
+                $('#divstatusall').html('<p class="p-margin-list1 text-cut-name status-color-succeed flex-jcenter-acenter" ><img class="order-size-table mx-2" src = "/mymenumerchant/images/Order_Served.png" />เสิร์ฟครบ</p>');
+                Checkbtnperclick();
+                $("#ModalOrderSucceed").modal("hide");
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+    function BtnAllC(event) {
+        var order =
+        {
+            openOrdersID: $("#OpenOrdersID").val(),
+            ordersID: $("#OrdersID").val(),
+            status: "C"
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditStatusOrder", "Order")",
+            data: order,
+            success: function (message) {
+                event.preventDefault();
+                $('.inputstatus').each(function () {
+                    var status = $(this).val();
+                    if (status == "W"){
+                        var id = $(this).data("id");
+                        $("#exampleRadios2_" + id).prop("checked", true);
+                        $(this).val("C");
+                        $("#order_waitserve_" + id).text("@Localizer["ยกเลิก"]");
+                    }
+                });
+                $('#divstatusall').html('<p class="p-margin-list1 text-cut-name status-color-cancel flex-jcenter-acenter" ><img class="order-size-table mx-2" src = "/mymenumerchant/images/Order_Cancel.png" />@Localizer["ยกเลิก"]</p>');
+                Checkbtnperclick();
+                $("#ModalOrderCancel").modal("hide");
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+
+        //$('#TableListOrder tbody').on('td.list-data', function () {
+        //    var tr = $(this).closest('tr');
+        //    var row = table.row(tr);
+        //    row.child(format(row.data())).show();
+        //    tr.addClass('shown');
+        //});
+</script>
+

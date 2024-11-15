@@ -1,0 +1,53 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "name": "สาขาใหญ่",
+      "branchsid": "Dx1001",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "50"
+    },
+    {
+      "id": "2",
+      "name": "สาขา A",
+      "branchsid": "Dx1002",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "30"
+    },
+    {
+      "id": "3",
+      "name": "สาขา B",
+      "branchsid": "Dx1003",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "30"
+    },
+    {
+      "id": "4",
+      "name": "สาขา C",
+      "branchsid": "Dx1004",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "35"
+    },
+    {
+      "id": "5",
+      "name": "สาขา D",
+      "branchsid": "Dx1005",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "30"
+    },
+    {
+      "id": "6",
+      "name": "สาขา E",
+      "branchsid": "Dx1006",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "40"
+    },
+    {
+      "id": "7",
+      "name": "สาขา F",
+      "branchsid": "Dx1007",
+      "times": "จ-ศ 9:00-18:00",
+      "tables": "30"
+    }
+  ]
+}

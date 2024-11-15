@@ -1,0 +1,24 @@
+--Prod--
+docker stop mymenumerchant-prod
+docker rm mymenumerchant-prod
+docker image rm mymenumerchant
+docker build -t mymenumerchant .
+docker run --name mymenumerchant-prod --restart always -d -p 8060:80 -v /microservices/MyMenuMerchant/keys:/root/.aspnet/DataProtection-Keys mymenumerchant
+
+
+docker logs --follow mymenumerchant-prod
+
+
+--lab--
+
+docker stop mymenumerchant-lab
+docker rm mymenumerchant-lab
+docker image rm mymenumerchant
+docker build -t mymenumerchant .
+docker run --name mymenumerchant-lab --env ASPNETCORE_ENVIRONMENT=Lab --restart always -d -p 8060:80 -v /microservices/MyMenuMerchant/keys:/root/.aspnet/DataProtection-Keys mymenumerchant
+
+
+docker logs --follow mymenumerchant-lab
+
+
+-------

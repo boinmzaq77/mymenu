@@ -1,0 +1,155 @@
+﻿@using MyMenu.JAM;
+@using MyMenu.ORM.Master
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model List<Branch>
+@{
+    ViewData["Title"] = "LoginBranchs";
+    Layout = null;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" type="image/x-icon" href="/mymenumerchant/images/LogoMyMenu.png">
+    <title>MyMenuMerchant</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyMenuMerchant.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body id="LoginBranchs">
+    <div class="header-logo">
+        <img class="logo-otp" src="/mymenumerchant/images/LogomyMenuText.png" />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12  mb-3 mt-3">
+                <div class="flex-row-head ">
+                    <div class="mr-3">
+                        <a asp-controller="Login" asp-action="Logout"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                    </div>
+                    <div class="">
+                        <h2 class="menu-header mb-0">@Localizer["เลือกสาขา"]</h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 mb-4 overflow-branchs">
+                <div class="body-branchs" id="allbranch">
+                    @{
+                        var i = 0;
+                    }
+                    @foreach (var item in Model)
+                    {
+
+                        <div class="form-check m-0 p-1 col-6 col-md-4 col-xl-4">
+                            @if (i == 0)
+                            {
+                                <input class="form-check-input examine-branchs-radio" type="radio" name="branchs" id="branch_@item.BranchID" value="@item.BranchID" checked hidden>
+                                i++;
+                            }
+                            else
+                            {
+                                <input class="form-check-input examine-branchs-radio" type="radio" name="branchs" id="branch_@item.BranchID" value="@item.BranchID" hidden>
+                            }
+                            <label class="form-check-label label-list-branchs" for="branch_@item.BranchID" id="labelbranch_@item.BranchID">
+                                <small class="mb-0 text-label-branch">
+                                    @item.BranchName
+                                </small>
+                            </label>
+
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="col-12 mb-5">
+                <div class="menu-login">
+                    <a class="btn-login" id="submitbranch" href="#">@Localizer["เริ่มต้นใช้งาน"] <img class="icon-start" src="/mymenumerchant/images/StartButton.png" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-help">
+        <div class="row">
+            <div class="col-12">
+                <div class="img-padding">
+                    <img class="footer-img" src="/mymenumerchant/images/LogInPoweredBySNS.png" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="text-flex">
+                    <p class="text-footer me-2">@Localizer["Version"] 1.1</p>
+                    @*<p class="text-footer me-2">&copy; 2022 </p>
+                    <p class="text-footer color-footer"> SeniorSoft Development</p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="selectbranch" asp-action="SelectBranch" asp-controller="Login" hidden>
+        <input type="text" name="Branchid" id="Branchid" />
+    </form>
+
+
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script>
+
+        const submitbranch = document.getElementById('submitbranch');
+        const branchs = document.getElementById('allbranch');
+
+        submitbranch.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const radioButtons = branchs.querySelectorAll('input[type="radio"][name="branchs"]');
+
+            radioButtons.forEach(radioButton => {
+                if (radioButton.checked) {
+                    document.getElementById('Branchid').value = radioButton.value;
+                    document.getElementById('selectbranch').submit();
+                }
+            });
+        });
+
+        @{
+            var CloudProduct = (string)TempData["Cloudproduct"];
+        }
+        var cloudproductlicence = @Html.Raw(Json.Serialize(CloudProduct));
+        // console.log(cloudproductlicence);
+        localStorage.setItem("CloudProductLicence", cloudproductlicence);
+
+
+    </script>
+
+</body>
+

@@ -1,0 +1,53 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "days": "อาทิตย์",
+      "tatalSales": "1250",
+      "orders": "25",
+      "comparemonths": "34"
+    },
+    {
+      "id": "2",
+      "days": "จันทร์",
+      "tatalSales": "1800",
+      "orders": "10",
+      "comparemonths": "65"
+    },
+    {
+      "id": "3",
+      "days": "อังคาร",
+      "tatalSales": "1050",
+      "orders": "21",
+      "comparemonths": "30"
+    },
+    {
+      "id": "4",
+      "days": "พุธ",
+      "tatalSales": "1500",
+      "orders": "30",
+      "comparemonths": "60"
+    },
+    {
+      "id": "5",
+      "days": "พฤหัสบดี",
+      "tatalSales": "1400",
+      "orders": "28",
+      "comparemonths": "50"
+    },
+    {
+      "id": "6",
+      "days": "ศุกร์",
+      "tatalSales": "1000",
+      "orders": "20",
+      "comparemonths": "45"
+    },
+    {
+      "id": "7",
+      "days": "เสาร์",
+      "tatalSales": "750",
+      "orders": "15",
+      "comparemonths": "10"
+    }
+  ]
+}

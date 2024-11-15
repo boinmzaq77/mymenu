@@ -1,0 +1,117 @@
+﻿@using MyMenuClient.Controllers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    Layout = null;
+}
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MyMenuClient</title>
+    <link rel="icon" type="image/x-icon" href="/MyMenuClient/images/LogoMyMenu.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/MyMenuClient.styles.css" asp-append-version="true" />*@
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body class="">
+    <nav class="navbar navbar-default mb-main">
+        <div class="container-fluid nav-width">
+            <div class="container mt-2 mb-1 navbar-padding">
+                <div class="layout-left">
+                    <a asp-controller="Home" asp-action="Index" class=" navbar-btn layout-i-bank">
+                        <i class="fa fa-angle-left back-green"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-menu-center">
+                @if (!string.IsNullOrEmpty(ViewBag.FoodTableName))
+                {
+                    @*แสดงชื่อโต๊ะ*@
+                    <h1 class="h1-size font-weight-bold navbar-text-head ">@Localizer["เลือกสินค้า"]</h1>
+                    <h2 class="h2-size font-weight-400">@ViewBag.FoodTableName</h2>
+                }
+                else
+                {
+                    @*แสดงชื่อคนสั่งกลับบ้าน*@
+                    <h1 class="h1-size font-weight-bold navbar-text-head ">@Localizer["เลือกสินค้า"]</h1>
+                    <div class="navbar-menu-text-name">
+                        <h2 class="h2-size font-weight-400 navbar-text-name">@ViewBag.CustomerName</h2>
+                        <h2 class="h2-size font-weight-400 navbar-menu-padding ">, </h2>
+                        <h2 class="h2-size font-weight-400 ">@HomeController.PhoneNumberFormat(@ViewBag.Customerphone)</h2>
+                    </div>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 order-body ">
+                <div class="text-center no-order-basket">
+                    <img class="size-img-order-success mb-2" src="~/images/OrderSuccess.png" />
+                    <p class="p-h-order mb-0">@Localizer["สั่งอาหารสำเร็จ"]</p>
+                    <p class="p-status">@Localizer["กรุณารอสักครู่"]</p>
+                </div>
+            </div>
+            
+            <div class="col-12 mb-5">
+                <br /><br /><br /><br />
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 ">
+                    <button type="button" class=" mb-3 btn-add-basket btn-lg btn-block btn-weight font-size-14" onclick="ChargeRecordOrder();">@Localizer["ประวัติการสั่งอาหาร"]</button>
+                </div>
+                <div class="col-12 ">
+                    <button type="button" class=" mb-3 btn-add-orader btn-lg btn-block btn-weight font-size-14" onclick="ChargeMain();">@Localizer["สั่งอาหารเพิ่ม"]</button>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <script>
+
+        function ChargeRecordOrder() {
+             location.replace("/mymenuclient/Home/RecordOrder")
+        }
+        function ChargeMain() {            
+            location.replace("/mymenuclient")
+        }
+
+    </script>
+
+
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
+

@@ -1,0 +1,237 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using MyMenu.ORM.Master;
+@model Branch
+<form id="save">
+    <body id="ServiceCharge">
+        <div class="container">
+            <div class="form-row">
+                <div class="col-12  mb-2">
+                    <div class="row">
+                        <div class="col-12 header-group">
+                            <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["ตั้งค่าสาขา"]</h2>
+                            <ul class="breadcrumb ">
+                                <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                                <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                                <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["ค่าบริการ (Service Charge)"]</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3 ">
+                    <div class="card rounded-body border-0">
+                        <div class="card-body pt-3">
+                            <div class="container-ml">
+                                <div class="col-12">
+                                    <p class="text-header mb-0">@Localizer["ค่าบริการ (Service Charge)"]</p>
+                                    <p class="text-header-info">@Localizer["*ค่าบริการจะถูกคำนวณเฉพาะออเดอร์ทานที่ร้านเท่านั้น"]</p>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="ServicechargeRate">@Localizer["ค่าบริการ"] %</label>
+                                                <input type="text" id="ServicechargeRate" class="form-control text-count examine reset-name" maxlength="5" placeholder="%" value="@Model.ServicechargeRate" oninput="ServiceChargeInput()" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                <input type="text" id="ServicechargeRateOld"  value="@Model.ServicechargeRate" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                @*ปรับ*@
+                                                <label for="ServicechargeRate">@Localizer["รูปแบบการคำนวณค่าบริการ"]</label>
+                                                <select class="form-control form-select" aria-label=".form-select-lg example" id="ServicechargeType" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                    @if (Model.ServicechargeType == 'A')
+                                                    {
+                                                        <option value="A" selected>@Localizer["หลังหักส่วนลด"]</option>
+                                                        <option value="B">@Localizer["ก่อนหักส่วนลด"]</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="A">@Localizer["หลังหักส่วนลด"]</option>
+                                                        <option value="B" selected>@Localizer["ก่อนหักส่วนลด"]</option>
+                                                    }
+                                                </select>
+                                                <input type="text" id="ServicechargeTypeOld" value="@Model.ServicechargeType" hidden>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                        {
+                            <div>
+                                <button type="submit" class="btn-save" id="btnSave" disabled> @Localizer["บันทึก"]</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <!--Modal Post not Success-->
+    <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mt-5"></h5>
+                            <h5 class="text-center mb-5 mt-0 " id="namePutnotSuccess">@Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+
+        $("#save").on("submit", function (e) {
+            e.preventDefault();
+            var dataString = $(this).serialize();
+            var ServicechargeType = $("#ServicechargeType").val();
+            var ServicechargeRate = $("#ServicechargeRate").val();
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditServiceCharge", "BranchManagement")",
+                data: {
+                    servicechargetype: ServicechargeType,
+                    servicechargerate: ServicechargeRate,
+                },
+                success: function (message) {
+                    window.location.href = "@Url.Action("Index", "BranchManagement")";
+                }, error: function (message) {
+                    //alert(message.responseText);
+                    if ("FoodTables is using" == message.responseText || "OpenOrders Takeaway is using" == message.responseText) {
+                        $('#ModalPostnotSuccess').modal('show');
+                        $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                    else {
+                        $('#ModalPostnotSuccess').modal('show');
+                    }
+                }
+            });
+
+        });
+    });
+
+    $(document).on('change', 'input', function () {
+        var _ServicechargeRate = $('#ServicechargeRate').val();
+
+        if (jQuery.isEmptyObject(_ServicechargeRate)) {
+            _ServicechargeRate = $('#ServicechargeRateOld').val();
+        }
+
+        var _ServicechargeRateOld = $('#ServicechargeRateOld').val();
+
+        if (_ServicechargeRate != _ServicechargeRateOld ) {
+            document.getElementById('btnSave').disabled = false;
+        } else {
+            document.getElementById('btnSave').disabled = true;
+        }
+    });
+
+    $(document).on('change', 'select', function () {
+        var _ServicechargeType = $('#ServicechargeType').val();
+
+        if (jQuery.isEmptyObject(_ServicechargeType)) {
+            _ServicechargeType = $('#ServicechargeTypeOld').val();
+        }
+
+        var _ServicechargeTypeOld = $('#ServicechargeTypeOld').val();
+
+        if ( _ServicechargeType != _ServicechargeTypeOld) {
+            document.getElementById('btnSave').disabled = false;
+        } else {
+            document.getElementById('btnSave').disabled = true;
+        }
+    });
+
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    // ป้องกันการป้อนอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    document.getElementById("ServicechargeRate").addEventListener("keypress", function (e) {
+        if (e.key.match(/[^0-9]./) && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+
+    // ป้องกันการกดปุ่มอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    document.getElementById("ServicechargeRate").addEventListener("keydown", function (e) {
+        if (e.key.match(/[^0-9]./) && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+
+    function ServiceChargeInput() {
+        var display = document.getElementById("ServicechargeRate");
+        var currentValue = display.value;
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            $('#ServicechargeRate').val(aaa);
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    display.value = chack[1];
+                }
+            }
+        }
+
+        var integerValue = parseFloat(currentValue);
+        if (isNaN(integerValue)) {
+            display.value = "";
+            return;
+        }
+
+        if (integerValue >= 100) {
+            display.value = "100";
+        } else {
+            var decimalPattern = /^\d+(\.\d{0,2})?$/;
+
+            if (!decimalPattern.test(currentValue)) {
+                display.value = currentValue.slice(0, -1);
+            } else {
+                display.value = display.value;
+            }
+        }
+    }
+
+    function AllIndexOf(txt) {
+        var allIndexOf = [];
+        var index = 0;
+        index = txt.indexOf('.');
+        while (index != -1) {
+            allIndexOf.push(index);
+            index = txt.indexOf('.', index + 1);
+        }
+        return allIndexOf;
+    }
+
+</script>

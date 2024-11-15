@@ -1,0 +1,153 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using MyMenu.JAM;
+@model BranchManageModel
+<body id="AutoServe">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row">
+                    <div class="col-12 header-group">
+                        <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["ตั้งค่าสาขา"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["Option การเสิร์ฟครบอัติโนมัติ"]</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3 ">
+                <div class="card rounded-body border-0">
+                    <div class="card-body pt-3">
+                        <div class="container-ml">
+                            <div class="col-12">
+                                <p class="text-h2-header">@Localizer["Option การเสิร์ฟครบอัติโนมัติ"]</p>
+                            </div>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="font-weight-bold">@Localizer["เปิด-ปิด Option การเสิร์ฟครบอัติโนมัติ"]</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <input id="CheckboxAutoServeOld" value="@Model.AutoServe" hidden />
+                                        <div class=" input-group-prepend  d-flex justify-content-start">
+                                            <label class=" switch">
+                                                @if (Model.AutoServe == 0 || (Model.AutoServe == null))
+                                                {
+                                                    <input type="checkbox" id="CheckboxAutoServe" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="CheckboxAutoServe" checked @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" ? "" : "disabled='disabled'")>
+                                                }
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12  mb-2">
+                <div class="d-flex justify-content-end">
+                    @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                    {
+                        <div>
+                            <button type="submit" class="btn-save" id="btnSave" disabled onclick="SaveEdit()"> @Localizer["บันทึก"]</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--Modal Post not Success-->
+<div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <h5 class="text-center mt-5"></h5>
+                        <h5 class="text-center mb-5 mt-0 " id="namePutnotSuccess">@Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var formData;
+    var lstbranch = [];
+    var _CheckboxAutoServe = 0;
+    var BranchConfig = {};
+
+    function SaveEdit() {
+        formData = new FormData();
+        lstbranch = [];
+        var AUTOSERVE = $("#CheckboxAutoServe").prop("checked") ? "1" : "0";
+        var BranchConfig = {
+            CfgKey: 'AUTOSERVE',
+            CfgInteger: AUTOSERVE,
+        }
+        lstbranch.push(BranchConfig);
+
+        formData.append('value', JSON.stringify(lstbranch));
+        $.ajax({
+            type: "PUT",
+            url: "@Url.Action("UpdateQRpath", "BranchManagement")",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (message) {
+                window.location.href = "@Url.Action("Index", "BranchManagement")";
+            }, error: function (message) {
+                if ("Update Fail" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+                else {
+                    $('#ModalPostnotSuccess').modal('show');
+                }
+            }
+        });
+    }
+
+    $(':checkbox').change(function () {
+        if ($(this).prop("checked")) {
+            _CheckboxAutoServe = 1;
+        } else {
+            _CheckboxAutoServe = 0;
+        }
+
+        var _CheckboxAutoServeOld = $('#CheckboxAutoServeOld').val();
+        if (jQuery.isEmptyObject(_CheckboxAutoServeOld)) {
+            _CheckboxAutoServeOld = 0;
+        }
+
+        if (_CheckboxAutoServe != _CheckboxAutoServeOld) {
+            document.getElementById('btnSave').disabled = false;
+        } else {
+            document.getElementById('btnSave').disabled = true;
+        }
+    });
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+
+</script>

@@ -1,0 +1,1284 @@
+﻿@using MyMenu.JAM
+@using MyMenuMerchant.Controllers;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model ItemInfoModelEdit
+<body id="MenuEdit">
+    <div class="container">
+        <form onchange="MenuEditTables();" asp-action="ItemEditSave" method="post" enctype="multipart/form-data" id="SaveMenu">
+            <div class="form-row">
+                <div class="col-md-12  mb-2">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="ManageMenu" asp-action="Menu"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["แก้ไขเมนูอาหาร"]</h2>
+                        </div>
+                        @*            <div class="col-md-auto">
+                        <a asp-controller="ManageMenu" asp-action="Menu"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        </div>
+                        <div class="col-md-auto">
+                        <h2  class="font-weight-bold menu-header">แก้ไขเมนูอาหาร</h2>
+                        </div>*@
+                    </div>
+                </div>
+                <div class="col-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-sm-12">
+                                        <div class="form-row mt-3">
+                                            <div class="col-sm-auto me-2 layout-img">
+                                                <div class="mb-2 Menu-img">
+                                                    @if (!string.IsNullOrEmpty(Model.ItemInfoModel.PicturePath))
+                                                    {
+                                                        <img src="@Model.ItemInfoModel.PicturePath" class="img-fluid" id="productimg" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="/mymenumerchant/images/ItemDefault.png" class="img-fluid" id="productimg" />
+                                                    }
+                                                    <br />
+
+                                                    <input type="file" id="productinput" accept=".jpg, .jpeg, .png" onclick="AddImageLogo()" hidden />
+                                                    <label for="productinput" class="btn-image-product"><i class="fa fa-pencil "></i></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm">
+                                                <div class="form-row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="font-weight-bold" for="MenuName">@Localizer["ชื่อเมนู"]</label>
+                                                            <div class="input-group input-text">
+                                                                <input type="text" class="form-control text-count examine" data-id="@Model.ItemInfoModel.ItemID" id="MenuName" maxlength="250" placeholder="@Localizer["ชื่อเมนู"]" value="@Model.ItemInfoModel.ItemName">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <label class="font-weight-bold" for="SubCategory">@Localizer["ราคาปกติ"]</label>
+                                                                    <div class="input-group input-text">
+                                                                        <input type="text" class="form-control text-count examine" id="Price" maxlength="25" placeholder="฿ 00.00" step="0.01" value="@ManageMenuController.ConvertToCurrency(Model.ItemInfoModel.Price) ">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <label class="font-weight-bold" for="SalePriceMenu">@Localizer["ราคาขาย"]</label>
+                                                                    <div class="input-group input-text">
+                                                                        <input type="text" class="form-control text-count examine" id="SalePriceMenu" maxlength="25" placeholder="฿ 00.00" step="0.01" value=" @ManageMenuController.ConvertToCurrency(Model.ItemInfoModel.SellingPrice)">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="font-weight-bold" for="DetailsnMenu">@Localizer["รายละเอียดเมนู"]</label>
+                                                    <div class="input-group input-text">
+                                                        <textarea class="form-control" id="DetailsnMenu" rows="3" placeholder="@Localizer["รายละเอียดเมนู"]" maxlength="240">@Model.ItemInfoModel.ItemDetail</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="flex-menu-head mb-3">
+                                                        <label class="font-weight-bold" for="MenuCategory">@Localizer["หมวดหมู่"] <samp class="samp-color"> @Localizer["เลือกได้ 1 หมวดหมู่ และ 1 หมวดหมู่ย่อย"]</samp></label>
+                                                        <button type="button" class="btn-add-menu" data-toggle="modal" data-target="#ModalMenuCategory"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มหมวดหมู่ใหม่"]</button>
+                                                    </div>
+
+                                                    <select class="custom-select mr-sm-2 examine" id="MenuCategory" onchange="ChangeCategory(this)">
+                                                        <option disabled hidden value="">เลือกหมวดหมู่</option>
+                                                        @for (var i = 0; i < Model.ItemConfig.Categories.Count; i++)
+                                                        {
+                                                            if (Model.ItemInfoModel.CategoryID == Model.ItemConfig.Categories[i].CategoryID)
+                                                            {
+                                                                <option selected value="@Model.ItemConfig.Categories[i].CategoryID">@Model.ItemConfig.Categories[i].CategoryName</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@Model.ItemConfig.Categories[i].CategoryID">@Model.ItemConfig.Categories[i].CategoryName</option>
+                                                            }
+
+                                                        }
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="font-weight-bold" for="MenuSubCategory">@Localizer["หมวดหมู่ย่อย"]</label>
+                                                    <select class="custom-select mr-sm-2 examine" id="MenuSubCategory">
+                                                        @if (Model.ItemInfoModel.SubCategoryID == null)
+                                                        {
+                                                            <option selected value="0">@Localizer["ไม่ระบุหมวดหมู่ย่อย"]</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="0">@Localizer["ไม่ระบุหมวดหมู่ย่อย"]</option>
+                                                        }
+                                                        @for (var i = 0; i < Model.subCategoryModels.Count; i++)
+                                                        {
+                                                            if (Model.ItemInfoModel.SubCategoryID == Model.subCategoryModels[i].SubCategoryID)
+                                                            {
+                                                                <option selected value="@Model.subCategoryModels[i].SubCategoryID">@Model.subCategoryModels[i].SubCategoryName </option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@Model.subCategoryModels[i].SubCategoryID">@Model.subCategoryModels[i].SubCategoryName </option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="flex-menu-head mb-3">
+                                                        <label class="font-weight-bold">@Localizer["Option (ตัวเลือก)"] <samp class="samp-color">@Localizer["เลือกได้มากกว่า 1 ตัวเลือก"]</samp></label>
+                                                        <button type="button" class="btn-add-menu" data-toggle="modal" data-target="#ModalMenuOption"><img class="img-size-add" src="/mymenumerchant/images/Add.png" />@Localizer["เพิ่ม Option ใหม่"]</button>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3 pl-0 pr-0">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <table id="TableOption">
+                                                                    <tbody>
+                                                                        <tr id="cloneoption" hidden>
+                                                                            <td>
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" name="optioncheck" id="OptionCheck_">
+                                                                                    <label class="form-check-label" for="OptionCheck_"></label>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @for (var i = 1; i < Model.ItemConfig.Options.Count + 1; i++)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="form-check">
+                                                                                        @if (Model.ItemInfoModel.Optionitems.Any(x => x.OptionID == Model.ItemConfig.Options[i - 1].OptionID))
+                                                                                        {
+                                                                                            <input checked class="form-check-input" type="checkbox" name="optioncheck" value="@Model.ItemConfig.Options[i-1].OptionID" id="OptionCheck_@i">
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <input class="form-check-input" type="checkbox" name="optioncheck" value="@Model.ItemConfig.Options[i-1].OptionID" id="OptionCheck_@i">
+                                                                                        }
+                                                                                        <label class="form-check-label" for="OptionCheck_@i">@Model.ItemConfig.Options[i-1].OptionName</label>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <div class="flex-menu-head mb-3">
+                                                        <label class="font-weight-bold" for="MenuExtra">@Localizer["Extra (ตัวเลือกเสริม)"] <samp class="samp-color">@Localizer["เลือกได้มากกว่า 1 ตัวเลือก"]</samp></label>
+                                                        <button type="button" class="btn-add-menu" data-toggle="modal" data-target="#ModalMenuExtra"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่ม Extra ใหม่"]</button>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3 pl-0 pr-0">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <table id="TableExtra">
+                                                                    <tbody>
+                                                                        <tr id="cloneextra" hidden>
+                                                                            <td>
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" name="extracheck" id="ExtraCheck_">
+                                                                                    <label class="form-check-label" for="ExtraCheck_"></label>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @for (var i = 1; i < Model.ItemConfig.Extraitems.Count + 1; i++)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="form-check">
+                                                                                        @if (Model.ItemInfoModel.Extraitems.Any(x => x.ExtraID == Model.ItemConfig.Extraitems[i - 1].ExtraID))
+                                                                                        {
+                                                                                            <input checked class="form-check-input" type="checkbox" name="extracheck" value="@Model.ItemConfig.Extraitems[i-1].ExtraID" id="ExtraCheck_@i">
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <input class="form-check-input" type="checkbox" name="extracheck" value="@Model.ItemConfig.Extraitems[i-1].ExtraID" id="ExtraCheck_@i">
+
+                                                                                        }
+                                                                                        <label class="form-check-label" for="ExtraCheck_@i">@Model.ItemConfig.Extraitems[i-1].ExtraName</label>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="font-weight-bold" for="MenuBranch">@Localizer["สาขาที่เปิดขาย"]</label>
+                                                    <div class="col-md-12 mb-3 pl-0 pr-0 mt-2">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <div class="form-group container-sm position-initial p-0 mb-0">
+                                                                    <div class="position-all-branch">
+                                                                        <div class="form-check mb-2 color-check">
+                                                                            <div class=" input-group-prepend  d-flex justify-content-end">
+                                                                                <label class="align-self-center me-2" for="CheckboxAllBranch">
+                                                                                    @Localizer["ทุกสาขา"]
+                                                                                </label>
+                                                                                <label class="form-check-label switch">
+                                                                                    <input type="checkbox" id="CheckboxAllBranch" onclick="OnClickAllBranch();" >
+                                                                                    <span class="slider round"></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <table id="TableBranch">
+                                                                        <tbody>
+                                                                            @for (var i = 1; i < Model.ItemConfig.Branches.Count + 1; i++)
+                                                                            {
+                                                                                <div class="col-8 col-sm-7 col-md-9 form-check mb-2 color-check">
+                                                                                    @if (Model.ItemInfoModel.itemonBranches.Where(x => x.Status == 'A').Any(x => x.BranchID == Model.ItemConfig.Branches[i - 1].BranchID))
+                                                                                    {
+                                                                                        <input checked class="form-check-input checkbox-branch" name="branchcheck" value="@Model.ItemConfig.Branches[i-1].BranchID" type="checkbox" id="BranchCheck_@i" onclick="OnBranchs()">
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="form-check-input checkbox-branch" name="branchcheck" value="@Model.ItemConfig.Branches[i-1].BranchID" type="checkbox" id="BranchCheck_@i" onclick="OnBranchs()">
+
+                                                                                    }
+                                                                                    <label class="form-check-label" for="BranchCheck_@i">
+                                                                                        @Model.ItemConfig.Branches[i-1].BranchName
+                                                                                    </label>
+                                                                                </div>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="p-2">
+                            <button type="submit" class="btn-save" id="SaveMenu">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <br />
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin">@Localizer["รูปสินค้า"] <samp class="color-sub-help">@Localizer["ขนาด 500*500 px, ไม่เกิน XXXX KB และเป็นไฟล์ JPG, JPEG และ PNG เท่านั้น"]</samp></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+   @*   ModalMenuCategory *@
+    <div class="modal fade bd-example-modal-lg" id="ModalMenuCategory" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row">
+                        <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="CloseCategory();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="p-2"><h5 class="text-branch">@Localizer["เพิ่มหมวดหมู่ใหม่"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <form onkeyup="MenuAddTablesCategory();" id="saveCategory">
+                                <div class="form-row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="CategoryName">@Localizer["ชื่อหมวดหมู่"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control text-count examine-category" name="[0].CategoryName" id="CategoryName" maxlength="250" placeholder="@Localizer["ชื่อหมวดหมู่"]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="card border">
+                                            <div class="card-body">
+                                                <div class="col-md-12 p-0">
+                                                    <label class="font-weight-bold mr-2 mb-1 mt-1">@Localizer["หมวดหมู่ย่อย"]<small class="color-list-number font-weight-bold ml-2">@Localizer["เพิ่มได้สูงสุด 10 รายการ"]</small></label>
+                                                </div>
+
+                                                <table id="TablesSubCategory">
+                                                    <tr class="size-tr-tables" hidden>
+                                                    </tr>
+                                                    <tr id="category_row1" class="size-tr-tables">
+                                                        <td class="size-tables-name">
+                                                            <div class="input-text">
+                                                                <input type="text" class="form-control text-count examine-category reset-name" name="[0].Subcategorymodel[0].SubCategoryName" id="TableNameCategory_1" name="TableNameCategory_1" maxlength="250" placeholder="@Localizer["ชื่อหมวดหมู่ย่อย รายการที่ 1"]">
+                                                            </div>
+                                                        </td>
+                                                        <td class="size-tables-delete" id="country_row11">
+                                                            <button class="form-control btn-delete reset-delete" id="TableDeleteCategory_1" name="TableDeleteCategory_1" onclick="category_delete_row('1')"><i class="fa fa-trash-o"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <div class="col-md-12 mt-2 p-0">
+                                                    <button type="button" class="btn-add-sub font-weight-bold" onclick="AddSubCategory();"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการย่อย"]</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="mt-1">
+                                        <button type="submit" class="btn-save" id="SaveCategory" disabled="disabled">@Localizer["บันทึก"]</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     @* ModalMenuOption *@
+    <div class="modal fade bd-example-modal-lg" id="ModalMenuOption" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row">
+                        <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="CloseOption();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="p-2"><h5 class="text-branch">@Localizer["เพิ่ม Option ใหม่"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <form id="saveOption" onkeyup="MenuAddTablesOption();">
+                                <div class="form-row mb-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="OptionName">@Localizer["ชื่อ Option"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine-option text-count" name="[0].OptionName" id="OptionName" maxlength="30" placeholder="@Localizer["ชื่อ Option"]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="card border">
+                                            <div class="card-body pt-2">
+                                                <div class="form-row">
+                                                    <div class="col-md-12 ">
+                                                        <table id="TablesSubOption">
+                                                            <tr class="">
+                                                                <td class="size-tables-name-op-ex">
+                                                                    <label class="font-weight-bold mb-1 ">@Localizer["ชื่อ Option ย่อย"]</label>
+                                                                </td>
+                                                                <td class="size-tables-sell-op-ex">
+                                                                    <label class="font-weight-bold input-option-size mb-1  ">@Localizer["ราคา"]</label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="option_row1" class="size-tr-tables">
+                                                                <td>
+                                                                    <div class="input-text">
+                                                                        <input type="text" class="form-control text-count examine-option reset-name" id="TableNameOption_1" name="[0].OptionDetailModels[0].OptionDetailName" maxlength="250" placeholder="@Localizer["ชื่อ Option ย่อย รายการที่ 1"]">
+                                                                    </div>
+                                                                </td>
+                                                                <td class="size-tables-op-ex">
+                                                                    <div class="input-text">
+                                                                        <input type="text" class="form-control text-count examine-option reset-price optionprice" id="TablePriceOption_1" name="[0].OptionDetailModels[0].Price" maxlength="25" placeholder="฿00.00" oninput="PriceInput(this)">
+                                                                    </div>
+                                                                </td>
+                                                                <td id="country_row1">
+                                                                    <button type="button" class="form-control btn-delete reset-delete" id="TableDeleteOption_1" name="TableDeleteOption_1" onclick="option_delete_row('1')"><i class="fa fa-trash-o"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="col-md-12 mt-2">
+                                                        <button type="button" class="btn-add-sub font-weight-bold" onclick="AddSubOption();"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการย่อย"]</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="mt-1">
+                                        <button type="submit" class="btn-save" id="SaveOption" disabled="disabled">@Localizer["บันทึก"]</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @* ModalMenuExtra  *@
+    <div class="modal fade bd-example-modal-lg" id="ModalMenuExtra" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row">
+                        <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="CloseExtra();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class="p-2"><h5 class="text-branch">@Localizer["เพิ่ม Extra ใหม่"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <form onkeyup="MenuAddTablesExtra();" id="saveExtra">
+                                <div class="form-row mb-2">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="ExtraName">@Localizer["ชื่อ Extra"]</label>
+                                            <div class="input-text">
+                                                <input type="text" class="form-control text-count examine-extra" id="ExtraName" name="[0].ExtraName" maxlength="30" placeholder="@Localizer["ชื่อ Extra"]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold " for="MaxSelect">@Localizer["เลือก Extra ได้สูงสุด"]</label>
+                                            <div class="input-text">
+                                                <input type="number" class="form-control text-count examine-extra" id="MaxSelect" name="[0].MaxSelect" maxlength="240" placeholder="@Localizer["ระบุจำนวน Extra ที่เลือกได้"]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="card border">
+                                            <div class="card-body">
+                                                <div class="form-row">
+                                                    <div class="col-md-12 ">
+                                                        <table id="TablesSubExtra">
+                                                            <tr>
+                                                                <td class="size-tables-name-op-ex">
+                                                                    <label class="font-weight-bold mb-1 ">@Localizer["ชื่อตัวเลือกพิเศษย่อย"]</label>
+                                                                </td>
+                                                                <td class="size-tables-sell-op-ex">
+                                                                    <label class="font-weight-bold input-option-size mb-1">@Localizer["ราคา"]</label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="extra_row1" class="size-tr-tables examine-row">
+                                                                <td>
+                                                                    <div class="input-text">
+                                                                        <input type="text" class="form-control text-count examine-extra reset-name " id="TableNameExtra_1" name="[0].ExtraDetailModel[0].ExtraDetailName" maxlength="250" placeholder="@Localizer["ชื่อ Extra ย่อย รายการที่ 1"]">
+                                                                    </div>
+                                                                </td>
+                                                                <td class="size-tables-op-ex">
+                                                                    <div class="input-text">
+                                                                        <input type="text" class="form-control text-count examine-extra reset-price extraprice" oninput='PriceInput(this)' id="TablePriceExtra_1" name="[0].ExtraDetailModel[0].Price" maxlength="25" placeholder="฿00.00">
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <button type="button" class="form-control btn-delete reset-delete" id="TableDeleteExtra_1" name="TableDeleteExtra_1" onclick="extra_delete_row('1')"><i class="fa fa-trash-o"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-12 mt-2">
+                                                        <button type="button" class="btn-add-sub font-weight-bold" onclick="AddSubExtra();"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการย่อย"]</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="mt-1">
+                                        <button type="submit" class="btn-save" id="SaveExtra" disabled="disabled">@Localizer["บันทึก"]</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   @*  ModalInfoExtraNumber *@
+    <div class="modal fade " id="ModalInfoExtraNumber" tabindex="1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["คุณระบุจำนวน Extra ที่เลือกได้ สูงกว่า จำนวนรายการย่อยที่มี กรุณาระบุจำนวนให้สอดคล้องกัน"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn btn-info-ok" data-dismiss="modal" data-toggle="modal" data-target="#ModalInfoExtraNumber" onclick="OnInfoExtraNumber();">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert">@Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+</body>
+<script>
+    const formData = new FormData();
+
+    $(document).ready(function () {
+        $("#saveOption").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("OptionAddSave", "ManageMenu")",
+                data: dataString,
+                success: function (message) {
+                    console.log(message.result);
+                    var obj = jQuery.parseJSON(message.result);
+                    console.log(obj[0].optionName);
+                    var tables = document.getElementById("TableOption");
+                    var tablessubcategory_id = (tables.rows.length);
+                    let cloneItem = $("#cloneoption").clone();
+                    var aaa = cloneItem.find('.form-check-input');
+                    cloneItem.find('.form-check-input').attr('value', obj[0].optionID)
+                    cloneItem.find('.form-check-label').text(obj[0].optionName)
+                    cloneItem.find('.form-check-input').attr('id', 'OptionCheck_' + tablessubcategory_id);
+                    cloneItem.removeAttr('hidden');
+                    $("#TableOption").append(cloneItem);
+                    $("#ModalMenuOption").modal('hide');
+                    CloseOption();
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                    if (message.responseText == 'Insert OptionDetail Error') {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถเพิ่ม Option ย่อย ได้กรุณาลองใหม่อีกครั้ง"].Value)) );
+                    } else {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+
+        $("#saveExtra").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            e.preventDefault();
+            var extra = CheckMaxSelect();
+            if (extra == 1) {
+                return false;
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ExtraAddSave", "ManageMenu")",
+                    data: dataString,
+                    success: function (message) {
+                        var obj = jQuery.parseJSON(message.result);
+                        var tables = document.getElementById("TableExtra");
+                        var tablessubcategory_id = (tables.rows.length);
+                        let cloneItem = $("#cloneextra").clone();
+                        var aaa = cloneItem.find('.form-check-input');
+                        cloneItem.find('.form-check-input').attr('value', obj[0].extraID)
+                        cloneItem.find('.form-check-label').text(obj[0].extraName)
+                        cloneItem.find('.form-check-input').attr('id', 'ExtraCheck_' + tablessubcategory_id);
+                        cloneItem.removeAttr('hidden');
+                        $("#TableExtra").append(cloneItem);
+                        $("#ModalMenuExtra").modal('hide');
+                        CloseExtra();
+                    }, error: function (message) {
+                        $('#ModalPostnotSuccessError').modal('show');
+                        if (message.responseText == "Insert ExtraDetail Error") {
+                            $('$namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถเพิ่ม Extra ย่อย ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                        } else {
+                            $('$namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#saveCategory").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CategoryAddSave", "ManageMenu")",
+                data: dataString,
+                success: function (message) {
+
+                    var obj = jQuery.parseJSON(message.result);
+                    $('#MenuCategory').append($('<option>', {
+                        value: obj[0].categoryID,
+                        text: obj[0].categoryName
+                    }));
+                    $("#ModalMenuCategory").modal('hide');
+                    CloseCategory();
+
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                    $('$namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถเพิ่มหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+
+            });
+            e.preventDefault();
+        });
+
+        OnBranchs();
+
+        $("#SaveMenu").on("submit", function (e) {
+            e.preventDefault();
+            
+            //สินค้ามีรูปอยู่แล้ว 
+            // const fileInput = document.getElementById('productinput');
+            // if (fileInput.files.length > 0) {
+            //     const file = fileInput.files[0];
+            //     formData.append('FilePicture', file);
+            // }
+
+
+            var picturepath = null;
+            if ('@Html.Raw(Model.ItemInfoModel.PicturePath)' != '' || '@Html.Raw(Model.ItemInfoModel.PicturePath)' != null) {
+                picturepath =  '@Html.Raw(Model.ItemInfoModel.PicturePath)' ;
+            }
+
+            let listoption = [];
+            let listbranch = [];
+            let listextra = [];
+
+            $('input[name="branchcheck"]:checked').each(function () {
+                $(this).checked
+                var ItemInfoModel =
+                {
+                    branchid: this.value,
+                    Status: 'A'
+                }
+                listbranch.push(ItemInfoModel);
+            });
+            $('input[name="optioncheck"]:checked').each(function () {
+                var ItemInfoModel =
+                {
+                    itemid: $("#MenuName").data('id'),
+                    optionid: this.value
+                }
+                listoption.push(ItemInfoModel);
+            });
+            $('input[name="extracheck"]:checked').each(function () {
+                var ItemInfoModel =
+                {
+                    itemid: $("#MenuName").data('id'),
+                    extraid: this.value
+                }
+                listextra.push(ItemInfoModel);
+            });
+
+            var ItemInfoModel =
+            {
+                itemid: $("#MenuName").data('id'),
+                optionitems: listoption,
+                itemonbranches: listbranch,
+                extraitems: listextra,
+                ItemName: $("#MenuName").val(),
+                ItemDetail: $("#DetailsnMenu").val(),
+                categoryid: $("#MenuCategory").find(":selected").val(),
+                subcategoryid: $("#MenuSubCategory").find(":selected").val(),
+                price: $("#Price").val(),
+                sellingprice: $("#SalePriceMenu").val(),
+                PicturePath: picturepath,
+            }
+            formData.append('value', JSON.stringify(ItemInfoModel));
+
+
+            // alert(dataString); return false;
+            $.ajax({
+
+                url: "@Url.Action("ItemEditSave", "ManageMenu")",
+                type: 'POST',
+                data: formData,
+                contentType: false, // Set to false to prevent jQuery from automatically setting the content type
+                processData: false,
+                success: function (message) {
+                    window.location.href = "@Url.Action("Menu", "ManageMenu")";
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                    if (message.responseText == "Item not found") {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    } else if (message.responseText == "Dublicate ItemName") {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    } else {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+
+            });
+            e.preventDefault();
+        });
+
+
+    });
+    function OnInfoExtraNumber() {
+        $("#ModalInfoExtraNumber").modal().on('hidden.bs.modal', function (e) {
+            $("body").addClass("modal-open");
+        });
+
+    }
+    function OnClickAllBranch() {
+        var BranchAll = document.getElementById("CheckboxAllBranch").checked;
+        var Branch = document.getElementsByClassName("checkbox-branch");
+        if (BranchAll == true) {
+            for (var i = 1; i <= Branch.length; i++) {
+                $("#BranchCheck_" + i).prop("checked", true);
+            }
+        } else {
+            for (var i = 1; i <= Branch.length; i++) {
+                $("#BranchCheck_" + i).prop("checked", false);
+            }
+        }
+    }
+    function OnBranchs() {
+        var BranchAll = document.getElementById("CheckboxAllBranch").checked;
+        if (BranchAll == true) {
+            if (BranchAll == false) {
+                $("#CheckboxAllBranch").prop("checked", false);
+            }
+        }
+        var Branch = document.querySelectorAll('input[type="checkbox"].checkbox-branch');
+        let allChecked = true;
+        Branch.forEach(checkbox => {
+            if (!checkbox.checked) {
+                allChecked = false;
+            }
+        });
+        if (allChecked) {
+            $("#CheckboxAllBranch").prop("checked", true);
+        } else {
+            $("#CheckboxAllBranch").prop("checked", false);
+        }
+    }
+    function CheckMaxSelect() {
+        var TablesNumber = document.getElementById("TablesSubExtra");
+        var sub_extra = TablesNumber.getElementsByClassName("examine-row").length;
+        var MaxSelectVal = document.getElementById("MaxSelect").value;
+        if (sub_extra < MaxSelectVal) {
+            $('#ModalInfoExtraNumber').modal('show');
+            return 1;
+        }
+        return 0;
+    }
+
+    var loadProductFile = function (event) {
+        var Product = document.getElementById('productimg');
+        Product.src = URL.createObjectURL(event.target.files[0]);
+        Product.onload = function () {
+            URL.revokeObjectURL(Product.src)
+        }
+    }
+    function ChangeCategory(sel) {
+        console.log(sel.value);
+
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("GetSubCategory", "ManageMenu")",
+            data: {
+                id: sel.value
+            },
+            dataType: 'json',
+            success: function (message) {
+                $('#MenuSubCategory')
+                    .find('option')
+                    .remove()
+                    .end();
+                $('#MenuSubCategory').append($("<option></option>")
+                    .attr("value", 0)
+                    .text('ไม่ระบุ'));
+                $.each(message, function (i, item) {
+                    $('#MenuSubCategory').append($("<option></option>")
+                        .attr("value", item.subCategoryID)
+                        .text(item.subCategoryName));
+                });
+
+                $('#MenuSubCategory').disabled = false;
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+    function MenuEditTables() {
+        //var MenuCategory = document.getElementById('MenuCategory');
+        //var MenuSubCategory = document.getElementById('MenuSubCategory');
+        //if (MenuCategory.value != "") {
+        //    MenuSubCategory.disabled = false;
+        //} else {
+        //    MenuSubCategory.disabled = true;
+        //}
+
+        //document.getElementById('SaveMenu').disabled = false;
+        //var inputtext = document.querySelectorAll(".examine");
+        //inputtext.forEach((x) => {
+        //    if (x.value == "") {
+        //        document.getElementById('SaveMenu').disabled = true;
+        //    }
+        //});
+    }
+
+    function MenuAddTablesCategory() {
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext1 = document.querySelectorAll(".examine-category");
+        inputtext1.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+        });
+    }
+
+    function AddSubCategory() {
+        var tables = document.getElementById("TablesSubCategory");
+        var tablessubcategory_id = (tables.rows.length);
+        if (tablessubcategory_id <= 10) {
+            var row = tables.insertRow(tablessubcategory_id).outerHTML =
+                "<tr  class='size-tr-tables' id='category_row" + tablessubcategory_id + "'>" +
+                "<td  class='size-tables-name'>" +
+                "<div class='input-text'>" +
+                "<input type='text' class='form-control text-count examine-category reset-name'  id='TableNameCategory_" + tablessubcategory_id + "' name='[0].Subcategorymodel[" + (tablessubcategory_id - 1) + "].SubCategoryName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่"].Value))  + ' ' + tablessubcategory_id + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-delete'>" +
+                "<button  class='form-control btn-delete reset-delete' id='TableDeleteCategory_" + tablessubcategory_id + "' name='TableDeleteCategory_" + tablessubcategory_id + "'onclick='category_delete_row(&apos;" + tablessubcategory_id + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+            document.getElementById('SaveCategory').disabled = true;
+        } else {
+            return false;
+        }
+    }
+
+    function category_delete_row(no) {
+        document.getElementById("category_row" + no + "").outerHTML = "";
+
+        category_reset_id(no);
+
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext2 = document.querySelectorAll(".examine-category");
+        inputtext2.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+        });
+    }
+
+    function category_reset_id(no) {
+        var tables = document.getElementById("TablesSubCategory");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            if (i > 0) {
+                rows[i].setAttribute("id", "category_row" + i + "");
+            }
+        }
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableNameCategory_" + (i + 1) + "");
+            names[i].setAttribute("name", "[0].Subcategorymodel[" + (i) + "].SubCategoryName");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่"].Value)) + ' ' + (i + 1) + "");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            deletes[i] = i;
+            deletes[i].setAttribute("id", "TableDeleteCategory_" + (i + 1) + "");
+            deletes[i].setAttribute("name", "TableDeleteCategory_" + (i + 1) + "");
+            deletes[i].setAttribute("onclick", "category_delete_row('" + (i + 1) + "');");
+        }
+
+    }
+
+    function CloseCategory() {
+        var CategoryName = document.getElementById("CategoryName");
+        CategoryName.value = "";
+        var TablesSubCategory = document.getElementById("TablesSubCategory");
+        TablesSubCategory.outerHTML =
+            "<table id='TablesSubCategory'>" +
+            "<tr class='size-tr-tables' hidden></tr>" +
+            "<tr id='row1' class='size-tr-tables'>" +
+            "<td  class='size-tables-name'>" +
+            "<div class='input-text'>" +
+            "<input type='text' class='form-control text-count examine-category reset-name' id='TableNameCategory_1' name='[0].Subcategorymodel[0].SubCategoryName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่ 1"].Value)) + "'>" +
+            "</div>" +
+            "</td>" +
+            "<td  class='size-tables-delete' id='country_row11'>" +
+            "<button  class='form-control btn-delete reset-delet' id='TableDeleteCategory_1' name='TableDeleteCategory_1' onclick='category_delete_row(&apos;1&apos;)'><i class='fa fa-trash-o'></i></button>" +
+            "</td>" +
+            "</tr>" +
+            "</table>";
+    }
+
+    function MenuAddTablesOption() {
+        document.getElementById('SaveOption').disabled = false;
+        var inputtext = document.querySelectorAll(".examine-option");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveOption').disabled = true;
+            }
+        });
+    }
+
+    function AddSubOption() {
+        var tables = document.getElementById("TablesSubOption");
+        var tablessuboption_id = (tables.rows.length);
+        if (tablessuboption_id <= 30) {
+            var row = tables.insertRow(tablessuboption_id).outerHTML =
+                "<tr id='option_row" + tablessuboption_id + "' class='size-tr-tables'>" +
+                "<td >" +
+                "<div class='input-text'>" +
+                "<input type='text' class='form-control text-count examine-option reset-name' id='TableNameOption_" + tablessuboption_id + "' name='[0].OptionDetailModels[" + (tablessuboption_id - 1) + "].OptionDetailName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่"]))  + ' ' + tablessuboption_id + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-op-ex'>" +
+                "<div class='input-text'>" +
+                "<input type='text' class='form-control text-count examine-option reset-price optionprice'  oninput='PriceInput(this)' id='TablePriceOption_" + tablessuboption_id + "' name='[0].OptionDetailModels[" + (tablessuboption_id - 1) + "].Price' maxlength='25' placeholder='฿00.00'>" +
+                "</div>" +
+                "</td>" +
+                "<td  >" +
+                "<button type='button' class='form-control btn-delete reset-delete' id='TableDeleteOption_" + tablessuboption_id + "' name='TableDeleteOption_" + tablessuboption_id + "' onclick='option_delete_row(&apos;" + tablessuboption_id + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+            document.getElementById('SaveOption').disabled = true;
+        } else {
+            return false;
+        }
+    }
+
+    function option_delete_row(no) {
+        document.getElementById("option_row" + no + "").outerHTML = "";
+
+        option_reset_id(no);
+
+        document.getElementById('SaveOption').disabled = true;
+        //ถ้ามีการลบที่เคยสร้างจะต้องเปิดปุ่ม
+        var inputtext2 = document.querySelectorAll(".examine-option");
+        if (inputtext2.length > 1) {
+            document.getElementById('SaveOption').disabled = false;
+        }
+    }
+
+    function option_reset_id(no) {
+        var tables = document.getElementById("TablesSubOption");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var prices = tables.getElementsByClassName("reset-price");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            if (i > 0) {
+                rows[i].setAttribute("id", "option_row" + i + "");
+            }
+        }
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableNameOption_" + (i + 1) + "");
+            names[i].setAttribute("name", "[0].OptionDetailModels[" + (i) + "].OptionDetailName");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่"].Value)) + ' '  + (i + 1) + "");
+        }
+        for (var i = 0; i < prices.length; i++) {
+            prices[i] = i;
+            prices[i].setAttribute("id", "TablePriceOption_" + (i + 1) + "");
+            prices[i].setAttribute("name", "[0].OptionDetailModels[" + (i) + "].Price");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            deletes[i] = i;
+            deletes[i].setAttribute("id", "TableDeleteOption_" + (i + 1) + "");
+            deletes[i].setAttribute("name", "TableDeleteOption_" + (i + 1) + "");
+            deletes[i].setAttribute("onclick", "option_delete_row('" + (i + 1) + "');");
+        }
+
+    }
+
+    function CloseOption() {
+        var OptionName = document.getElementById("OptionName");
+        OptionName.value = "";
+        var TablesSubOption = document.getElementById("TablesSubOption");
+        TablesSubOption.outerHTML =
+            "<table id='TablesSubOption'>" +
+            "<tr>" +
+            "<td  class='size-tables-name-op-ex'>" +
+            "<label class='font-weight-bold mb-1'>" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย"].Value))  + "</label>" +
+            "</td>" +
+            "<td  class='size-tables-sell-op-ex'>" +
+            "<label class='font-weight-bold input-option-size mb-1'>" + @Html.Raw(Json.Serialize(Localizer["ราคา"].Value))+ "</label>" +
+            "</td>" +
+            "<td class='size-tables-del-op-ex'>" +
+            "</td>" +
+            "</tr>" +
+            "<tr id='option_row1' class='size-tr-tables'>" +
+            "<td>" +
+            "<div class='input-text'>" +
+            "<input type='text' class='form-control text-count examine-option reset-name' id='TableNameOption_1' name='[0].OptionDetailModels[0].OptionDetailName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Option ย่อย รายการที่ 1"].Value))  + "'>" +
+            "</div>" +
+            "</td>" +
+            "<td  class='size-tables-op-ex'>" +
+            "<div class='input-text'>" +
+            "<input type='text' class='form-control text-count examine-option reset-price optionprice' oninput='PriceInput(this)' id='TablePriceOption_1' name='[0].OptionDetailModels[0].Price' maxlength='25' placeholder='฿00.00'>" +
+            "</div>" +
+            "</td>" +
+            "<td id='country_row1'>" +
+            "<button type='button'  class='form-control btn-delete reset-delete' id='TableDeleteOption_1' name='TableDeleteOption_1' onclick='option_delete_row(&apos;1&apos;)'><i class='fa fa-trash-o'></i></button>" +
+            "</td>" +
+            "</tr>" +
+            "</table>";
+
+    }
+
+    function MenuAddTablesExtra() {
+        document.getElementById('SaveExtra').disabled = false;
+        var inputtext2 = document.querySelectorAll(".examine-extra");
+        inputtext2.forEach((x) => {
+           if (x.value == "") {
+               document.getElementById('SaveExtra').disabled = true;
+           }
+        });
+    }
+
+    function AddSubExtra() {
+        var tables = document.getElementById("TablesSubExtra");
+        var tablessuboption_id = (tables.rows.length);
+        if (tablessuboption_id <= 30) {
+            var row = tables.insertRow(tablessuboption_id).outerHTML =
+                "<tr id='extra_row" + tablessuboption_id + "' class='size-tr-tables examine-row'>" +
+                "<td>" +
+                "<div class='input-text'>" +
+                "<input type='text' class='form-control text-count examine-extra reset-name' id='TableNameExtra_" + tablessuboption_id + "' name='[0].ExtraDetailModel[" + (tablessuboption_id - 1) + "].ExtraDetailName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Extra ย่อย รายการที่"]))  + ' ' + tablessuboption_id + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-op-ex'>" +
+                "<div class='input-text'>" +
+                "<input type='text' class='form-control text-count examine-extra reset-price extraprice' oninput='PriceInput(this)' id='TablePriceExtra_" + tablessuboption_id + "' name='[0].ExtraDetailModel[" + (tablessuboption_id - 1) + "].Price' maxlength='25' placeholder='฿00.00'>" +
+                "</div>" +
+                "</td>" +
+                "<td>" +
+                "<button type='button' class='form-control btn-delete reset-delete' id='TableDeleteExtra_" + tablessuboption_id + "' name='TableDeleteExtra_" + tablessuboption_id + "' onclick='extra_delete_row(&apos;" + tablessuboption_id + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+            document.getElementById('SaveExtra').disabled = true;
+        } else {
+            return false;
+        }
+    }
+
+    function extra_delete_row(no) {
+
+        document.getElementById("extra_row" + no + "").outerHTML = "";
+
+        extra_reset_id(no);
+
+        document.getElementById('SaveExtra').disabled = true;
+        //ถ้ามีการลบที่เคยสร้างจะต้องเปิดปุ่ม
+        var inputtext2 = document.querySelectorAll(".examine-extra");
+        if (inputtext2.length > 2) {
+            document.getElementById('SaveExtra').disabled = false;
+        }
+    }
+
+    function extra_reset_id(no) {
+        var tables = document.getElementById("TablesSubExtra");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var prices = tables.getElementsByClassName("reset-price");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            if (i > 0) {
+                rows[i].setAttribute("id", "extra_row" + i + "");
+            }
+        }
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableNameExtra_" + (i + 1) + "");
+            names[i].setAttribute("name", "[0].ExtraDetailModel[" + (i) + "].ExtraDetailName");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(@Localizer["ชื่อ Extra ย่อย รายการที่"].Value))  + ' ' + (i + 1) + "");
+        }
+        for (var i = 0; i < prices.length; i++) {
+            prices[i] = i;
+            prices[i].setAttribute("id", "TablePriceExtra_" + (i + 1) + "");
+            prices[i].setAttribute("name", "[0].ExtraDetailModel[" + (i) + "].Price");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            deletes[i] = i;
+            deletes[i].setAttribute("id", "TableDeleteExtra_" + (i + 1) + "");
+            deletes[i].setAttribute("name", "TableDeleteExtra_" + (i + 1) + "");
+            deletes[i].setAttribute("onclick", "extra_delete_row('" + (i + 1) + "');");
+        }
+    }
+
+    function CloseExtra() {
+        var ExtraName = document.getElementById("ExtraName");
+        ExtraName.value = "";
+        var MaxSelect = document.getElementById("MaxSelect");
+        MaxSelect.value = "";
+        var TablesSubExtra = document.getElementById("TablesSubExtra");
+        TablesSubExtra.outerHTML =
+            "<table id='TablesSubExtra'>" +
+            "<tr>" +
+            "<td  class='size-tables-name-op-ex'>" +
+            "<label class='font-weight-bold mb-1'>" + @Html.Raw(Json.Serialize(Localizer["ชื่อตัวเลือกพิเศษย่อย"].Value))  + "</label>" +
+            "</td>" +
+            " <td  class='size-tables-sell-op-ex'>" +
+            "<label class='font-weight-bold input-option-size mb-1'>" + @Html.Raw(Json.Serialize(Localizer["ราคา"].Value))  + "</label>" +
+            "</td>" +
+            "</tr>" +
+            "<tr id='extra_row1' class='size-tr-tables'>" +
+            "<td>" +
+            "<div class='input-text'>" +
+            "<input type='text' class='form-control text-count examine-extra reset-name' id='TableNameExtra_1' name='[0].ExtraDetailModel[0].ExtraDetailName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อ Extra ย่อย รายการที่ 1"])) + "'>" +
+            "</div>" +
+            "</td>" +
+            "<td  class='size-tables-op-ex'>" +
+            "<div class='input-text'>" +
+            "<input type='text' class='form-control text-count examine-extra reset-price extraprice' oninput='PriceInput(this)' id='TablePriceExtra_1' name='[0].ExtraDetailModel[0].Price' maxlength='25' placeholder='฿00.00'>" +
+            "</div>" +
+            "</td>" +
+            "<td>" +
+            "<button type='button'  class='form-control btn-delete reset-delete' id='TableDeleteExtra_1' name='TableDeleteExtra_1' onclick='extra_delete_row(&apos;1&apos;)'><i class='fa fa-trash-o'></i></button>" +
+            "</td>" +
+            "</tr>" +
+            "</table>";
+    }
+
+    function PriceInput(arg) {
+        var id = arg.getAttribute('id');
+        var currentValue = arg.value.trim();
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            arg.value = aaa;
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    arg.value = chack[1];
+                }
+            }
+        }
+
+        var integerValue = parseFloat(currentValue);
+        if (isNaN(integerValue)) {
+            arg.value = "";
+            return;
+        }
+
+        if (integerValue >= 1000000000000) {
+            arg.value = "9,999,999,999,999";
+        } else {
+            arg.value = numberWithCommas(arg.value.trim());
+        }
+    }
+
+    function AddImageLogo() {
+        Device.saveLogoimage();
+    }
+
+    function setLogobase64String(file) {
+        //Convert64 to image
+        var base64String = file;
+
+        // Convert the Base64 string to a Blob
+        var byteCharacters = atob(base64String);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var blob = new Blob([byteArray], { type: 'image/png' });
+
+        // Create a Blob URL
+        var blobUrl = URL.createObjectURL(blob);
+
+        // Convert Blob URL to Blob
+        fetch(blobUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                // Create a FormData object and append the Blob
+                //formData = new FormData();
+                formData.append("FilePicture", blob, "imageProfile.png");
+            });
+
+
+        // Set the Blob URL as the source of the image preview
+        $("#productimg").attr("src", blobUrl);
+    }
+
+</script>

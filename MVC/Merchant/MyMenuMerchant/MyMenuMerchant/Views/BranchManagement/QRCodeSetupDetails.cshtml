@@ -1,0 +1,327 @@
+﻿﻿@using MyMenu.JAM;
+@using MyMenuMerchant.Controllers;
+@model QrCodeGenerateModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "QRCodeSetupDetails";
+}
+
+<body id="QRCodeSetupDetails">
+    <div id="loader"></div>
+    <div class="container mb-5">
+        <form>
+            <div class="form-row animate-bottom" style="display:none;" id="myDiv">
+                <div class="col-12 mb-2 ">
+                    <div class="row ">
+                        <div class="col-12 flex-header">
+                            <div class="header-group">
+                                <a asp-controller="BranchManagement" asp-action="QRCodeSetup"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                                <h1 class="font-weight-bold menu-header">@Localizer["รูปภาพ QR Code"]</h1>
+                            </div>
+                            <div>
+                                <button type="button" class="btn header-img-save border-1" id="btnsave" onclick="buttonSavetoDevice()"><img class="btn-size-img" src="/mymenumerchant/images/Save.png" /></button>
+                                <button type="button" class="btn header-img-print border-1" id="btnprint" onclick="buttonPrintQrCode()"><img class="btn-size-img" src="/mymenumerchant/images/Print.png" /></button>
+                                @*<button type="button" class="btn header-img-print border-1" id="btnprint" onclick="buttonPrintQrCodeTest()"><img class="btn-size-img" src="/mymenumerchant/images/Print.png" /></button>*@
+                                <button type="button" class="btn header-img-reset border-1" id="btnreset" onclick="buttonResetQrCode()"><img class="btn-size-img mr-1 btn-reset-img" src="/mymenumerchant/images/Reset.png" />@Localizer["รีเซ็ต QR Code"]</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*                <div class="col-12 col-loader">
+
+                </div>*@
+                <div class="col-md-12 mb-4 ">
+                    <div class="card border-0" id="forprint">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="flex-bg-img">
+                                            <div class="position-initial">
+                                                <img class="img-bg-QR" src="/mymenumerchant/images/MyMenuQR_bg.png" />
+                                                <img class="logo-merchant" src="@Model.LogoPath" />
+                                                <p class="text-name-merchant">@Model.MerchantName</p>
+                                                <div id="qrcode" class="img-QRCodeup " style="display:none;">
+                                                </div>
+                                                <p class="text-QRname">@Model.FoodTableName</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*QRCode 58mm*@
+                <div class="layout-myDiv58" style="opacity: 0.0;" id="myDiv58">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="flex-bg-img">
+                                            <div class="position-initial">
+                                                <div class="bg-QR-58" id="imagePrintQr58mm">
+                                                    <p class="text-name-merchant-58 mt-4 pt-2">@Model.MerchantName</p>
+                                                    <p class="text-QRname-58">@Model.FoodTableName</p>
+                                                    <div class="text-time-58 mx-3 py-3">
+                                                        <input type="text" value="@BranchManagementController.ConvertDatetimeLocal(@Model.DateModified)" id="datetimeqr58" hidden />
+                                                        <p class="mb-0" id="date58"></p>
+                                                        <p class="mb-0" id="time58"></p>
+                                                    </div>
+                                                    <div id="qrcode-58" class="img-QRCodeup-Print img-QRCodeup-58 mt-4 pt-2 mb-4">
+                                                    </div>
+                                                    <p class="text-QRCode-58">@Localizer["สแกน QR Code เพื่อสั่งอาหาร"]</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*QRCode 80mm*@
+                <div class="layout-myDiv80" style="opacity: 0.0;" id="myDiv80">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="flex-bg-img">
+                                            <div class="position-initial">
+                                                <div class="bg-QR-80" id="imagePrintQr80mm" style="border: 0px solid #000000">
+                                                    <p class="text-name-merchant-80 mt-4 pt-2">@Model.MerchantName</p>
+                                                    <p class="text-QRname-80">@Model.FoodTableName</p>
+                                                    <div class="text-time-80 mx-3 py-3">
+                                                        <input type="text" value="@BranchManagementController.ConvertDatetimeLocal(@Model.DateModified)" id="datetimeqr80" hidden />
+                                                        <p class="mb-0" id="date80"></p>
+                                                        <p class="mb-0" id="time80"></p>
+                                                    </div>
+                                                    <div id="qrcode-80" class="img-QRCodeup-Print img-QRCodeup-80 mt-4 pt-2 mb-4"></div>
+                                                    <p class="text-QRCode-80">@Localizer["สแกน QR Code เพื่อสั่งอาหาร"]</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="form-container-myqrcord">
+                <div id="qrcode" class="size-img-qrcord"></div>
+                <p class="id-qrcord">ID: @ViewBag.MemberCardNo</p>
+                </div>
+                <img class="img-bg-QR" src="@Model.LogoPath" />*@
+            </div>
+        </form>
+    </div>
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<script>
+    var myVar;
+    function myFunction() {
+        myVar = setTimeout(showPage, 1000);
+    }
+    function showPage() {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("myDiv").style.display = "block";
+        
+        var myVarQRCode = setTimeout( function() {document.getElementById("qrcode").style.display = "block";} , 1000);
+    }
+
+    //function showQRCode(){
+    //    document.getElementById("myDiv58").style.display = "block";
+    //    document.getElementById("myDiv80").style.display = "block";
+    //}
+
+    window.addEventListener("load", () => {
+        var qrc = new QRCode(document.getElementById("qrcode"), {
+            text: '@Html.Raw(Model.GenerateCode)',
+            width: 150,
+            height: 150,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+        });
+        var qrc58 = new QRCode(document.getElementById("qrcode-58"), {
+            text: '@Html.Raw(Model.GenerateCode)',
+            width: 250,
+            height: 250,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+        });
+        var qrc80 = new QRCode(document.getElementById("qrcode-80"), {
+            text: '@Html.Raw(Model.GenerateCode)',
+            width: 250,
+            height: 250,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+        });
+        SetPrinter();
+        myFunction();
+    });
+
+    function buttonSavetoDevice() {
+        const div = document.getElementById('forprint');
+        html2canvas(div, {
+            scale: 5,
+            useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        }).then(canvas => {
+            saveImageToLocal(canvas, @Html.Raw(Json.Serialize(@Model.FoodTableName)));
+        });
+    }
+
+    var printerSetting = "";
+     // Default size
+
+    function buttonPrintQrCode() {
+        //Get Printer Setting
+        console.log("sss1");
+        var modelprintmanin = GetMainPrint();
+        if (modelprintmanin.papersize == 80) {
+            var aaa = $('#datetimeqr80').val();
+            var aaaa = aaa.split(' ');
+            var ccc = aaaa[0];
+            var ddd = aaaa[1];
+            $('#date80').text(ccc);
+            $('#time80').text(ddd);
+        } else {
+            var aaa = $('#datetimeqr58').val();
+            var aaaa = aaa.split(' ');
+            var ccc = aaaa[0];
+            var ddd = aaaa[1];
+            $('#date58').text(ccc);
+            $('#time58').text(ddd);
+        }
+        console.log("sss2");
+        //Print Qr
+        var div = "";
+        if (modelprintmanin.papersize == 80) {
+            div = document.getElementById("imagePrintQr80mm");
+        } else {
+            div = document.getElementById("imagePrintQr58mm");
+        }
+        //const div = document.getElementById("imagePrintQr58mm");
+        html2canvas(div, {
+            scale: 1,
+            useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        }).then(canvas => {
+            console.log("sss3");
+            Print(canvas);
+        });
+
+    }
+
+
+
+    function snapshot() {
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        var imgInfo = canvas.toDataURL("image/png");
+        var blobImage = dataURItoBlob(imgInfo);
+        var formData = new FormData();
+        formData.append("image", blobImage)
+
+        $.ajax({
+            url: "@Url.Action("Contact", "Home")",
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: "post",
+            complete: function () {
+                console.log("Ready");
+            }
+        });
+    }
+    function buttonResetQrCode() {
+        var qrcodeNo = @Html.Raw(Model.QrCodeGenerateNO);
+        var branchID = "@Html.Raw(Model.BranchID)";
+
+        //qrcode
+        var canvas=  $('#qrcode canvas');
+        var canvas58=  $('#qrcode-58 canvas');
+        var canvas80=  $('#qrcode-80 canvas');
+        canvas.remove();
+        canvas58.remove();
+        canvas80.remove();
+
+        var imageremove=  $('#qrcode img');
+        var imageremove58=  $('#qrcode-58 img');
+        var imageremove80=  $('#qrcode-80 img');
+        imageremove.remove();
+        imageremove58.remove();
+        imageremove80.remove();
+
+        $.ajax({
+            url: "@Url.Action("ResetQRCode", "BranchManagement")",
+            data: {
+                BranchID: branchID,
+                QrCodeGenerateNO: qrcodeNo
+            },
+            type: 'POST',
+            success: function (message) {
+                console.log(message);
+                //$('#datetimeqr80').val(message.DateModified);
+                
+                $.ajax({
+                    url: "@Url.Action("QRCodeDetails", "BranchManagement")",
+                    data: {
+                        text: message,
+                    },
+                    type: 'GET',
+                    success: function (message) {
+                        console.log(message);
+
+                        var qrc = new QRCode(document.getElementById("qrcode"), {
+                            text: message,
+                            width: 250,
+                            height: 250,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H,
+                        });
+                        var qrc58 = new QRCode(document.getElementById("qrcode-58"), {
+                            text: message,
+                            width: 250,
+                            height: 250,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H,
+                        });
+                        var qrc80 = new QRCode(document.getElementById("qrcode-80"), {
+                            text: message,
+                            width: 250,
+                            height: 250,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H,
+                        });
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+                });
+
+
+
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+</script>
+
+
+

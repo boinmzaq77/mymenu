@@ -1,0 +1,444 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+﻿@{
+    ViewData["Title"] = "CategoryAdd";
+}
+<body id="CategoryAdd">
+    <div class="container">
+        <form id="saveCategory" onkeyup="CategoryAddTables();">
+            <div class="form-row">
+                <div class="col-md-12  mb-2">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="ManageMenu" asp-action="Category"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["เพิ่มหมวดหมู่"]</h2>
+                        </div>
+                        @*                <div class="col-auto">
+                        <a asp-controller="ManageMenu" asp-action="Category"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        </div>
+                        <div class="col-md-auto">
+                        <h1  class="font-weight-bold menu-header">เพิ่มหมวดหมู่</h1>
+                        </div>*@
+                    </div>
+                </div>
+                <table id="TablesCategoryNember" class="col-md-12 ">
+                    <tr class="col-md-12 " hidden>
+                    </tr>
+                    <tr id="Categoryrow1" class=" col-md-12 reset-menu">
+                        <td class="card mb-3 border-0">
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="form-row">
+                                        <div class="btn-ml" hidden>
+                                            <div class="d-flex justify-content-end">
+                                                <button type="button" class="form-control  btn-delete-category font-weight-bold reset-menu-delete" id="TableDeleteCategory_1" name="TableDeleteCategory_1" onclick="delete_row_category('1')">@Localizer["ลบหมวดหมู่1"]</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-2 mt-2">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="CategoryName_1">@Localizer["ชื่อหมวดหมู่"]</label>
+                                                <div class="input-group input-text">
+                                                    <input type="text" class="form-control text-count examine reset-menu-name" id="CategoryName_1" name="[0].CategoryName" maxlength="250" placeholder="@Localizer["ชื่อหมวดหมู่"]">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <div class="card border">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="col-md-12 ">
+                                                            <label class="font-weight-bold mr-2">@Localizer["หมวดหมู่ย่อย"]<small class="color-list-number font-weight-bold ml-2">@Localizer["เพิ่มได้สูงสุด 10 รายการ"]</small></label>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <table id="TablesNember1A1" class="reset-table">
+                                                                <tr class="size-tr-tables" hidden>
+                                                                </tr>
+                                                                <tr id="row1A1" class="size-tr-tables reset-row">
+                                                                    <td class="size-tables-name">
+                                                                        <div class="input-text pr-3">
+                                                                            <input type="text" class="form-control text-count examine reset-name" id="TableName_1A1" name="[0].Subcategorymodel[0].SubCategoryName" maxlength="250" placeholder="@Localizer["ชื่อหมวดหมู่ย่อย รายการที่ 1"]">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="size-tables-delete">
+                                                                        <button class="form-control btn-delete reset-delete" id="TableDelete_1A1" name="TableDelete_1A1" onclick="delete_row('1A1')"><i class="fa fa-trash-o"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-md-12 width-button">
+                                                            <button type="button" class="btn-add-subcategory font-weight-bold reset-add ml-1" onclick="AddLists('1A1');"><img class="img-size-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มรายการย่อย"]</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12  mt-4">
+                                            <div class="form-group">
+                                                <p class="text-h2-header">@Localizer["การแสดงผล"]</p>
+                                                <div class="row mt-3">
+                                                    <div class="col-6">
+                                                        <p class="font-weight-bold">@Localizer["แสดงหมวดหมู่เฉพาะพนักงาน"]</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type="hidden" name="[0].ShowEmployeesOnly" id="ShowEmployeesOnly" value="" />
+                                                        <div class=" input-group-prepend  d-flex justify-content-start">
+                                                            <label class="switch">
+                                                                <input type="checkbox" id="CheckboxShowonlyemp" onchange="CheckchangeboxShowonlyemp(this)">
+                                                                <span class="slider round"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="col-md-12 mb-3 mt-3 pl-0 pr-0">
+                    <div class="card border-0">
+                        <button type="button" class="btn-add-category btn-lg font-weight-bold btn-border-radius" onclick="AddTablesRow()">@Localizer["เพิ่มหมวดหมู่ใหม่"]</button>
+                    </div>
+                </div>
+                <div class="col-md-12  mb-2 pr-0 mt-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="">
+                            <button type="submit" class="btn-save" id="SaveCategory" disabled="disabled">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @*  Modal Post not Success Error*@
+        <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center mt-4 mb-4">
+                                <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถเพิ่มหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin">@Localizer["หมวดหมู่"] <samp class="color-sub-help">@Localizer["สามารถมีหมวดหมู่ย่อยได้สูงสุด 10 รายการ"] </samp></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+<script>
+    $(document).ready(function () {
+        $("#saveCategory").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            $.ajax({
+                url: "@Url.Action("CategoryAddSave", "ManageMenu")",
+                data: dataString,
+                type: "POST",
+                success: function (message) {
+                    window.location.href = "@Url.Action("Category", "ManageMenu")";
+                }, error: function (message) {
+                    console.log(message.responseText);
+                    $('#ModalPostnotSuccessError').modal('show');
+                }
+            });
+            e.preventDefault();
+        });
+    });
+
+    //showOnlyEmployee
+    function CheckchangeboxShowonlyemp(a) {
+        var id = a.id.replace('CheckboxShowonlyemp','');
+        updateFormData(id);
+    }
+
+    // ฟังก์ชันสำหรับอัปเดตค่าในฟอร์ม
+    function updateFormData(id) {
+        var showId = '#CheckboxShowonlyemp' + id;
+        var setshow = 0;
+        var checkshowOnlyEemp = $(showId).is(":checked");
+        if (checkshowOnlyEemp) {
+            setshow = 1; //1 : Show Employees Only (แสดงเฉพาะพนักงาน)
+        } else { 
+            setshow = 0; //0 : แสดงทั้งหมด(Default)
+        }
+        var setId = '#ShowEmployeesOnly' + id;
+        $(setId).val(setshow);
+    }
+
+    function CategoryAddTables() {
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+        });
+    }
+
+    function AddTablesRow() {
+        var tablesrow = document.getElementById("TablesCategoryNember");
+        var tablesrow_id = (tablesrow.rows.length);
+        var row = tablesrow.insertRow(tablesrow_id).outerHTML =
+            "<tr id='Categoryrow" + tablesrow_id + "' class='col-md-12 reset-menu'>" +
+            "<td  class='card mb-3 border-0'>" +
+            "<div class='card-body'>" +
+            "<div class='container'>" +
+            "<div class='form-row'>" +
+            "<div class='btn-ml'>" +
+            "<div class='d-flex justify-content-end'>" +
+            "<button  class='form-control  btn-delete-category font-weight-bold reset-menu-delete' id='TableDeleteCategory_" + tablesrow_id + "'  onclick='delete_row_category(&apos;" + tablesrow_id + "&apos;)'><i class='fa fa-trash-o'></i> " + @Html.Raw(Json.Serialize(Localizer["ลบหมวดหมู่1"].Value)) + "</button>" +
+            "</div>" +
+            "</div>" +
+            "<div class='col-md-12 mb-2 mt-2'> " +
+            "<div class='form-group'>" +
+            "<label class='font-weight-bold' for='CategoryName" + tablesrow_id + "'>" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่"].Value)) + "</label>" +
+            "<div class='input-group input-text'>" +
+            "<input type='text' class='form-control text-count examine reset-menu-name' id='CategoryName_" + tablesrow_id + "'  name='[" + (tablesrow_id - 1) + "].CategoryName'  maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่"].Value)) + "'>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "<div class='col-md-12 mb-2'>" +
+            "<div class='card border'>" +
+            "<div class='card-body'>" +
+            "<div class='form-row'>" +
+
+            "<div class='col-md-12 ' >" +
+            "<label class='font-weight-bold'>@Localizer["หมวดหมู่ย่อย"]<small class='color-list-number font-weight-bold ml-2'>" + @Html.Raw(Json.Serialize(Localizer["เพิ่มได้สูงสุด 10 รายการ"].Value)) + "</small></label>" +
+            "</div>" +
+            "<div class='col-md-12'>" +
+            "<table id='TablesNember" + tablesrow_id + "A1' class='reset-table'>" +
+            "<tr class='size-tr-tables' hidden>" +
+            "</tr>" +
+            "<tr id='row" + tablesrow_id + "A1' class='size-tr-tables reset-row'>" +
+            "<td  class='size-tables-name'>" +
+            "<div class='input-text pr-3'>" +
+            "<input type='text' class='form-control text-count examine reset-name' id='TableName_" + tablesrow_id + "A1' name='[" + (tablesrow_id - 1) + "].Subcategorymodel[0].SubCategoryName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่ 1"].Value)) + "'>" +
+            "</div>" +
+            "</td>" +
+            "<td class='size-tables-delete'>" +
+            " <button type='button' class='form-control btn-delete reset-delete' id='TableDelete_" + tablesrow_id + "A1'  onclick='delete_row(&apos;" + tablesrow_id + "A1&apos;)'><i class='fa fa-trash-o'></i></button>" +
+            "</td>" +
+            "</tr>" +
+            "</table>" +
+            "</div>" +
+            "<div class='col-md-12 width-button'> " +
+            "<button type='button' class='btn-add-subcategory font-weight-bold reset-add ml-1' onclick='AddLists(&apos;" + tablesrow_id + "A1&apos;);'> " + @Html.Raw(Json.Serialize(Localizer["เพิ่มรายการย่อย"].Value)) + "</button>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "<div class='col-md-12  mt-4'>" +
+            "<div class='form-group'>" +
+            "<p class='text-h2-header'> @Localizer["การแสดงผล"]</p>" +
+            "<div class='row mt-3'>" +
+            "<div class='col-6'>" +
+            "<p class='font-weight-bold'>" + @Html.Raw(Json.Serialize(Localizer["แสดงหมวดหมู่เฉพาะพนักงาน"].Value)) + "</p>" +
+            "</div>" +
+            "<div class='col-6'>" +
+            "<input   type='hidden'  name='[" + (tablesrow_id - 1) + "].ShowEmployeesOnly' id='ShowEmployeesOnly_" + tablesrow_id + "' /> " +
+            "<div class='input-group-prepend  d-flex justify-content-start'>" +
+            "<label class='switch'>" +
+            "<input type='checkbox' id='CheckboxShowonlyemp_" + tablesrow_id + "' onchange='CheckchangeboxShowonlyemp(this)'>" +
+            "<span class='slider round'> </span>" +
+            "</label>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</td>" +
+            "</tr>";
+        document.getElementById('SaveCategory').disabled = true;
+    }
+    function delete_row_category(no) {
+        document.getElementById("Categoryrow" + no + "").outerHTML = "";
+        reset_body();
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+        });
+    }
+
+    function reset_body() {
+        var tables_out = document.getElementById("TablesCategoryNember");
+        var rows_out = tables_out.getElementsByClassName("reset-menu");
+        var menu_names = tables_out.getElementsByClassName("reset-menu-name");
+        var menu_deletes = tables_out.getElementsByClassName("reset-menu-delete");
+        var menu_adds = tables_out.getElementsByClassName("reset-add");
+        var tables_in = tables_out.getElementsByClassName("reset-table");
+        for (var i = 0; i < rows_out.length; i++) {
+            rows_out[i] = i;
+            if (i > 0) {
+                rows_out[i].setAttribute("id", "Categoryrow" + (i + 1) + "");
+            }
+        }
+        for (var i = 0; i < menu_names.length; i++) {
+            menu_names[i] = i;
+            if (i > 0) {
+                menu_names[i].setAttribute("id", "CategoryName_" + (i + 1) + "");
+                menu_names[i].setAttribute("name", "[" + (i) + "].CategoryName ");
+            }
+        }
+        for (var i = 0; i < menu_deletes.length; i++) {
+            menu_deletes[i] = i;
+            if (i > 0) {
+                menu_deletes[i].setAttribute("id", "TableDeleteCategory_" + (i + 1) + "");
+                menu_deletes[i].setAttribute("name", "TableDeleteCategory_" + (i + 1) + "");
+                menu_deletes[i].setAttribute("onclick", "delete_row_category('" + (i + 1) + "');");
+            }
+        }
+        for (var i = 0; i < menu_adds.length; i++) {
+            menu_adds[i] = i;
+            menu_adds[i].setAttribute("onclick", "AddLists('" + (i + 1) + "A1');");
+        }
+        for (var i = 0; i < tables_in.length; i++) {
+            tables_in[i] = i;
+            if (i > 0) {
+                tables_in[i].setAttribute("id", "TablesNember" + (i + 1) + "A1");
+                var no = "TablesNember" + (i + 1) + "A1";
+                var tables = document.getElementById(no);
+                var rows = tables.getElementsByTagName("tr");
+                var names = tables.getElementsByClassName("reset-name");
+                var deletes = tables.getElementsByClassName("reset-delete");
+                for (var j = 0; j < rows.length; j++) {
+                    rows[j] = j;
+                    if (j > 0) {
+                        rows[j].setAttribute("id", "row" + (i + 1) + "A" + (j) + "");
+                    }
+                }
+                for (var k = 0; k < names.length; k++) {
+                    names[k] = k;
+                    names[k].setAttribute("id", "TableName_" + (i + 1) + "A" + (k + 1) + "");
+                    names[k].setAttribute("name", "[" + (i) + "].Subcategorymodel[" + (k) + "].SubCategoryName");
+                }
+
+                for (var h = 0; h < deletes.length; h++) {
+                    deletes[h] = h;
+                    deletes[h].setAttribute("id", "TableDelete_" + (i + 1) + "A" + (h + 1) + "");
+                    deletes[h].setAttribute("name", "TableDelete_" + (i + 1) + "A" + (h + 1) + "");
+                    deletes[h].setAttribute("onclick", "delete_row('" + (i + 1) + "A" + (h + 1) + "')");
+                }
+            }
+        }
+    }
+
+    function AddLists(no_id) {
+        var ExamineNoId;
+        const cut_tablesrow_id = no_id.split("A");
+        var Cot_NoId = cut_tablesrow_id[0];
+        if (Cot_NoId == 1) {
+            ExamineNoId = Cot_NoId;
+        } else {
+            ExamineNoId = (Cot_NoId - (Cot_NoId - 1));
+        }
+        var tables = document.getElementById("TablesNember" + Cot_NoId + "A" + ExamineNoId + "");
+        var tablessubcategory_id = (tables.rows.length);
+        if (tablessubcategory_id <= 10) {
+            var row = tables.insertRow(tablessubcategory_id).outerHTML =
+                "<tr  id='row" + Cot_NoId + "A" + tablessubcategory_id + "' class='size-tr-tables reset-row'  >" +
+                "<td  class='size-tables-name'>" +
+                "<div class='input-text pr-3'>" +
+                "<input type='text' class='form-control text-count examine reset-name' id='TableName_" + Cot_NoId + "A" + tablessubcategory_id + "' name='[" + (Cot_NoId - 1) + "].Subcategorymodel[" + (tablessubcategory_id - 1) + "].SubCategoryName' maxlength='250' placeholder='" + @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่"].Value)) + tablessubcategory_id + "'>" +
+                "</div>" +
+                "</td>" +
+                "<td  class='size-tables-delete'>" +
+                "<button  class='form-control btn-delete reset-delete' id='TableDelete_" + Cot_NoId + "A" + tablessubcategory_id + "' name='TableDelete_" + Cot_NoId + "A" + tablessubcategory_id + "'onclick='delete_row(&apos;" + Cot_NoId + "A" + tablessubcategory_id + "&apos;)'><i class='fa fa-trash-o'></i></button>" +
+                "</td>" +
+                "</tr>";
+
+            if (tablessubcategory_id == 10) {
+                var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold reset-add ml-1');
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].style.opacity = '0.5';
+                    elements[i].style.pointerEvents = "none";
+                    elements[i].style.cursor = "default";
+                }
+            }
+        } else {
+            return false;
+        }
+        document.getElementById('SaveCategory').disabled = true;
+    }
+
+    function delete_row(no) {
+        document.getElementById("row" + no + "").outerHTML = "";
+        reset_id(no);
+        document.getElementById('SaveCategory').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveCategory').disabled = true;
+            }
+        });
+    }
+    function reset_id(no) {
+        var ExamineNoId;
+        const cut_tablesrow_id = no.split("A");
+        var Cot_NoId = cut_tablesrow_id[0];
+        if (Cot_NoId == 1) {
+            ExamineNoId = Cot_NoId;
+        } else {
+            ExamineNoId = (Cot_NoId - (Cot_NoId - 1));
+        }
+        var tables = document.getElementById("TablesNember" + Cot_NoId + "A" + ExamineNoId + "");
+        var rows = tables.getElementsByTagName("tr");
+        var names = tables.getElementsByClassName("reset-name");
+        var deletes = tables.getElementsByClassName("reset-delete");
+        for (var i = 0; i < rows.length; i++) {
+            rows[i] = i;
+            if (i > 0) {
+                rows[i].setAttribute("id", "row" + Cot_NoId + "A" + i + "");
+            }
+        }
+
+        if (rows.length <= 10) {
+            var elements = document.getElementsByClassName('btn-add-subcategory font-weight-bold reset-add ml-1');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.opacity = '1';
+                elements[i].style.pointerEvents = "auto";
+                elements[i].style.cursor = "pointer";
+            }
+        }
+
+        for (var i = 0; i < names.length; i++) {
+            names[i] = i;
+            names[i].setAttribute("id", "TableName_" + Cot_NoId + "A" + (i + 1) + "");
+            names[i].setAttribute("name", "[" + (Cot_NoId - 1) + "].Subcategorymodel[" + (i) + "].SubCategoryName");
+            names[i].setAttribute("placeholder", @Html.Raw(Json.Serialize(Localizer["ชื่อหมวดหมู่ย่อย รายการที่"].Value))+ " " + (i + 1) + "");
+        }
+        for (var i = 0; i < deletes.length; i++) {
+            deletes[i] = i;
+            deletes[i].setAttribute("id", "TableDelete_" + Cot_NoId + "A" + (i + 1) + "");
+            deletes[i].setAttribute("name", "TableDelete_" + Cot_NoId + "A" + (i + 1) + "");
+            deletes[i].setAttribute("onclick", "delete_row('" + Cot_NoId + "A" + (i + 1) + "');");
+        }
+    }
+</script>

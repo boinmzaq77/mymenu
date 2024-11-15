@@ -1,0 +1,241 @@
+﻿@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.JAM;
+@using MyMenuMerchant.Controllers;
+@model ItemWithDetail;
+@inject IViewLocalizer Localizer
+
+<form class="modal-content mb-0 border-0" style="min-height: calc(100% - 0rem);" id="btnAddtoCart">
+
+    <div class="modal-header">
+        <div class=""><h5 class="text-branch mb-0 font-weight-bold font-size-18">@Localizer["ตัวเลือก"]</h5><h5 class="text-branch mb-0  font-weight-bold font-size-18">@Model.ItemName</h5></div>
+        <div class=""> <button type="button" class="close btn-close-details header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true">&times;</span></button></div>
+        <input type="text" id="itemID" name="itemID" value="@Model.ItemID" hidden />
+        <input type="text" id="itemname" name="itemname" value="@Model.ItemName" hidden />
+        <input type="text" id="sellingprice" name="sellingprice" value="@Model.SellingPrice" hidden />
+
+    </div>
+    <div class="modal-body bg-color-grey pb-0">
+        <div class="card-body p-0 ">
+            @for (int i = 0; i < Model.ItemOptionDetails.Count; i++)
+            {
+                <div class="col-12 mb-3">
+                    <div class="card border-0">
+                        <div class="card-body font-weight-bold">
+                            <label for="exampleFormControlTextarea1"> @Model.ItemOptionDetails[i].OptionName <small class=" ml-2 color-small-list">@Localizer["เลือกได้"] 1</small> </label>
+                            @for (int ii = 0; ii < Model.ItemOptionDetails[i].OptionDetails.Count; ii++)
+                            {
+                                <div class="form-check flex-lise-item" id="rowoptionDetail">
+                                    <div>
+                                        @if (ii == 0)
+                                        {
+                                            <input class="form-check-input radiooption" type="radio" name="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionID" id="exampleRadios1" data-optionid="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionID"
+                                                   data-name="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailName" data-price="@Model.ItemOptionDetails[i].OptionDetails[ii].Price"
+                                                   data-optiondetailno="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailNO"
+                                                   value="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailNO" checked="checked">
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input radiooption" type="radio" name="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionID" id="exampleRadios1" data-optionid="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionID"
+                                                   data-name="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailName" data-price="@Model.ItemOptionDetails[i].OptionDetails[ii].Price"
+                                                   data-optiondetailno="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailNO"
+                                                   value="@Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailNO">
+                                        }
+
+                                        <label class="form-check-label" for="exampleRadios2">
+                                            @Model.ItemOptionDetails[i].OptionDetails[ii].OptionDetailName
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="form-check-label">
+                                            @{
+                                                string add = "";
+                                            }
+                                            @if (@Model.ItemOptionDetails[i].OptionDetails[ii].Price != 0)
+                                            {
+                                                add = "+";
+                                            }
+
+                                            @add @TableController.ConvertToCurrency(@Model.ItemOptionDetails[i].OptionDetails[ii].Price)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @for (int i = 0; i < Model.ItemExtraDetails.Count; i++)
+            {
+                <div class="col-12 mb-3">
+                    <div class="card border-0 "  >
+                        <div class="card-body font-weight-bold">
+                            <label class="" for="exampleFormControlTextarea1"> @Model.ItemExtraDetails[i].ExtraName <small class=" ml-2 color-small-list">@Localizer["เลือกได้สูงสุด"]  @Model.ItemExtraDetails[i].MaxSelect </small></label>
+                            <input type="text" id="MaxselectExtra @Model.ItemExtraDetails[i].ExtraID" value="@Model.ItemExtraDetails[i].MaxSelect" hidden />
+                            @for (int ii = 0; ii < @Model.ItemExtraDetails[i].ExtraDetails.Count; ii++)
+                            {
+                                <div class="form-check flex-lise-item" id="rowextraDetail" data-extraid="@Model.ItemExtraDetails[i].ExtraID" data-maxselect="@Model.ItemExtraDetails[i].MaxSelect">
+                                    <div>
+                                        <input class="form-check-input checkboxextra" type="checkbox" value="@Model.ItemExtraDetails[i].ExtraDetails[ii].ExtraDetailNO" data-extraid="@Model.ItemExtraDetails[i].ExtraDetails[ii].ExtraID" data-extradetailname="@Model.ItemExtraDetails[i].ExtraDetails[ii].ExtraDetailName" data-extradetailno="@Model.ItemExtraDetails[i].ExtraDetails[ii].ExtraDetailNO" data-price="@Model.ItemExtraDetails[i].ExtraDetails[ii].Price" id="defaultCheck1" name="GroupExtraDetailNO @Model.ItemExtraDetails[i].ExtraDetails[ii].ExtraID">
+                                        <label class="form-check-label">@Model.ItemExtraDetails[i].ExtraDetails[ii].ExtraDetailName</label>
+                                    </div>
+                                    <div>
+                                        <label class="form-check-label">
+                                            @{
+                                                string add = "";
+                                            }
+                                            @if (@Model.ItemExtraDetails[i].ExtraDetails[ii].Price != 0)
+                                            {
+                                                add = "+";
+                                            }
+
+                                            @add  @TableController.ConvertToCurrency(@Model.ItemExtraDetails[i].ExtraDetails[ii].Price)
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="col-12 mb-3">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="font-weight-bold" for="exampleFormControlTextarea1">@Localizer["หมายเหตุ"]</label>
+                            <textarea class="form-control" id="comment" rows="3" maxlength="100"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="modal-footer flex-footer-oeder bg-color-grey border-0 py-0"><p class="mb-0 ml-3 font-weight-bold">@Localizer["จำนวนสินค้า"]</p></div>
+        <div class="modal-footer flex-footer-oeder bg-color-grey border-0 pt-0">
+            <div class="flex-number-order">
+                <div class="flex-center">
+                    <button class="btn btn-number-order" type="button" onclick="OnDelOrderNumber()"><img class="size-number-order" src="/mymenumerchant/images/AmountDel.png" /></button>
+                    <p class="text-show-number-order mb-0 font-weight-bold " id="textorder">1</p>
+                    <input class="input-number-order" type="number" id="numberproduct" min="1" value="1" hidden />
+                    <button class="btn btn-number-order" type="button" onclick="OnAddOrderNumber()"><img class="size-number-order" src="/mymenumerchant/images/AmountAdd.png" /></button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-modal-color">@Localizer["ตกลง"]</button>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#btnAddtoCart").on("submit", function (e) {
+            e.preventDefault();
+            //console.log("A");
+            let listextra = [];
+            let listoption = [];
+
+            $('input.checkboxextra').each(function (i) {
+                if ($(this).is(':checked')) {
+                    var ItemInfoModel =
+                    {
+                        extraid: $(this).data("extraid"),
+                        extradetailname: $(this).data("extradetailname"),
+                        extradetailno: $(this).data("extradetailno"),
+                        price: $(this).data("price"),
+                    }
+                    listextra.push(ItemInfoModel);
+                }
+            })
+            $('input.radiooption').each(function (i) {
+                if ($(this).is(':checked')) {
+                    var ItemInfoModel =
+                    {
+                        optionid: $(this).data("optionid"),
+                        optiondetailname: $(this).data("name"),
+                        optiondetailno: $(this).data("optiondetailno"),
+                        price: $(this).data("price")
+                    }
+                    listoption.push(ItemInfoModel);
+                }
+            })
+
+            var Itemchoose =
+            {
+                itemid: $("#itemID").val(),
+                itemname: $("#itemname").val(),
+                sellingprice: $("#sellingprice").val(),
+                comment: $("#comment").val(),
+                itemquantity: $("#textorder").text(),
+                itemoption: listoption,
+                itemextras: listextra,
+            }
+
+            var listitemchoose = JSON.parse(localStorage.getItem("order"));
+            //console.log(listitemchoose);
+            if (listitemchoose == null) {
+                listitemchoose = [];
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CheckSameOrderSelect", "Table")",
+                data: {
+                    lstorder: listitemchoose,
+                    chooseorder: Itemchoose,
+                },
+                success: function (message) {
+                    //console.log(message);
+                    listitemchoose = message;
+                    localStorage.setItem("order", JSON.stringify(listitemchoose));
+                    $('#ModalDetailsMenu').modal('hide');
+                    //window.location.href = "@Url.Action("Index", "Home")";
+                    set();
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+            });
+        });
+        $('#ModalDetailsMenu').modal('show');
+    });
+
+
+    //Extra Click
+    $("input[id='defaultCheck1']").click(function (e) {
+        var data = $(this);
+        var extraNo = data[0].name.replace("GroupExtraDetailNO ", "");
+        var Maxselect = 'MaxselectExtra ' + extraNo;
+        var aaa = $('input[id="' + Maxselect);
+        var limit = aaa[0].value;
+        var groupname = "GroupExtraDetailNO " + extraNo;
+        if ($('input[name="' + groupname + '"]:checked').length > limit) {
+            $(this).prop('checked', false);
+        }
+        e.stopPropagation();
+    });
+
+    var checkbox;
+    var check;
+    $('div#rowextraDetail.form-check.flex-lise-item').click(function () {
+        var data = $(this);
+        var extraNo = $(this).data("extraid");
+        var limit = $(this).data("maxselect");
+        check = $(this).find("input[id='defaultCheck1']:checked").val();
+        check = !check;
+        $(this).find("input[id='defaultCheck1']").prop("checked", check);
+        var groupname = "GroupExtraDetailNO " + extraNo;
+        if ($('input[name="' + groupname + '"]:checked').length > limit) {
+            $(this).find("input[id='defaultCheck1']").prop('checked', false);
+        }
+    });
+
+    $('div#rowoptionDetail.form-check.flex-lise-item').click(function () {
+        $(this).find("input[id='exampleRadios1']").prop('checked', true);
+    });
+
+
+</script>

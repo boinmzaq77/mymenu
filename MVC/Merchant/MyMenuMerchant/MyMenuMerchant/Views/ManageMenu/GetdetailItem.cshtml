@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="d-flex flex-row">
+                <div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                <div class="p-2"><h5 class="text-branch">@Localizer["รายละเอียดเมนู"]</h5></div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4 mb-3">
+                        <img class="img-info-menu" src="/mymenumerchant/images/BackGroundShop.png" />
+                    </div>
+                    <div class="col-8 mb-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <p class="text-end">@Localizer["เปิด/ปิด การขาย"]</p>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-end">
+                                    <label class="switch">
+                                        <input type="checkbox" id="Status">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <p class="font-weight-bold">อเมริกาโน่</p>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-row">
+                            <div class="p-2"><p class="font-weight-bold">@Localizer["ราคาปกติ"]</p></div>
+                            <div class="p-2"> ฿ 50.00</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-row">
+                            <div class="p-2"><p class="font-weight-bold">@Localizer["ราคาขาย"]</p></div>
+                            <div class="p-2"> ฿ 50.00</div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="col-12">
+                        <p class="font-weight-bold">@Localizer["รายละเอียดเมนู"]</p>
+                        <p>อเมริกาโน่ ไม่ใส่ไซรัป กรุณาระบุความหวาน</p>
+                    </div>
+                    <hr />
+                    <div class="col-12">
+                        <p class="font-weight-bold">@Localizer["หมวดหมู่"]</p>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="d-flex flex-row">
+                            <div class="p-1"><p class="font-weight-bold">@Localizer["Option (ตัวเลือก)"] </p></div>
+                            <div class="p-1"><p class="color-green">กาแฟ <samp class="color-name-head"> >></samp> กาแฟย่อย</p></div>
+                        </div>
+                        <div class="container">
+                            <p class="card-text "><i class="fa fa-square me-3 icon-type-size"></i> ระดับความหวาน</p>
+                            <p class="card-text "><i class="fa fa-square me-3 icon-type-size"></i> ไซส์</p>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-5">
+                        <div class="d-flex flex-row">
+                            <div class="p-1"><p class="font-weight-bold">@Localizer["Extra (ตัวเลือกเสริม)"]</p></div>
+                        </div>
+                        <div class="container">
+                            <p class="card-text "><i class="fa fa-square me-3 icon-type-size"></i> ท็อปปิ้ง เครื่องดื่ม</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12 ">
+                        <div class="d-flex justify-content-end">
+                            <div class="p-2">
+                                <a class="btn modal-btn-size-edit" asp-controller="ManageMenu" asp-action="MenuEdit"><i class="fa fa-edit"></i> @Localizer["แก้ไข"]</a>
+                            </div>
+                            <div class="p-2">
+                                <a class="btn modal-btn-size-delete" data-toggle="modal" data-target="#ModalMenuDelete"><i class="fa fa-trash-o"></i> @Localizer["ลบ"]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*                    <h5 class="text-center mb-5 my-5 ">ยืนยันการลบรายการ</h5>
+            <div class=" d-flex justify-content-center">
+            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">ยกเลิก</button>
+            <button type="button" class="font-weight-bold btn ms-5 button-modal-delete">ลบ</button>
+            </div>*@
+        </div>
+    </div>
+</div>

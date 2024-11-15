@@ -1,0 +1,373 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Extra";
+}
+<body id="Extra">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  ">
+                <div class="row ">
+                    <div class="col-12 header-group mb-2">
+                        <a asp-controller="ManageMenu" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["Extra (ตัวเลือกเสริม)"]</h2>
+                        <ul class="breadcrumb mb-2">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="ManageMenu" asp-action="Index">@Localizer["จัดการเมนูอาหาร"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["Extra (ตัวเลือกเสริม)"]</li>
+                        </ul>
+                        <a class="breadcrumb button-add text-center layout-add" asp-controller="ManageMenu" asp-action="ExtraAdd" id="btnAddextra"><img class="img-icon-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่ม Extra"]</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3 search">
+                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["ชื่อตัวเลือกพิเศษ, ราคา"]" style="height: 45px;" autocomplete="off">
+            </div>
+            <div class="col-md-12 mb-5">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold mb-0 font-size">@Localizer["รายการ Extra (ตัวเลือกเสริม)"] <span class="size-small font-weight-bold ms-2" id="count"> @Localizer["จำนวนทั้งหมด"] 0</span><span class="size-small font-weight-bold">/100</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-0">
+                                <div class="table-responsive">
+                                    <table class="table" id="TableExtra" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ชื่อตัวเลือกเสริม"]</th>
+                                                <th scope="col" class="size-th-number text-right">@Localizer["ราคา"]</th>
+                                                <th scope="col" class="size-th-edit"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*ModalDetailsInfo*@
+        <div class="modal fade bd-example-modal-xl" id="ModalDetailsInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <div class="d-flex flex-row mb-2">
+                            <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                            <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0">@Localizer["รายละเอียดตัวเลือกเสริม"]</h5></div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card-body p-0">
+                            <div class="col-12">
+                                <div class="modal-header-table">
+                                    <div class="form-row">
+                                        <label class="font-weight-bold mb-0 font-size16 color-header-dack">@Localizer["ตัวเลือกเสริม (Extra) :"]  <small class="size-small font-weight-bold ms-2" id="namedetail"> กาแฟ</small></label>
+                                    </div>
+                                    <div class="form-row">
+                                        <label class="font-weight-bold mb-0 font-size16 color-header-dack">@Localizer["จำนวน Extra ที่เลือกได้สูงสุด:"]  <small class="size-small font-weight-bold ms-2" id="countdetail"> 0</small></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="card-body p-0">
+                            <div class="form-row">
+                                <div class="col-md-12 mb-2">
+                                    <div class="table-responsive">
+                                        <table class="table " id="TableExtraDetail" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">@Localizer["ลำดับ"]</th>
+                                                    <th scope="col" class="size-th-name">@Localizer["ชื่อตัวเลือกเสริม"]</th>
+                                                    <th scope="col" class="size-th-number text-right">@Localizer["ราคา"]</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*ModalExtraDelete*@
+        <div class="modal fade " id="ModalExtraDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 " id="namedelete"></h5>
+                        <div class=" d-flex justify-content-center">
+                            <input id="iddelete" value="" hidden />
+                            <button type="button" class="font-weight-bold btn  button-modal-delete" onclick="fnDelete()">@Localizer["ลบ"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Modal Post not Success-->
+        <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body layout-model m-3 p-0 ">
+                        <div class="modal-m-text">
+                            <div class="row text-center mt-4 mb-4">
+                                <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบ Extra ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <footer>
+        <div class="footer-help">
+            <div class="row">
+                <div class="media">
+                    <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                    <div class="media-body layout-body">
+                        <p class="color-header-help p-margin">@Localizer["Extra (ตัวเลือกเสริม)"] <samp class="color-sub-help">@Localizer["เป็นตัวเลือกเสริมที่สามารถเลือกได้มากกว่า 1 รายการ ตัวอย่างเช่น ท็อปปิ้งเครื่องดื่ม"] </samp></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+<form hidden id="EditExtra" asp-action="ExtraEdit">
+    <input name="extra" id="ExtraModel" value="" />
+</form>
+<script>
+    function sentdata(d) {
+        var data = $('#TableExtra').DataTable().row(d).data();
+        var test = JSON.stringify(data);
+        $("#ExtraModel").val(test);
+        $("#EditExtra").submit();
+    }
+    var _role;
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+        $('#TableExtra').on('click', 'tbody td button.dt-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            var icon = $(this).closest("button");
+            if (row.child.isShown()) {
+                icon.html('แสดงหมวดหมู่ย่อย <i class="fa fa-angle-down"></i>');
+                row.child.hide();
+            } else {
+                icon.html('แสดงหมวดหมู่ย่อย <i class="fa fa-angle-up"></i>');
+                row.child(format(row.data())).show();
+            }
+        });
+
+        var table = $('#TableExtra').DataTable({
+            ajax: {
+                url: "@Url.Action("GetMenuExtra", "ManageMenu")",
+                dataSrc: ''
+            },
+            processing: false,
+            serverSide: false,
+            stateSave: false,
+            columns: [
+                { data: 'extraID', },
+                { data: { extraName: 'extraName', extraDetailModel: 'extraDetailModel' } },
+                { data: { extraID: 'extraID', extraDetailModel: 'extraDetailModel' } },
+                { data: 'extraID' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text1 = "<p class='p-padding-table'>" + data.extraName + "</p><div class='sub-extra display-sub-extra'>";
+                    for (var i = 0; i < data.extraDetailModel.length; i++) {
+                        text1 += "<p class='p-padding-table'><i class='fa fa-square me-3 icon-type-size'></i>" + data.extraDetailModel[i].extraDetailName + "</p>";
+                    }
+                    text1 += "</div>";
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text2 = "<p class='p-padding-table text-right'>" + "</p><div class='sub-extra display-sub-extra'>";
+                    for (var i = 0; i < data.extraDetailModel.length; i++) {
+                        // var price = parseFloat(data.extraDetailModel[i].price).toLocaleString();
+                        var price = roundToTwo(data.extraDetailModel[i].price);
+                        text2 += "<p class='p-padding-table text-right'>" + price + "</p>";
+                    }
+                    text2 += "</div>";
+                    return text2;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var disibleedit = "";
+                    var disibledelete = "";
+                    if (_role == "editor" || _role == "invoice" || _role == "officer" || _role == "cashier") {
+                        if (_role != "editor") {
+                            disibleedit = "block-a";
+                        }
+                        disibledelete = "block-a";
+                    }
+                    var edit = "<div class='group-btn-table'><button type='button' class='btn btn-green-info mr-2' data-toggle='modal' data-target='#ModalDetailsInfo' onclick='OnInfoCategoryDetali(" + meta.row + ")'><img class='img-detail size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button><button class='btn btn-blue-edit mr-2 " + disibleedit + "'  onclick='sentdata(" + meta.row + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></button><button type='button' class='btn btn-red-delete " + disibledelete + "' onclick='btnDelete(" + meta.row + ")'  data-toggle='modal' data-target='#ModalExtraDelete'><img class='size-img-list-menu' src ='/mymenumerchant/images/Delete20.png' /></button></div>";
+                    return edit;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีรายการ Extra"].Value))+ "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value))+ "</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            "initComplete": function (settings, json) {
+                $('#count').text(@Html.Raw(Json.Serialize(Localizer["จำนวนทั้งหมด"].Value)) + ' ' + table.data().count());
+
+                var count = table.data().count();
+                var btn = document.getElementById("btnAddextra");
+                if (count >= 100) {
+                    btn.style.opacity = "0.5";
+                    btn.style.pointerEvents = "none";
+                    btn.style.cursor = "default";
+                } else {
+                    btn.style.opacity = "1";
+                    btn.style.pointerEvents = "auto";
+                    btn.style.cursor = "pointer";
+                }
+
+            },
+        });
+        $('#TableExtra tbody').on('click', 'tr td:not(:nth-child(4))', function () {
+            var tr = $(this).closest('tr');
+            tr.find('div.sub-extra').toggleClass('display-sub-extra');
+        });
+        var tables = $('#TableExtra').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+
+        if (_role == "invoice" || _role == "officer" || _role == "cashier") {
+            $("#btnAddextra").addClass("block-a");
+        }
+    });
+
+    function OnInfoCategoryDetali(d) {
+        var data = $('#TableExtra').DataTable().row(d).data();
+        $('#namedetail').text(data.extraName);
+        $('#countdetail').text(data.maxSelect);
+        var table = $('#TableExtraDetail').DataTable({
+            data: data.extraDetailModel,
+            stateSave: false,
+            columns: [
+                { data: 'extraDetailNO', },
+                { data: 'extraDetailName' },
+                { data: 'price' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text1 = '<p class="p-0 m-0">' + data + '</p>'
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text2 = '<p class="p-0 m-0 text-right">';
+                    // var price = parseFloat(data).toLocaleString();
+                    var price = roundToTwo(data);
+                    text2 += price + "</p>";
+                    return text2;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีรายการ Extra"].Value))+ "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value))+ "</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+        });
+    }
+
+    function Close() {
+        $('#TableExtraDetail').dataTable().fnDestroy();
+    }
+
+    function btnDelete(id) {
+        var data = $('#TableExtra').DataTable().row(id).data();
+        console.log(data);
+        $('#iddelete').val(data.extraID);
+        $('#namedelete').text(@Html.Raw(Json.Serialize(Localizer["คุณต้องการลบ Extra"].Value)) + ' '+'"' + data.extraName +'"'+ ' ' + @Html.Raw(Json.Serialize(Localizer["หรือไม่?"].Value)));
+    }
+
+    function fnDelete() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteExtra", "ManageMenu")",
+            data: {
+                id: $('#iddelete').val(),
+            },
+            success: function (message) {
+                location.reload();
+            }, error: function (message) {
+                $('#ModalExtraDelete').modal().hide();
+                $('#ModalPostnotSuccess').modal('show');
+            }
+        });
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function roundToTwo(num) {
+        return format('th-TH', 'THB', num);
+    }
+
+    function format(locale, currency, number) {
+        return new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency,
+            currencyDisplay: "code"
+        })
+            .format(number)
+            .replace(currency, "")
+            .trim();
+    }
+
+</script>

@@ -1,0 +1,26 @@
+
+--Prod--
+
+docker stop mymenuclient-prod
+docker rm mymenuclient-prod
+docker image rm mymenuclient
+docker build -t mymenuclient .
+docker run --name mymenuclient-prod --restart always -d -p 8061:80 -v /microservices/MyMenuClient/keys:/root/.aspnet/DataProtection-Keys mymenuclient
+
+docker logs --follow mymenuclient-prod
+
+
+-------
+
+--lab--
+
+docker stop mymenuclient-lab
+docker rm mymenuclient-lab
+docker image rm mymenuclient
+docker build -t mymenuclient .
+docker run --name mymenuclient-lab --env ASPNETCORE_ENVIRONMENT=Lab --restart always -d -p 8061:80 -v /microservices/MyMenuClient/keys:/root/.aspnet/DataProtection-Keys mymenuclient
+
+docker logs --follow mymenuclient-lab
+
+
+-------

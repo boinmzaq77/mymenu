@@ -1,0 +1,1869 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.JAM;
+@using MyMenu.ORM.Master
+@using MyMenuMerchant.Controllers;
+@model TranModel
+@inject IViewLocalizer Localizer
+
+<style>
+
+
+</style>
+
+<body id="PaymentProcess">
+    <div class="modal fade " id="ModalLoad" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div id="loader" style="display:block; top: 50%;"></div>
+    </div>
+
+    <div class="container" style="display:block;" id="myDiv">
+        <div class="form-row">
+            <div class="col-md-12  mb-0">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a onclick="ButtonBack()"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["ชำระเงิน"]</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="shadow-sm">
+                    <div class="card border-0">
+                        <div class="card-body ">
+                            <div class="container">
+                                <div class="form-row">
+                                    @*<div class="col-12">
+                                    <p class="text-head">ราคารวมทั้งหมด</p>
+                                    <p class="text-total-price" id="TotalPrice">100.00</p>
+                                    </div>*@
+                                    <div class="col-12 mb-3">
+                                        <p class="text-head text-left">@Localizer["เลือกประเภทการชำระเงิน"]</p>
+                                        <ul class="row nav nav-pills mb-3 " id="pills-tab" role="tablist">
+                                            <li class="col-6 nav-item">
+                                                <a class="nav-link active" onclick="clickcashtab()" id="pills_menu_tab1" data-toggle="pill" href="#pills_menu1" role="tab" aria-controls="pills_menu1" aria-selected="true">@Localizer["เงินสด"]</a>
+                                            </li>
+                                            <li class="col-6 nav-item">
+                                                <a class="nav-link" onclick="clickqrcodetab()" id="pills_menu_tab2" data-toggle="pill" href="#pills_menu2" role="tab" aria-controls="pills_menu2" aria-selected="false">@Localizer["myQR"]</a> @* style="pointer-events: none;background:#F8F8F8;color:#E5E5E5; border: 1px solid #F8F8F8;" *@
+                                            </li>
+
+                                        </ul>
+                                        <div class="">
+                                            <p class="text-head text-left">@Localizer["ราคารวมทั้งหมด"]</p>
+                                            <p class="text-total-price" id="TotalPrice">0.00</p>
+                                        </div>
+                                        <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="pills_menu1" role="tabpanel" aria-labelledby="pills_menu_tab1">
+                                                <div class="card color-body">
+                                                    <div class="card-body border-card-body">
+                                                        @*<div class="col-12 px-0 mb-0">
+                                                        <p class="text-head-pills pb-2 mb-0">ชำระด้วยเงินสด</p>
+                                                        </div>*@
+                                                        <div class="col-12 px-0 col-flex-center-input  mb-2">
+                                                            <p class="text-body-p mb-0">@Localizer["รับเงินสด"]</p>
+                                                            <input class="calculators-number" type="text" id="Calculators" autofocus="autofocus" oninput="validateInput(this)" autocomplete="off" placeholder='0.00' value="" />
+                                                        </div>
+                                                        @*<div class="col-12 px-0 col-flex-center-input my-0 mb-3">
+
+                                                        <p class="my-0 hr-size"></p>
+
+                                                        </div>*@
+                                                        @*<div class="col-12 px-0 col-flex-center-input mt-2 mb-0">
+                                                        <p class="text-body-p">ยอดเงินทอน</p>
+                                                        <input class="changes-number" type="text" id="Changes" autocomplete="off" placeholder='0.00' readonly />
+                                                        </div>*@
+                                                        <div class="col-12 px-0 col-flex-center  m-top-cal">
+                                                            <table>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="4">
+                                                                            <p class="mb-0 text-body-p">@Localizer["กรอกยอดเงิน"]</p>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2" id="newprice">
+                                                                            <button type="button" class="btn-number-price-now" onclick="appendToDisplayprice('0')">0.00</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number-price" onclick="appendToDisplayprice('20')">+20</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number-price" onclick="appendToDisplayprice('50')">+50</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number-price" onclick="appendToDisplayprice('100')">+100</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number-price" onclick="appendToDisplayprice('200')">+200</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number-price" onclick="appendToDisplayprice('500')">+500</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number-price" onclick="appendToDisplayprice('1000')">+1,000</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('1')">1</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('2')">2</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('3')">3</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-clear" onclick="clearDisplay()">C</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('4')">4</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('5')">5</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('6')">6</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="backspace()"><img class="img-delnum" src="/mymenumerchant/images/DelNum.png" /></button>
+                                                                        </td>
+
+
+                                                                    </tr>
+                                                                    <tr>
+
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('7')">7</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('8')">8</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('9')">9</button>
+                                                                        </td>
+                                                                        <td rowspan="2">
+                                                                            <button type="button" class="btn-enter" onclick="btnPayment()">Enter</button>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    <tr>
+
+
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('.')">.</button>
+
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('0')">0</button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn-number" onclick="appendToDisplay('00')">00</button>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="pills_menu2" role="tabpanel" aria-labelledby="pills_menu_tab2">
+                                                @{
+                                                    if (ViewBag.qrcode != null)
+                                                    {
+                                                        if (ViewBag.qrcode.CfgKey == "QRPATH" && !string.IsNullOrEmpty(ViewBag.qrcode.CfgString))
+                                                        {
+                                                            <div class="card color-body" style="height: 600px;">
+                                                                <div class="card-body border-card-body">
+                                                                    <div class="show-myQR mt-4 mb-4">
+                                                                        <img class="size-img-qrcord" src="@ViewBag.qrcode.CfgString" id="imgqrcord">
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <div>
+                                                                            <button type="submit" class="btn-save" id="myqrcodeSave" onclick="mymyqrcodeSave()">@Localizer["ชำระเงินสำเร็จ"]</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="card color-body">
+                                                                <div class="card-body border-card-body">
+                                                                    <div class="null-myQR">
+                                                                        <p class="color-nullmyQR">@Localizer["ยังไม่ได้ตั้งค่ารูปภาพ myQR สามารถตั้งค่าได้ที่ จัดการสาขา"]</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="card color-body">
+                                                            <div class="card-body border-card-body">
+                                                                <div class="null-myQR">
+                                                                    <p class="color-nullmyQR">@Localizer["ยังไม่ได้ตั้งค่ารูปภาพ myQR สามารถตั้งค่าได้ที่ จัดการสาขา"]</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalPaymentComplete">
+                                        ชำระเงินครบ
+                                        </button>
+                                        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalPaymentCompleteQR">
+                                        ชำระเงินครบ myQR
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalPaymentNotComplete">
+                                        ชำระเงินไม่ครบ
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalBackOrderPayment">
+                                        ย้อนกลับเมื่อมีประวัติการชำระเงิน
+                                        </button>*@
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="card color-body card-payment ">
+                                            <div class="card-body">
+                                                <p class="text-head text-head-pills pb-2 text-left">@Localizer["ประวัติการชำระเงิน"]</p>
+                                                <div class="card-body p-0 collapse show " id="collapseExample">
+                                                    <div class="form-row">
+                                                        <div class="col-md-12 mb-0 ">
+                                                            <div class="table-responsive ">
+                                                                <table class="table mb-0 " id="TableOrderPayment" style="width:100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col" class="color-th size-th-number">@Localizer["ลำดับ"]</th>
+                                                                            <th scope="col" class="color-th size-th-time">@Localizer["เวลา"]</th>
+                                                                            <th scope="col" class="color-th size-th-payment">@Localizer["ยอดชำระ"]</th>
+                                                                            <th scope="col" class="color-th size-th-remain">@Localizer["คงเหลือ"]</th>
+                                                                            <th scope="col" class="color-th size-th-status"></th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr hidden>
+                                                                            <td><div class="padding-td"><p class="mb-0">1</p></div></td>
+                                                                            <td><div class="padding-td"><p class="mb-0">17:22:05</p></div></td>
+                                                                            <td><div class="padding-td"><p class="mb-0">50.00</p></div></td>
+                                                                            <td><div class="padding-td"><p class="mb-0">65.00</p></div></td>
+                                                                            <td><button type="button" class="btn btn-close-order" data-toggle="modal" data-target="#ModalDeleteOrderPayment"><img class="btn-img-close mr-2" src="/mymenumerchant/images/Close.png" />@Localizer["ยกเลิก"]</button></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-4 set-print-txt ">
+        @*  *@
+        <div class="card border-0">
+            <div class="card-body">
+                <div class="container">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="mb-0 font-weight-bold  menu-header">@Localizer["ตัวอย่างใบเสร็จรับเงิน"]</p>
+                            <div class="col-12 flex-justify-center my-4">
+                                <div class="body-print">
+                                    <div class="bg-QR-80 bg-print" id="divprint80mm">
+                                        <div class="container">
+                                            <div class="receipt">
+                                                @* เพื่มรูปร้านค้า *@
+                                                <div class="layout-text-center mt-3" id="showlogo80" hidden>
+                                                    <img class="align-self-center size-logo-merchant" id="imagelogo80">
+                                                </div>
+
+                                                <div class="layout-text-center mt-3 mb-2">
+                                                    <p class="mb-0 p-size p-namemer" id="namemer80">xxxxxxxxx</p>
+                                                    <p class="mb-0 p-size p-branchmer" id="branchmer80">xxxxxxxxxxxxxxxx</p>
+                                                    <p class="mb-0 p-size p-addressmer" id="addressmer80">xxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                                    <p class="mb-0 p-size p-telmer" id="telmer80">Tel.xxxxxxxxxx </p>
+                                                </div>
+
+                                                <div class="layout-text-center">
+                                                    <p class="mb-0 p-size mb-2 p-receiptname" id="receiptname80">@Localizer["ใบเสร็จรับเงิน"]</p>
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="border-sub-detail my-2">
+                                                    <div class="lists-sub-detail">
+                                                        @* <p class="mb-0 p-size">Cashier : @Model.SellerName</p> *@
+                                                        <p class="mb-0 p-size" id="datetran80">@Model.DateTran @* @Model.TranDate.ToString("HH:mm") *@</p>
+                                                    </div>
+                                                    <div class="lists-sub-detail">
+                                                        <p class="mb-0 p-size" id="tranno80">@Localizer["เลขที่"] : @Model.TranNo</p>
+                                                    </div>
+                                                    <div class="lists-sub-detail">
+                                                        <p class="mb-0 p-size">Cashier : @Model.SellerName</p>
+                                                    </div>
+                                                    <div class="lists-sub-detail">
+                                                        @{
+                                                            var showstatustype = "";
+                                                            var showcusname = "";
+                                                            var showcustel = "";
+                                                            var displaytel = "";
+                                                            var classmr = "";
+                                                            var setlinetext58 = "set-p-name-58";
+                                                            var setlinetext80 = "set-p-name-80";
+                                                            if (string.IsNullOrEmpty(Model.FoodTableName))
+                                                            {
+                                                                showstatustype = "";
+                                                                showcusname = Model.CustomerName;
+                                                                showcustel = "," + Model.CustomerTel;
+                                                                displaytel = "display-show";
+                                                                classmr = "";
+                                                            }
+                                                            else
+                                                            {
+                                                                showstatustype = "Table : ";
+                                                                showcusname = Model.FoodTableName;
+                                                                displaytel = "display-hide";
+                                                                classmr = "mr-1";
+                                                            }
+                                                        }
+
+                                                        <p class="mb-0 p-size set-p-food-name @classmr">@showstatustype<samp class="@setlinetext80">@showcusname</samp><samp class="set-p-tel @displaytel">@showcustel</samp></p>
+                                                    </div>
+                                                    <div class="mt-1">
+                                                    </div>
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="border-menu  mb-2">
+                                                    @for (int i = 0; i < Model.TranDetailItemModels.Count; i++)
+                                                    {
+                                                        @if (Model.TranDetailItemModels[i].Price == 0)
+                                                        {
+                                                            <div class="layout-lists-menu mb-2 pricezero">
+                                                                <div class="w-menu-30">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                </div>
+                                                                <div class="w-menu-130">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                    }
+                                                                    @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                    {
+                                                                        <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                    }
+
+                                                                </div>
+                                                                <div class="w-menu-60">
+                                                                    <p class="mb-0 p-size">
+                                                                        @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                    </p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="layout-lists-menu mb-2">
+                                                                <div class="w-menu-30">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                </div>
+                                                                <div class="w-menu-130">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                    }
+                                                                    @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                    {
+                                                                        <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                    }
+
+                                                                </div>
+                                                                <div class="w-menu-60">
+                                                                    <p class="mb-0 p-size">
+                                                                        @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                    </p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="color-br"></div>
+                                                <div class="layout-sum-lists mb-0">
+                                                    @*  <p class="mb-0 p-size">จำนวนสินค้า @Model.TranDetailItemModels.Count รายการ</p> *@
+                                                    <input type="hidden" id="ItemCountnotZero" value="@Model.TranDetailItemModels.Where(x=>x.Price > 0).Count()"/>
+                                                </div>
+
+                                                <div class="my-2">
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size  w-flex-p-135" >จำนวน<small  id="itemCount80" class="mb-0 mr-1 p-size f-w-smalll">@Model.TranDetailItemModels.Count</small><small class="mb-0 p-size w-s-20 f-w-smalll">@Localizer["รวมเงิน"]</small></p>
+                                                        <p class="mb-0 p-size"> <small class="mb-0 p-size w-s-20 f-w-smalll">@TableController.ConvertToCurrency(@Model.SubTotalHaveVat + Model.SubTotalNoneVat)</small></p>
+                                                    </div>
+
+                                                    @if (Model.ServicechargeType == 'A')
+                                                    {
+                                                        @if (Model.TranTradDiscounts.Count != 0)
+                                                        {
+                                                            @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                            {
+                                                                <div class="layout-flex-space-between">
+                                                                    <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                    <p class="mb-0 p-size">-@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        @if (Model.ServiceCharge != 0)
+                                                        {
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @if (Model.ServiceCharge != 0)
+                                                        {
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                            </div>
+                                                        }
+                                                        @if (Model.TranTradDiscounts.Count != 0)
+                                                        {
+                                                            @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                            {
+                                                                <div class="layout-flex-space-between">
+                                                                    <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                    <p class="mb-0 p-size">-@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    }
+
+                                                    <div class="layout-flex-space-between">
+                                                        @if (Model.TaxRate > 0)
+                                                        {
+                                                            <p class="mb-0 p-size w-flex-p-135">
+                                                                VAT @(Model.TranTaxType == 'I' ? "Include" : "Exclude")
+                                                                <small class="mb-0 p-size w-s-20 f-w-smalll">
+                                                                    @Model.TaxRate?.ToString("0.##")%
+                                                                </small>
+                                                            </p>
+                                                            <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TotalVat)</p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="layout-flex-space-between mb-2">
+                                                    <p class="mb-0 p-size p-weight">@Localizer["รวมทั้งหมด"]</p>
+                                                    <p class="mb-0 p-size p-weight">@TableController.ConvertToCurrency(Model.GrandTotal)</p>
+                                                </div>
+                                                <div class="mb-5">
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size" id="txtpaymenttype80"> @Localizer["ชำระเงินสด"]</p>
+                                                        <p class="mb-0 p-size" id="txtpay80">xxx.xx</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size">@Localizer["ทอน"]</p>
+                                                        <p class="mb-0 p-size" id="txtton80">xxx.xx</p>
+                                                    </div>
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(Model.Comments))
+                                                {
+                                                    <p class="mb-0 p-size">@Localizer["หมายเหตุ"] : @Model.Comments </p>
+                                                }
+
+
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        <p class="p-size mb-0" id="ReceiptFooter80">***@Localizer["ขอขอบคุณที่ใช้บริการ"]***</p>
+                                                    </div>
+                                                </div>
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        <p class="p-size">Powered By SeniorSoft</p>
+                                                    </div>
+                                                </div>
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        <p class="p-size" id="txttaxid80" hidden>TAX ID : xxxxxxxx</p>
+                                                        <p class="p-size" id="txtposid80" hidden>POS ID : xxxxxxx</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-QR-58 bg-print" id="divprint58mm">
+                                        <div class="container">
+                                            <div class="receipt">
+                                                @* เพื่มรูปร้านค้า *@
+                                                <div class="layout-text-center mt-3" id="showlogo58" hidden>
+                                                    <img class="align-self-center size-logo-merchant" id="imagelogo58">
+                                                </div>
+
+                                                <div class="layout-text-center mt-3 mb-2">
+                                                    <p class="mb-0 p-size p-namemer" id="namemer58">xxxxxxxxx</p>
+                                                    <p class="mb-0 p-size p-branchmer" id="branchmer58">xxxxxxxxxxxxxxxx</p>
+                                                    <p class="mb-0 p-size p-addressmer" id="addressmer58">xxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                                    <p class="mb-0 p-size p-telmer" id="telmer58">Tel.xxxxxxxxxx </p>
+                                                </div>
+
+                                                <div class="layout-text-center">
+                                                    <p class="mb-0 p-size mb-2 p-receiptname" id="receiptname58">@Localizer["ใบเสร็จรับเงิน"]</p>
+                                                </div>
+                                                <div class="color-br58"></div>
+                                                <div class="border-sub-detail my-2">
+                                                    @* <div class="lists-sub-detail">
+                                                    <p class="mb-0 p-size"id="tranno">@Model.TranNo</p>
+                                                    <p class="mb-0 p-size">@Model.TranDate.ToString("dd/MM/yyyy")</p>
+                                                    </div> *@
+                                                    <div class="lists-sub-detail">
+                                                        @* <p class="mb-0 p-size">Cashier : @Model.SellerName</p> *@
+                                                        <p class="mb-0 p-size" id="datetran58">@Model.DateTran @* @Model.TranDate.ToString("HH:mm") *@</p>
+                                                    </div>
+                                                    <div class="lists-sub-detail">
+                                                        <p class="mb-0 p-size" id="tranno58">@Localizer["เลขที่"] : @Model.TranNo</p>
+                                                    </div>
+                                                    <div class="lists-sub-detail">
+                                                        <p class="mb-0 p-size">@Localizer["Cashier"] : @Model.SellerName</p>
+                                                    </div>
+                                                    <div class="lists-sub-detail">
+                                                        <p class="mb-0 p-size set-p-food-name @classmr">@showstatustype<samp class="@setlinetext58">@showcusname</samp><samp class="set-p-tel @displaytel">@showcustel</samp></p>
+                                                        @*<p class="mb-0 p-size">Table : @Model.FoodTableName</p>*@
+                                                    </div>
+                                                    <div class="mt-1">
+                                                        @* <p class="mb-0 p-size">เงินสด</p> *@
+                                                    </div>
+                                                </div>
+                                                <div class="color-br58"></div>
+                                                <div class="border-menu  mb-2">
+                                                    @for (int i = 0; i < Model.TranDetailItemModels.Count; i++)
+                                                    {
+                                                        @if (Model.TranDetailItemModels[i].Price == 0)
+                                                        {
+                                                            <div class="layout-lists-menu mb-2 pricezero">
+                                                                <div class="w-menu-30">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                </div>
+                                                                <div class="w-menu-130">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                    }
+                                                                    @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                    {
+                                                                        <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                    }
+
+                                                                </div>
+                                                                <div class="w-menu-60">
+                                                                    <p class="mb-0 p-size">
+                                                                        @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                    </p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="layout-lists-menu mb-2">
+                                                                <div class="w-menu-30">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                </div>
+                                                                <div class="w-menu-130">
+                                                                    <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                    }
+                                                                    @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                    {
+                                                                        <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                    }
+
+                                                                </div>
+                                                                <div class="w-menu-60">
+                                                                    <p class="mb-0 p-size">
+                                                                        @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                    </p>
+                                                                    @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                    {
+                                                                        <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="color-br58"></div>
+                                                <div class="layout-sum-lists mb-0">
+                                                    @*  <p class="mb-0 p-size">จำนวนสินค้า @Model.TranDetailItemModels.Count รายการ</p> *@
+                                                    <input type="hidden" id="ItemCountnotZero" value="@Model.TranDetailItemModels.Where(x=>x.Price > 0).Count()"/>
+                                                </div>
+                                                <div class="my-2">
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size  w-flex-p-135">จำนวน<small id="itemCount58" class="mb-0 mr-1 p-size f-w-smalll">@Model.TranDetailItemModels.Count</small><small class="mb-0 p-size w-s-20 f-w-smalll">@Localizer["รวมเงิน"]</small></p>
+                                                        <p class="mb-0 p-size"> <small class="mb-0 p-size w-s-20 f-w-smalll">@TableController.ConvertToCurrency(@Model.SubTotalHaveVat + Model.SubTotalNoneVat)</small></p>
+                                                    </div>
+
+                                                    @if (Model.ServicechargeType == 'A')
+                                                    {
+                                                        @if (Model.TranTradDiscounts.Count != 0)
+                                                        {
+                                                            @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                            {
+                                                                <div class="layout-flex-space-between">
+                                                                    <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                    <p class="mb-0 p-size">-@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        @if (Model.ServiceCharge != 0)
+                                                        {
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @if (Model.ServiceCharge != 0)
+                                                        {
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                            </div>
+                                                        }
+                                                        @if (Model.TranTradDiscounts.Count != 0)
+                                                        {
+                                                            @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                            {
+                                                                <div class="layout-flex-space-between">
+                                                                    <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                    <p class="mb-0 p-size">-@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    }
+
+                                                    <div class="layout-flex-space-between">
+                                                        @if (Model.TaxRate > 0)
+                                                        {
+                                                            <p class="mb-0 p-size w-flex-p-135">VAT @(Model.TranTaxType == 'I' ? "Include" : "Exclude")  <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TaxRate?.ToString("0.##") %</small></p>
+                                                            <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TotalVat)</p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="layout-flex-space-between mb-2">
+                                                    <p class="mb-0 p-size p-weight">@Localizer["รวมทั้งหมด"]</p>
+                                                    <p class="mb-0 p-size p-weight">@TableController.ConvertToCurrency(Model.GrandTotal)</p>
+                                                </div>
+                                                <div class="mb-5">
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size" id="txtpaymenttype58">@Localizer["ชำระเงินสด"]</p>
+                                                        <p class="mb-0 p-size" id="txtpay58">xxx.xx</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size">@Localizer["ทอน"]</p>
+                                                        <p class="mb-0 p-size" id="txtton58">xxx.xx</p>
+                                                    </div>
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(Model.Comments))
+                                                {
+                                                    <p class="mb-0 p-size">@Localizer["หมายเหตุ"] : @Model.Comments </p> @* หมายเหตุ จะเป็นหมายเหตุของฝั่งร้านค้า ไม่ใช่หมายเหตุของ tran *@
+                                                }
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        <p class="p-size mb-0" id="ReceiptFooter58">***@Localizer["ขอขอบคุณที่ใช้บริการ"]***</p>
+                                                    </div>
+                                                </div>
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        <p class="p-size">Powered By SeniorSoft</p>
+                                                    </div>
+                                                </div>
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        <p class="p-size" id="txttaxid58" hidden>TAX ID : xxxxxxxx</p>
+                                                        <p class="p-size" id="txtposid58" hidden>POS ID : xxxxxxx</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    @*ModalPaymentComplete*@
+    <div class="modal fade" id="ModalPaymentComplete" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="centent-status-payment">
+                                <img class="img-paymant-success" src="/mymenumerchant/images/OrderSuccess.png" />
+                                <p class="color-status-payment-success">@Localizer["ชำระเงินสำเร็จ"]</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="centent-lists-payment">
+                                <p class="set-text-p-head mb-1">@Localizer["ยอดที่ต้องชำระ"]</p>
+                                <p class="set-text-d mb-2" id="PaymentCompleteTotalPrice">XX.XX</p>
+                                <p class="set-text-p-head mb-1">@Localizer["รับเงินสด"]</p>
+                                <p class="set-text-g" id="PaymentCompletePaymentAmount">XX.XX</p>
+                            </div>
+
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="centent-remain-payment">
+                                <div class="set-body-remain">
+                                    <p class="set-text-p-head mb-0 mt-3">@Localizer["ทอน"]</p>
+                                    <p class="set-text-remain" id="PaymentCompleteChange">XX.XX</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="centent-btn-payment">
+                                <button class="btn btn-sky-payment mr-2" onclick="Printrecript()"><img class="btn-img-print" src="/mymenumerchant/images/Print.png" /></button>
+                                <button class="btn btn-greem-payment" data-dismiss="modal" onclick="Backtotable()">@Localizer["กลับหน้าโต๊ะ"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*ModalPaymentCompleteQR*@
+    <div class="modal fade" id="ModalPaymentCompleteQR" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="centent-status-payment">
+                                <img class="img-paymant-success" src="/mymenumerchant/images/OrderSuccess.png" />
+                                <p class="color-status-payment-success">@Localizer["ชำระเงินสำเร็จ"]</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="centent-lists-payment">
+                                <p class="set-text-p-head mb-1">@Localizer["ยอดที่ต้องชำระ"]</p>
+                                <p class="set-text-d mb-2" id="PaymentCompleteTotalPriceQR">XX.XX</p>
+                                <p class="set-text-p-head mb-1">@Localizer["ชำระด้วย QR Code"]</p>
+                                <p class="set-text-g" id="PaymentCompletePaymentAmountQR">XX.XX</p>
+                            </div>
+
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="centent-btn-payment">
+                                <button class="btn btn-sky-payment mr-2" onclick="Printrecript()"><img class="btn-img-print" src="/mymenumerchant/images/Print.png" /></button>
+                                <button class="btn btn-greem-payment" data-dismiss="modal" onclick="Backtotable()">@Localizer["กลับหน้าโต๊ะ"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*ModalPaymentNotComplete*@
+    <div class="modal fade" id="ModalPaymentNotComplete" tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="centent-status-payment">
+                                <img class="img-paymant-success" src="/mymenumerchant/images/OrderSuccess.png" />
+                                <p class="color-status-payment-success">@Localizer["ชำระเงินสำเร็จ"]</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="centent-lists-payment">
+                                <p class="set-text-p-head mb-1">@Localizer["ยอดที่ต้องชำระ"]</p>
+                                <p class="set-text-d mb-2" id="PaymentNotCompleteTotalPrice">XX.XX</p>
+                                <p class="set-text-p-head mb-1">@Localizer["รับเงินสด"]</p>
+                                <p class="set-text-g" id="PaymentNotCompletePaymentAmount">XX.XX</p>
+                            </div>
+
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="centent-remain-payment">
+                                <div class="set-body-remain">
+                                    <p class="set-text-p-head mb-0 mt-3">@Localizer["คงเหลือ"]</p>
+                                    <p class="set-text-remain" id="PaymentNotCompleteChange">XX.XX</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="centent-btn-payment">
+                                <button class="btn btn-greem-payment" data-dismiss="modal" onclick="nextpayment()">@Localizer["ชำระเงินต่อ"]</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ModalDeleteOrderPayment *@
+    <div class="modal fade " id="ModalDeleteOrderPayment" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["คุณต้องการยกเลิก การชำระเงินนี้หรือไม่?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-delete" onclick="CancelPayment(this)" id="rowcancel">@Localizer["ใช่"]</button>
+                        <button type="button" class="font-weight-bold btn ms-3 button-modal-close" data-dismiss="modal">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ModalBackOrderPayment *@
+    <div class="modal fade " id="ModalBackOrderPayment" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5 font-weight-bold">@Localizer["ระบบจะไม่บันทึกข้อมูลการชำระเงิน คุณต้องการออกจากหน้าชำระเงินหรือไม่?"]</h5>
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-delete" onclick="BackOrderPayment()">@Localizer["ใช่"]</button>
+                        <button type="button" class="font-weight-bold btn ms-3 button-modal-close" data-dismiss="modal">@Localizer["ชำระเงินต่อ"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-text-center mt-4 mb-4 flex-justify-center set-print-txt">
+        <div id="qrcodepic80" style="width:230px;height:230px;"></div>
+    </div>
+</body>
+
+<style>
+
+    #calculators::placeholder {
+        color: #BEE0D4 !important;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+
+    var arrayPayment = [];
+    var grandPayment = 0;
+    var _TotalPrice = 0;
+    var _PaymentAmount = 0;
+    var _ReceivedAmount = 0;
+    var _Change = 0;
+    var _Balance = 0;
+    var numberpayment = 0;
+    var Tran = [];
+    var cashinput = "";
+    var QRCodestring;
+    var ListBranchConfig = [];
+    $(window).bind('beforeunload', function () {
+        showhionbacksceen("Welcome");
+    });
+
+    $(document).ready(function () {
+
+
+        //alert(window.navigator.userAgent);
+        iOS();
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|pOera Mini/i.test(navigator.userAgent)) {
+
+            $("#Calculators").prop('readonly', true);
+        } else {
+            $("#Calculators").prop('readonly', false);
+        }
+        function iOS() {
+            var isIOS = /iPad|iPhone|iPod|iPod Simulator|iPhone Simulator|iPad Simulator|Mac/.test(navigator.userAgent);
+            //alert(isIOS);
+
+            var aa = [
+                'iPad Simulator',
+                'iPhone Simulator',
+                'iPod Simulator',
+                'iPad',
+                'iPhone',
+                'iPod'
+            ].includes(navigator.platform)
+                // iPad on iOS 13 detection
+                || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+            //alert(aa);
+        }
+        //Lab การจ่ายเงิน
+        Tran = @Json.Serialize(Model);
+
+        //get local storage
+        Tran.posID = localStorage.getItem("POSID");
+        //console.log(Tran);
+
+        var data = Tran.grandPayment + "";
+        if (data.indexOf('.') >= 0) {
+            grandPayment = roundToTwo(Tran.grandPayment);
+        } else {
+            grandPayment = Tran.grandPayment;
+        }
+
+        document.getElementById("newprice").innerHTML = '<button type="button" class="btn-number-price-now" id="newprice" onclick="appendToDisplayNewPrice(&apos;' + grandPayment + '&apos;)">' + grandPayment + '</button>'
+        //$('#newprice').text(grandPayment);
+        $('#TotalPrice').text(grandPayment);
+        $('#PaymentCompleteTotalPrice').text(grandPayment);
+        $('#PaymentNotCompleteTotalPrice').text(grandPayment);
+        //var payment = document.getElementById("Calculators");
+        //payment.placeholder = grandPayment;
+        CreateQRCode();
+        showpriceonbacksceen(grandPayment);
+    });
+    function clickqrcodetab() {
+        if (QRCodestring != "") {
+            showqrcodeonbacksceen();
+        }
+
+    }
+    function clickcashtab() {
+        showpriceonbacksceen(grandPayment);
+    }
+
+    function showpriceonbacksceen(value) {
+        var userAgent = window.navigator.userAgent.toLowerCase(),
+            safari = /safari/.test(userAgent),
+            ios = /iphone|ipod|ipad/.test(userAgent);
+
+        if (ios) {
+            if (safari) {
+                //browser
+            } else if (!safari) {
+                //window.webkit.messageHandlers.SearchBT.postMessage('');
+            };
+        } else {
+            if (window.navigator.platform.indexOf("Win") != 0) {
+                Device.showprice(value);
+            }
+        };
+    }
+
+    function showqrcodeonbacksceen() {
+
+        var div = document.getElementById("qrcodepic80");
+
+        //const div = document.getElementById("imagePrintQr58mm");\
+        var userAgent = window.navigator.userAgent.toLowerCase(),
+            safari = /safari/.test(userAgent),
+            ios = /iphone|ipod|ipad/.test(userAgent);
+        html2canvas(div, {
+            scale: 1,
+            useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        }).then(canvas => {
+            var imgInfo = canvas.toDataURL("image/png");
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    //window.webkit.messageHandlers.SearchBT.postMessage('');
+                };
+            } else {
+                if (window.navigator.platform.indexOf("Win") != 0) {
+                    Device.showqr(imgInfo);
+                }
+            };
+        });
+    }
+
+    function showhionbacksceen(txt) {
+        var userAgent = window.navigator.userAgent.toLowerCase(),
+            safari = /safari/.test(userAgent),
+            ios = /iphone|ipod|ipad/.test(userAgent);
+
+        if (ios) {
+            if (safari) {
+                //browser
+            } else if (!safari) {
+                //window.webkit.messageHandlers.SearchBT.postMessage('');
+            };
+        } else {
+            if (window.navigator.platform.indexOf("Win") != 0) {
+                Device.showhi(txt);
+            }
+        };
+    }
+
+    function appendToDisplayNewPrice(value) {
+        $('#Calculators').val(value);
+    }
+
+    var current = 0;
+    function appendToDisplayprice(value) {
+        var bbb = $('#Calculators').val();
+        if (bbb == '') {
+            current = 0;
+        } else {
+            current = parseFloat(bbb.replace(/,/g, ""));
+        }
+        cashinput = value.replace('/+/g', '');
+        var aaa = parseFloat(cashinput);
+        current += aaa;
+
+        var data = current + "";
+        if (data.indexOf('.') >= 0) {
+            current = roundToTwo(current);
+        }
+        $('#Calculators').val(current.toLocaleString());
+    }
+
+
+    function appendToDisplay(value) {
+        var input = $("#Calculators");
+        var len = input.val().length;
+        input[0].focus();
+        input[0].setSelectionRange(len, len);
+
+        //var currentValue = input[0].value;
+
+        var aaa = input[0].value;
+        var txtamount = value.trim();
+        aaa += txtamount;
+        var integerValue = parseFloat(aaa.replace(/,/g, ''));
+        if (isNaN(integerValue)) {
+            currentValue = "0.";
+            input[0].value = currentValue;
+            return;
+        }
+
+        if (aaa.toString() == "0" || aaa.toString() == "00") {
+            currentValue = '';
+
+        } else {
+            currentValue = aaa.toString();
+        }
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            currentValue = currentValue.slice(0, -1);
+            input[0].value = currentValue;
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    input[0].value = chack[1];
+                }
+            }
+        }
+
+        var checkdot = [];
+        checkdot = currentValue.split('.');
+        if (checkdot.length == 2) {
+            checkdot[0] = checkdot[0].replace(/,/g, '');
+            if (checkdot[0].length > 13) {
+                currentValue = checkdot[0].slice(0, -1) + checkdot[1];
+                input[0].value = numberWithCommas(currentValue);
+            } else {
+                currentValue = checkdot[0] + '.' + checkdot[1];
+                input[0].value = numberWithCommas(currentValue);
+            }
+            return;
+        }
+
+        currentValue = currentValue.replace(/,/g, '');
+        if (currentValue.length > 13) {
+            input[0].value = numberWithCommas(currentValue.slice(0, -1));
+        } else {
+            input[0].value = numberWithCommas(currentValue);
+        }
+
+    }
+
+    function clearDisplay() {
+        document.getElementById('Calculators').value = '';
+        var input = $("#Calculators");
+        var len = input.val().length;
+        input[0].focus();
+        input[0].setSelectionRange(len, len);
+    }
+
+    function backspace() {
+        const display = document.getElementById("Calculators");
+        const currentValue = display.value;
+        display.value = currentValue.slice(0, -1);
+        if (display.value == "") {
+            var input = $("#Calculators");
+            var len = input.val().length;
+            input[0].focus();
+            input[0].setSelectionRange(len, len);
+            return;
+        }
+        var valsplit = display.value.split(",");
+        var number = "";
+        for (var i = 0; i < valsplit.length; i++) {
+            number += valsplit[i]
+        }
+        var Asplit = display.value.split("");
+        if (Asplit.includes(".")) {
+            var formatNumberA = formatNumber(number);
+            display.value = formatNumberA;
+        } else {
+            var formattedValue = parseFloat(number).toLocaleString();
+            display.value = formattedValue;
+        }
+        if (currentValue.slice(-1) === ".") {
+            decimalPointUsed = false;
+        }
+
+        var input = $("#Calculators");
+        var len = input.val().length;
+        input[0].focus();
+        input[0].setSelectionRange(len, len);
+    }
+
+    document.getElementById("Calculators").addEventListener("keypress", function (e) {
+        if (e.key.match(/[^0-9.]/) && e.key !== "Enter" && e.key !== "Backspace" & e.key !== ".") {
+            e.preventDefault();
+        }
+    });
+    document.getElementById("Calculators").addEventListener("keydown", function (e) {
+        if (e.key.match(/[^0-9.]/) && e.key !== "Enter" && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+    document.getElementById("Calculators").addEventListener("keydown", function (e) {
+        if (e.key == "Backspace") { decimalPointUsed = false }
+    });
+    document.getElementById("Calculators").addEventListener("keypress", function (e) {
+        if (e.key == "Backspace") { decimalPointUsed = false }
+    });
+    document.getElementById("Calculators").addEventListener("keyup", function (e) {
+        if (e.key === "Enter") {
+            calculate();
+        }
+    });
+
+    function validateInput(arg) {
+        var id = arg.getAttribute('id');
+        var currentValue = arg.value.trim();
+
+        //เพิ่มกรณีมีจุดทศนิยมแล้ว จะไม่ยอมให้แสดงจุดทศนิยมอีก
+        var countpoint = AllIndexOf(currentValue);
+        if (countpoint.length > 1) {
+            var aaa = currentValue.substr(0, currentValue.length - 1);
+            arg.value = aaa;
+            return;
+        }
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    arg.value = chack[1];
+                }
+            }
+        }
+        currentValue = currentValue.replace(/,/g, '');
+        var integerValue = parseFloat(currentValue);
+        if (isNaN(integerValue)) {
+            arg.value = "";
+            return;
+        }
+
+        var checkdot = [];
+        checkdot = currentValue.split('.');
+        if (checkdot.length == 2) {
+            checkdot[0] = checkdot[0].replace(/,/g, '');
+            if (checkdot[0].length > 13) {
+                currentValue = checkdot[0].slice(0, -1) + checkdot[1];
+                arg.value = numberWithCommas(currentValue);
+            } else {
+                currentValue = checkdot[0] + '.' + checkdot[1];
+                arg.value = numberWithCommas(currentValue);
+            }
+            return;
+        }
+
+        if (integerValue.toString().length > 13) {
+            arg.value = numberWithCommas(integerValue.toString().slice(0, -1));
+        } else {
+            arg.value = numberWithCommas(arg.value.trim());
+        }
+    }
+
+    function formatNumber(numberString) {
+        var valpoint = numberString.split(".");
+        var formattedValue = "";
+        if (valpoint.length == 2) {
+            formattedValue = parseFloat(valpoint[0]).toLocaleString();
+            formattedValue += "." + valpoint[1];
+        } else {
+            formattedValue = parseFloat(number).toLocaleString();
+        }
+        return formattedValue;
+    }
+
+    function GetPaymentType() {
+        var activeTab = document.getElementById('pills_menu_tab1').getAttribute('aria-selected')
+        if (activeTab == "true") {
+            return "CH";
+        } else {
+            return "MYQR";
+        }
+    }
+
+    //Payment
+    function btnPayment() {
+        var receivedAmount = $('#Calculators').val();
+        if (receivedAmount === null || receivedAmount == '') {
+            return;
+        }
+
+        //add to array
+        arrayPayment.push({
+            PaymentNo: numberpayment + 1,
+            typePayment: GetPaymentType(),
+            PaymentAmount: 0, // ReceivedAmount - Change
+            ReceivedAmount: parseFloat(receivedAmount.replace(/,/g, "")), //ยอดเงินที่จ่าย
+            Change: 0,
+            Time: TimeFormat(),
+            balance: 0,
+        });
+        // console.log(arrayPayment);
+
+        //sum array
+        var sum = arrayPayment.reduce((n, { ReceivedAmount }) => n + ReceivedAmount, 0);
+        var sumamount = parseFloat(sum);
+
+        //clear input cal
+        document.getElementById('Calculators').value = '';
+
+        var grandPaymentfloat = 0;
+        var data = grandPayment + "";
+        if (data.indexOf(',') >= 0) {
+            grandPaymentfloat = parseFloat(grandPayment.replace(/,/g, ""));
+        } else {
+            grandPaymentfloat = parseFloat(grandPayment);
+        }
+
+        //console.log(grandPaymentfloat);
+        if (sumamount < grandPaymentfloat) {
+            numberpayment += 1;
+            $('#ModalPaymentNotComplete').modal().show();
+
+            //cal การจ่ายเงิน
+            $('#PaymentNotCompleteTotalPrice').text(grandPayment); //ยอดเงินที่ต้องชำระ
+
+            var receipt = 0;
+            if (receivedAmount.indexOf(',') >= 0) {
+                receipt = parseFloat(receivedAmount.toString().replace(/,/g, ""));
+            } else {
+                receipt = parseFloat(receivedAmount);
+            }
+
+            if (receipt.toString().indexOf('.') >= 0) {
+                receipt = roundToTwo(receipt);
+            }
+            $('#PaymentNotCompletePaymentAmount').text(receipt); //ยอดเงินที่จ่าย
+
+            if (numberpayment == 1) {
+                _TotalPrice = grandPaymentfloat; //ยอดเงินที่ต้องชำระ
+            } else {
+                _TotalPrice = parseFloat(_Balance); //ยอดเงินที่ต้องชำระ
+            }
+            _ReceivedAmount = parseFloat(receivedAmount.replace(/,/g, "")); //ยอดเงินที่จ่าย
+
+            //ยอดเงินที่ต้องชำระ - ยอดเงินที่จ่าย = เงินทอน
+            _Balance = _TotalPrice - _ReceivedAmount;
+            _Balance = _Balance.toFixed(2);
+
+            var sumnow = 0;
+            if (_Balance.toString().indexOf(',') >= 0) {
+                sumnow = parseFloat(_Balance.toString().replace(/,/g, ""));
+            } else {
+                sumnow = parseFloat(_Balance);
+            }
+
+            if (sumnow.toString().indexOf('.') >= 0) {
+                sumnow = roundToTwo(sumnow);
+            }
+
+            $('#PaymentNotCompleteChange').text(sumnow); //เงินทอน
+            $('#TotalPrice').text(sumnow); //ราคารวมทั้งหมดหักที่จ่ายไปแล้ว
+            document.getElementById("newprice").innerHTML = '<button type="button" class="btn-number-price-now" id="newprice" onclick="appendToDisplayNewPrice(&apos;' + sumnow + '&apos;)">' + sumnow + '</button>'
+            // console.log(_Balance);
+
+            var last_element = arrayPayment[arrayPayment.length - 1];
+            last_element.PaymentAmount = _ReceivedAmount;
+            last_element.Time = TimeFormat();
+            last_element.balance = parseFloat(sumnow);
+
+            AddRowtoTablePayment();
+
+            var payment = document.getElementById("Calculators");
+            payment.placeholder = _ReceivedAmount;
+        }
+        else {
+            //cal การจ่ายเงิน
+            $('#PaymentCompleteTotalPrice').text(grandPayment); //ยอดเงินที่ต้องชำระ
+            var received = 0;
+            if (receivedAmount.toString().indexOf(',') >= 0) {
+                received = parseFloat(receivedAmount.toString().replace(/,/g, ""));
+            } else {
+                received = parseFloat(receivedAmount);
+            }
+            $('#PaymentCompletePaymentAmount').text(received); //ยอดเงินที่จ่าย
+            if (numberpayment == 0) {
+                _TotalPrice = grandPaymentfloat; //ยอดเงินที่ต้องชำระ
+            } else {
+                numberpayment += 1;
+                _TotalPrice = parseFloat(_Balance); //ยอดเงินที่ต้องชำระ
+            }
+            _ReceivedAmount = parseFloat(receivedAmount.replace(/,/g, "")); //ยอดเงินที่จ่าย
+
+            //ยอดเงินที่ต้องชำระ - ยอดเงินที่จ่าย = เงินทอน
+            _Balance = _TotalPrice - _ReceivedAmount;
+
+
+            var aaa = 0;
+            if (_Balance.toString().indexOf(',') >= 0) {
+                aaa = parseFloat(_Balance.toString().replace(/,/g, ""));
+            } else {
+                aaa = parseFloat(_Balance);
+            }
+
+            if (aaa.toString().indexOf('-') >= 0) {
+                aaa = aaa.toString().replace(/-/g, "");
+            }
+
+            if (aaa.toString().indexOf('.') >= 0) {
+                aaa = roundToTwo(aaa);
+            }
+
+            $('#PaymentCompleteChange').text(aaa); //เงินทอน
+            var decimalChange = roundToTwo(_Balance).replace(/[^0-9.]/g, '');
+            var last_element = arrayPayment[arrayPayment.length - 1];
+            last_element.PaymentAmount = _TotalPrice;
+            last_element.Change = decimalChange;
+            last_element.Time = TimeFormat();
+            last_element.balance = decimalChange;
+
+
+            var modelprintmanin = GetMainPrint();
+            var Datatxtton = roundToTwo(sumamount);
+            var Datatxtpay = roundToTwo(decimalChange);
+            var Datatxtpaymenttype = GetPaymentType();
+
+            if (modelprintmanin?.papersize == 80) {
+                SetPriceBill(Datatxtpay, Datatxtton, Datatxtpaymenttype, "80")
+            } else {
+                SetPriceBill(Datatxtpay, Datatxtton, Datatxtpaymenttype, "58")
+            }
+
+            sumamount = 0;
+            AddRowtoTablePayment();
+
+            TranPaymentModel();
+            SummitPostPayment();
+            ///////////////////
+
+
+
+            showhionbacksceen("Thank you")
+        }
+
+    }
+    function SetPriceBill(Datatxtton, Datatxtpay, Datatxtpaymenttype, size) {
+        $('#txtton' + size).text(Datatxtton);
+        $('#txtpay' + size).text(Datatxtpay);
+        if (Datatxtpaymenttype == 'CH') {
+            $('#txtpaymenttype' + size).text(@Html.Raw(Json.Serialize(@Localizer["ชำระเงินสด"].Value)));
+        } else {
+            $('#txtpaymenttype' + size).text(@Html.Raw(Json.Serialize(@Localizer["ชำระด้วย My QR"].Value)));
+        }
+    }
+
+    function AddRowtoTablePayment() {
+        //เพิ่มไปที่ Table ประวัติการชำระเงิน
+        //remove row trrow
+        $("#TableOrderPayment  tbody tr").remove();
+        var text1 = "";
+        arrayPayment.forEach(function (value, i) {
+            text1 += '<tr id=' + 'trrow' + (i + 1) + '>' +
+                '<td><div class="padding-td"><p class="mb-0">' + (i + 1) + '</p></div></td>' +
+                '<td><div class="padding-td"><p class="mb-0">' + value.Time + '</p></div></td>' +
+                '<td><div class="padding-td"><p class="mb-0">' + roundToTwo(value.ReceivedAmount) + '</p></div></td>' +
+                '<td><div class="padding-td"><p class="mb-0">' + roundToTwo(value.balance) + '</p></div></td>' +
+                '<td><button type="button" class="open-modal btn btn-close-order" data-toggle="modal" data-target="#ModalDeleteOrderPayment" data-id="' + (i + 1) + '"><img class="btn-img-close mr-2" src="/mymenumerchant/images/Close.png" />@Localizer["ยกเลิก"]</button></td>' +
+                '</tr>';
+        });
+        $('#TableOrderPayment').find('tbody').append(text1);
+    }
+
+    function TranPaymentModel() {
+        var TranPayments = [];
+        arrayPayment.forEach(function (value, i) {
+            var tranpayment = {
+                PaymentNo: i + 1,
+                PaymentType: value.typePayment,
+                PaymentAmount: value.PaymentAmount,
+                ReceivedAmount: value.ReceivedAmount,
+                Change: value.Change,
+                TranNo: Tran.tranNo,
+                BranchID: Tran.branchID,
+                MerchantID: Tran.merchantID,
+                RequestDateTime: value.Time, //without time zone
+            }
+            TranPayments.push(tranpayment);
+        });
+        Tran.tranpayments = TranPayments;
+    }
+
+    function TimeFormatwithouttimezone(time) {
+        const tzoffset = date.getTimezoneOffset() * 60000; // offset in milliseconds
+        const withoutTimezone = new Date(date.valueOf() - tzoffset)
+            .toISOString()
+            .slice(0, -1);
+        return withoutTimezone;
+    }
+
+    function TimeFormat() {
+        var date = new Date();
+        return date.toLocaleTimeString('en-US', { hour12: false });
+    }
+
+    function Backtotable() {
+        window.location.href = "@Url.Action("Index", "Table")";
+    }
+
+    function SummitPostPayment() {
+        $('#ModalLoad').modal().show();
+        var dataString = JSON.stringify(Tran);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("PostTran", "Table")",
+            data: {
+                value: dataString,
+            },
+            success: function (message) {
+                //alert("Success");
+                //window.location.href = "@Url.Action("Index", "Table")";
+
+                var type = GetPaymentType();
+                if (type == "CH") {
+                    //ปิดไว้สำหรับเทสข้อมูล ห้ามลืมเปิดคืน
+                    $('#ModalPaymentComplete').modal().show();
+                } else if (type == "MYQR") {
+                    //ปิดไว้สำหรับเทสข้อมูล ห้ามลืมเปิดคืน
+                    $('#ModalPaymentCompleteQR').modal().show();
+                }
+
+                var jsontran = JSON.parse(message);
+                //console.log(jsontran);
+                var modelprintmanin = GetMainPrint();
+                if (modelprintmanin?.papersize == 80) {
+                    SetDataPrint(jsontran, "80");
+                } else {
+                    SetDataPrint(jsontran, "58");
+                }
+                if (modelprintmanin?.auto == 1) {
+                    $('#ModalPaymentComplete').modal().show();
+                    Printrecript();
+                }
+                const result = ListBranchConfig.filter((x) => x.cfgKey == "CASHDRAWER");
+
+                var fkick = result[0].cfgInteger;
+
+                var nubch = arrayPayment.filter(function (element) { return element.typePayment == "CH"; }).length;
+                if (nubch > 0 && fkick == 1) {
+                    Kick();
+                }
+                $('#ModalLoad').modal().hide();
+
+
+            }, error: function (message) {
+                $('#ModalLoad').modal().hide();
+                closemodel();
+            }
+        });
+    }
+
+    function closemodel() {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+    function SetDataPrint(jsontran, size) {
+        $('#namemer' + size).text(jsontran.merchantName);
+        $('#branchmer' + size).text(jsontran.branchName);
+
+        if (!jQuery.isEmptyObject(jsontran.branchAddress1)) {
+            $('#addressmer' + size).text(jsontran.branchAddress1);
+        } else {
+            document.getElementById("addressmer" + size).hidden = true;
+        }
+
+        if (!jQuery.isEmptyObject(jsontran.branchTel)) {
+            $('#telmer' + size).text("Tel." + jsontran.branchTel);
+        } else {
+            document.getElementById("telmer" + size).hidden = true;
+        }
+
+        $('#tranno' + size).text("@Localizer["เลขที่"] : " + jsontran.tranNo);
+        $('#receiptname' + size).text(jsontran.receiptName);
+
+        if (!jQuery.isEmptyObject(jsontran.receiptTextFooter)) {
+            $('#ReceiptFooter' + size).text(jsontran.receiptTextFooter);
+        } else {
+            document.getElementById("ReceiptFooter" + size).hidden = true;
+        }
+
+        if (!jQuery.isEmptyObject(jsontran.taxID)) {
+            $('#txttaxid' + size).text("TAX ID : " + jsontran.taxID);
+            $('#txttaxid' + size).removeAttr('hidden');
+        }
+        if (!jQuery.isEmptyObject(jsontran.posID)) {
+            $('#txtposid' + size).text("POS ID : " + jsontran.posID);
+            $('#txtposid' + size).removeAttr('hidden');
+        }
+
+        $('#datetran' + size).text(jsontran.dateTran);
+
+        var path = jsontran.logoPath;
+        var pathImage = '';
+        if (path !== "" || path !== null || !jQuery.isEmptyObject(path)) {
+            pathImage = path;
+            $('#showlogo' + size).removeAttr('hidden');
+            $('#imagelogo' + size).attr('src', pathImage);
+        }
+
+        //NOTSHOWZEROPRICE Item
+        const result = ListBranchConfig.filter((x) => x.cfgKey == "NOTSHOWZEROPRICE");
+        var CheckNOTSHOWZEROPRICE = 0;
+        if (!jQuery.isEmptyObject(result)) {
+            CheckNOTSHOWZEROPRICE = result[0].cfgInteger;
+        }
+       
+        if (CheckNOTSHOWZEROPRICE == 1) {
+            //ไม่แสดงราคา 0 บาท
+            let elements1 = document.getElementsByClassName("pricezero");
+            for (let i = 0; i < elements1.length; i++) {
+                elements1[i].style.display = "none";
+            }
+
+            //แสดงจำนวน เฉพาะราคาที่มากกว่า 0
+            var count = $('#ItemCountnotZero').val();
+            $('#itemCount' + size).text(count);
+        }
+    }
+
+    function closemodel() {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function ButtonBack() {
+        if (arrayPayment.length == 0) {
+            window.history.back();
+        } else {
+            $('#ModalBackOrderPayment').modal().show();
+        }
+    }
+
+    function Printrecript() {
+        //Get Printer Setting
+        //alert();
+        var modelprintmanin = GetMainPrint();
+        //alert(modelprintmanin);
+
+        //alert(JSON.stringify(modelprintmanin));
+        //Print Qr
+        var div = "";
+        if (modelprintmanin?.papersize == 80) {
+            div = document.getElementById("divprint80mm");
+        } else {
+            div = document.getElementById("divprint58mm");
+        }
+        //const div = document.getElementById("imagePrintQr58mm");
+        html2canvas(div, {
+            scale: 1,
+            useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        }).then(canvas => {
+
+            Print(canvas);
+        });
+
+        //$.ajax({
+        //    url: "@Url.Action("GetDataPrints", "BranchManagement")",
+        //    type: 'GET',
+        //    success: function (message) {
+        //        printerSetting = JSON.parse(message);
+        //        //console.log(printerSetting);
+        //    }, error: function (message) {
+        //        alert(message.responseText);
+        //    }
+        //});
+
+        //$.each(printerSetting, function (i, item) {
+        //    if (item.printerMain == 1) {
+        //        paperSize = item.paperSize;
+        //    }
+        //});
+
+        //const div = document.getElementById("divprint80mm");
+        //html2canvas(div, {
+        //    scale: 1,
+        //    useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        //}).then(canvas => {
+        //    Print(canvas);
+        //});
+    }
+    function CreateQRCode() {
+        $.ajax({
+            url: "@Url.Action("GetListMyQRCode", "Table")",
+            type: 'GET',
+            dataType: 'json',
+            success: function (responseData) {
+                // ทำสิ่งที่คุณต้องการกับข้อมูลที่ได้รับ
+                ListBranchConfig = responseData;
+                //console.log(responseData);
+                const result = responseData.filter((responseData) => responseData.cfgKey == "QRSTATIC ");
+                QRCodestring = result[0].cfgString;
+                if (QRCodestring != "") {
+                    var qrc = new QRCode(document.getElementById("qrcodepic80"), {
+                        text: QRCodestring,
+                        width: 230,
+                        height: 230,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H,
+                    });
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function CancelPayment(id) {
+        var paymentNo = parseInt(id.value);
+        var indexPayment = parseInt(paymentNo) - 1;
+
+        arrayPayment.splice(indexPayment, 1);
+
+        //new arrayPayment ใหม่ เพื่อปั้นค่าปัจจุบัน
+        var arrayPaymentNew = [];
+
+        if (arrayPayment.length == 0) {
+            _Balance = grandPayment;
+        } else {
+            arrayPayment.forEach(function (value, i) {
+                if (i < indexPayment) {
+                    arrayPaymentNew.push({
+                        PaymentNo: i + 1,
+                        typePayment: value.typePayment,
+                        PaymentAmount: value.PaymentAmount,
+                        ReceivedAmount: value.ReceivedAmount,
+                        Change: value.Change,
+                        Time: value.Time,
+                        balance: value.balance,
+                    });
+                    _Balance = arrayPaymentNew[i].balance;
+
+                } else {
+                    arrayPaymentNew.push({
+                        PaymentNo: i + 1,
+                        typePayment: value.typePayment,
+                        PaymentAmount: value.PaymentAmount + _payment.ReceivedAmount,
+                        ReceivedAmount: value.ReceivedAmount,
+                        Change: value.Change,
+                        Time: value.Time,
+                        balance: value.balance + _payment.ReceivedAmount,
+                    });
+                    _Balance = arrayPaymentNew[i].balance;
+                }
+            });
+        }
+        arrayPayment = arrayPaymentNew;
+
+        //ลบรายการที่เลือกอออกแล้ว ต้องไปเพิ่มค่ากลับที่ที่ต้องจ่าย
+        var sumnow = 0;
+        if (_Balance.toString().indexOf(',') >= 0) {
+            sumnow = parseFloat(_Balance.toString().replace(/,/g, ""));
+        } else {
+            sumnow = parseFloat(_Balance);
+        }
+        $('#TotalPrice').text(roundToTwo(sumnow)); //ราคารวมทั้งหมดหักที่จ่ายไปแล้ว
+        document.getElementById("newprice").innerHTML = '<button type="button" class="btn-number-price-now" id="newprice" onclick="appendToDisplayNewPrice(&apos;' + sumnow + '&apos;)">' + sumnow + '</button>'
+
+
+        if (arrayPayment.length == 0) {
+            _TotalPrice = 0;
+            _PaymentAmount = 0;
+            _ReceivedAmount = 0;
+            _Change = 0;
+            _Balance = 0;
+            numberpayment = 0;
+        }
+
+
+        //remove row trrow
+        $("#TableOrderPayment  tbody tr").remove();
+
+        var text1 = "";
+        arrayPayment.forEach(function (value, i) {
+            text1 += '<tr id=' + 'trrow' + (i + 1) + '>' +
+                '<td><div class="padding-td"><p class="mb-0">' + (i + 1) + '</p></div></td>' +
+                '<td><div class="padding-td"><p class="mb-0">' + value.Time + '</p></div></td>' +
+                '<td><div class="padding-td"><p class="mb-0">' + roundToTwo(value.ReceivedAmount) + '</p></div></td>';
+            if (i < indexPayment) {
+                text1 += '<td><div class="padding-td"><p class="mb-0">' + roundToTwo(value.balance) + '</p></div></td>';
+            } else {
+                text1 += '<td><div class="padding-td"><p class="mb-0">' + roundToTwo(value.balance) + '</p></div></td>';
+            }
+            text1 += '<td><button type="button" class="open-modal btn btn-close-order" data-toggle="modal" data-target="#ModalDeleteOrderPayment" data-id="' + (i + 1) + '"><img class="btn-img-close mr-2" src="/mymenumerchant/images/Close.png" />@Localizer["ยกเลิก"]</button></td>' +
+                '</tr>';
+        });
+        $('#TableOrderPayment').find('tbody').append(text1);
+
+        //modal hide
+        $('#ModalDeleteOrderPayment').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function BackOrderPayment() {
+        window.history.back();
+    }
+
+    $(document).on("click", ".open-modal", function () {
+        var idcancle = $(this).data('id');
+        $('#rowcancel').val(idcancle);
+    });
+
+    function nextpayment() {
+        var payment = document.getElementById("Calculators");
+        payment.placeholder = "0";
+    }
+
+    function mymyqrcodeSave() {
+        ///
+        showhionbacksceen("Thank you");
+        var receivedAmount = grandPayment;
+        if (receivedAmount === null || receivedAmount == '') {
+            return;
+        }
+
+        //add to array
+        arrayPayment = [];
+        arrayPayment.push({
+            PaymentNo: numberpayment + 1,
+            typePayment: GetPaymentType(),
+            PaymentAmount: 0, // ReceivedAmount - Change
+            ReceivedAmount: parseFloat(receivedAmount), //ยอดเงินที่จ่าย
+            Change: 0,
+            Time: TimeFormat(),
+            balance: 0,
+        });
+        //console.log(arrayPayment);
+
+        //sum array
+        var sum = arrayPayment.reduce((n, { ReceivedAmount }) => n + ReceivedAmount, 0);
+        var sumamount = parseFloat(sum);
+
+        //clear input cal
+        document.getElementById('Calculators').value = '';
+
+        var grandPaymentfloat = 0;
+        var data = grandPayment + "";
+        if (data.indexOf(',') >= 0) {
+            grandPaymentfloat = parseFloat(grandPayment.replace(/,/g, ""));
+        } else {
+            grandPaymentfloat = parseFloat(grandPayment);
+        }
+        //console.log(grandPaymentfloat);
+
+        //cal การจ่ายเงิน
+        $('#PaymentCompleteTotalPriceQR').text(grandPayment); //ยอดเงินที่ต้องชำระ
+        var received = 0;
+        if (receivedAmount.toString().indexOf(',') >= 0) {
+            received = parseFloat(receivedAmount.toString().replace(/,/g, ""));
+        } else {
+            received = parseFloat(receivedAmount);
+        }
+        $('#PaymentCompletePaymentAmountQR').text(received); //ยอดเงินที่จ่าย
+        if (numberpayment == 0) {
+            _TotalPrice = grandPaymentfloat; //ยอดเงินที่ต้องชำระ
+        } else {
+            numberpayment += 1;
+            _TotalPrice = parseFloat(_Balance); //ยอดเงินที่ต้องชำระ
+        }
+        _ReceivedAmount = parseFloat(receivedAmount); //ยอดเงินที่จ่าย
+
+        //ยอดเงินที่ต้องชำระ - ยอดเงินที่จ่าย = เงินทอน
+        _Balance = _TotalPrice - _ReceivedAmount;
+        var decimalChange = roundToTwo(_Balance).replace(/[^0-9.]/g, '');
+        var last_element = arrayPayment[arrayPayment.length - 1];
+        last_element.PaymentAmount = _TotalPrice;
+        last_element.Change = decimalChange;
+        last_element.Time = TimeFormat();
+        last_element.balance = decimalChange;
+
+        var modelprintmanin = GetMainPrint();
+        var Datatxtton = roundToTwo(sumamount);
+        var Datatxtpay = roundToTwo(decimalChange);
+        var Datatxtpaymenttype = GetPaymentType();
+
+        if (modelprintmanin?.papersize == 80) {
+            SetPriceBill(Datatxtpay, Datatxtton, Datatxtpaymenttype, "80")
+        } else {
+            SetPriceBill(Datatxtpay, Datatxtton, Datatxtpaymenttype, "58")
+        }
+
+        sumamount = 0;
+        AddRowtoTablePayment();
+        TranPaymentModel();
+        SummitPostPayment();
+    }
+
+
+</script>
+

@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "menuno": "1",
+	"surveymenu":"1",
+      "name": "เมนูชา"
+    },
+    {
+      "id": "2",
+      "menuno": "2",
+	"surveymenu":"1",
+      "name": "เมนูกาแฟ"
+    },
+    {
+      "id": "3",
+      "menuno": "3",
+	"surveymenu":"1",
+      "name": "เมนูโซดา"
+    },
+    {
+      "id": "4",
+      "menuno": "4",
+	"surveymenu":"1",
+      "name": "เมนูชาใต้หวัน"
+    },
+    {
+      "id": "5",
+      "menuno": "5",
+	"surveymenu":"0",
+      "name": "ขนม"
+    }
+  ]
+}

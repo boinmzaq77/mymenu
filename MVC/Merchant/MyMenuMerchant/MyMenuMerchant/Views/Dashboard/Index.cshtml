@@ -1,0 +1,636 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.JAM
+@model DashboardInfoall
+@using MyMenuMerchant.Controllers;
+@inject IViewLocalizer Localizer
+
+<style>
+    .font-dashboard-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9 !important;
+    }
+
+    .bg-dashboard {
+        background: #ffffff url(/mymenumerchant/images/MenuDashboardC.png) 0px 13px no-repeat;
+        background-size: 24px 24px;
+    }
+
+    .layout-sale {
+        display: flex;
+        align-items: center;
+        width: 100px;
+        justify-content: space-between;
+    }
+
+    .layout-compare {
+        display: flex;
+        justify-content: center;
+    }
+
+    .p-text-sale {
+        width: 100px;
+        text-align: right !important;
+    }
+</style>
+<body id="Dashboard">
+    <div class="container">
+        <div class="d-flex">
+            <div class="pr-2 pt-2 pb-2"><h1 class="name-menu font-weight-dashboard mb-5" style="font-size:25px; margin-bottom: 10px !important;">@Localizer["Dashboard"]</h1><p class="color-date text-dashboard-date">@Localizer["ประจำวันที่"] <small id="today"></small></p> </div>
+            <div class="ml-auto pl-2 pt-2 pb-2">
+                <button type="button" class="btn btn-branch" data-toggle="modal" data-target="#ModalBranch" onclick="ChangeBranch()">
+                    <div class="btn-sticky">
+                        <div class="text-left">
+                            <p class="font-weight-bold h-text-p color-set-branch text-branch  p-0">@Localizer["เปลี่ยนสาขา"]</p>
+                            <p class="font-weight-bold h-text-p color-branch-p text-name-branch">@ViewBag.BranchName</p>
+                        </div>
+                        <div class="set-modal-next text-right">
+                            <img class="img-btn-branch" src="/mymenumerchant/images/NextGreen.png" />
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+
+
+        <div class="form-row">
+            <div class="col-sm-6 mb-2">
+                <div class="card rounded-body border-0">
+                    <div class="card-body card-body-main showcursor" onclick="PageAllOrder()">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/DashboardOrderPending.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold text-media mb-0">@Localizer["ออเดอร์รอดำเนินการ"]</p>
+                                <p class="text-p-list color-order-Dashboard text-weightp">@Model.OrderWaitServe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 mb-2">
+                <div class="card rounded-body border-0">
+                    <div class="card-body card-body-main showcursor" onclick="PageTable()">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/DashboardBill.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold text-media mb-0">@Localizer["เรียกคิดเงิน"]</p>
+                                <p class="text-p-list color-money text-weight" id="orderwaitcash">@Model.OrderWaitCash</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="col-sm-6 mb-2">
+                <div class="card rounded-body border-0">
+                    <div class="card-body card-body-main showcursor" onclick="PageAllOrder()">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/DashboardOrderAll.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold text-media mb-0">@Localizer["ออเดอร์ทั้งหมด"]</p>
+                                <p class="text-p-list color-orderall text-weight">@Model.AllOrder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-sm-6 mb-2">
+                <div class="card rounded-body border-0">
+                    <div class="card-body card-body-main showcursor" onclick="PageHistoryReceipt()">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/DashboardSaleAll.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold text-media mb-0">@Localizer["ยอดขายทั้งหมด"]</p>
+                                <p class="text-p-list color-number text-weight">@TableController.ConvertToCurrency((decimal)(Model.SumTotal ?? 0))</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group col-12 mt-3 mb-4">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="d-flex text-pills">
+                            <div class="mr-auto pd-2 pt-0 py-0">
+                                <h5 class="mt-0 font-weight-bold hed-h">@Localizer["ยอดขาย"]</h5>
+                                <p class="size-text-sell" id="textChartSell"></p>
+                            </div>
+
+                            <ul class="nav nav-pills  mb-0 hed-ul nav-flex-list" id="pills-tab" role="tablist">
+                                <li class="nav-item me-2 ">
+                                    <a class="font-weight-bold nav-link active btn-sell " id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="true" onclick="showweek();">@Localizer["Week"]</a>
+                                </li>
+                                <li class="nav-item  ">
+                                    <a class="font-weight-bold nav-link btn-sell " id="pills-month-tab" data-toggle="pill" href="#pills-month" role="tab" aria-controls="pills-month" aria-selected="false" onclick="showmonth();">@Localizer["Month"]</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="container p-1">
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade  active" id="pills-week" role="tabpanel" aria-labelledby="pills-week-tab"></div>
+                                <div class="tab-pane fade  " id="pills-month" role="tabpanel" aria-labelledby="pills-month-tab"></div>
+
+                                <div class="canvas-size">
+                                    <canvas id="myChartweek"></canvas>
+                                    <canvas id="myChartmonth" hidden></canvas>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-12">
+                <div class="card border-0">
+                    <div class="card-body p-3">
+                        <div class="d-flex mb-0">
+                            <div class="mr-auto ">
+                                <h5 class="mt-0 font-weight-bold" id="textsummary">@Localizer["ยอดขายรายสัปดาห์"]</h5>
+                                <p class="size-text-sell" id="textSellTable"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 mb-0">
+                        <div class="container p-0">
+                            <div class="table-responsive">
+                                <table class="table" id="TableSell" style="width:100%">
+                                    <thead>
+                                        <tr class="table-color">
+                                            <th class="text-start" style="min-width: 65px;">@Localizer["วัน"]</th>
+                                            <th class="text-end" style="min-width: 120px;">@Localizer["ยอดขายรวม"]</th>
+                                            <th class="text-center" style="min-width: 130px;">@Localizer["จำนวนคำสั่งซื้อ"]</th>
+                                            <th class="text-center" style="min-width: 180px;" id="compareTableSell">@Localizer["เปรียบเทียบระหว่างสัปดาห์"]</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ModalBranch *@
+        <div class="modal fade bd-example-modal-lg" id="ModalBranch" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        @*<div class="d-flex flex-row">*@
+                        <div class="d-flex flex-row mb-2">
+                            <div class="pt-0 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                            <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch-modal mb-0">@Localizer["เลือกสาขา"]</h5></div>
+                        </div>
+                        
+                    </div>
+                    <form class="modal-body p-1" id="FormModalBranch" onchange="mybranch();">
+                        <div class="flex-menu-modal" id="divShowdata">
+                            <div class="mx-1 mb-2" hidden>
+                                <div class="form-check box-lists ">
+                                    <div class="row-lists">
+                                        <label class="form-check-label box-label font-boxs-label" for="branch_1" id="labelbranch_1">
+                                            <small class="mb-0 text-label-branch">@Localizer["สำนักงานใหญ่"]</small>
+                                        </label>
+                                        <input class="" type="radio" name="branchs" id="branch_1" value="option1" hidden>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div class="modal-branch modal-footer">
+                        <button type="button" class="btn btn-save-branch" id="SubmitBranch" onclick="ChangeCurrentBranch()">@Localizer["บันทึก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <form hidden id="ChangeBranch" asp-action="ChangeBranch" method="post">
+        <input name="branchID" id="branchID" value="" />
+    </form>
+
+</body>
+<style>
+    #Dashboard .showcursor {
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+    var Cal = [];
+    var datatotal = new Array();
+    var datatotal = [];
+    var datatotalMonth = [];
+    var listBranch = [];
+    var flagshowweek = true;
+    var dataWeek =[]
+    var dataDateWeek =[];
+
+    $(document).ready(function () {
+
+        var cloudproductlicence = localStorage.getItem("CloudProductLicence");
+        if (jQuery.isEmptyObject(cloudproductlicence)) {
+            @{
+                var CloudProduct = (string)TempData["Cloudproduct"];
+            }
+            var cloudproductlicence = @Html.Raw(Json.Serialize(CloudProduct));
+            localStorage.setItem("CloudProductLicence", cloudproductlicence);
+            GetcloudProduct();
+        }
+
+        SetPrinter();
+        var date = new Date();
+        var nowutc = formatDate(date);
+        $('#today').text(nowutc);
+        Cal = @Json.Serialize(Model);
+        // console.log(Cal);
+
+        Cal.summaryDaily.forEach((x) => {
+            datatotal.push(x.sumTotalAmount);
+        });
+        Cal.summaryMonth.forEach((x) => {
+            datatotalMonth.push(x.sumTotalAmount);
+        });
+
+        var table = $('#TableSell').DataTable({
+            "data": Cal.summaryDaily
+            ,
+            stateSave: true,
+            columns: [
+                { data: 'dateTimeLocal' },
+                { data: 'sumTotalAmount', render: $.fn.dataTable.render.number(',', '.', 2, '<p class="text-end mb-0 p-0">', '</p>') },
+                { data: 'totalOpenOrder', render: $.fn.dataTable.render.number(', ', '.', 0, '<p class="text-center mb-0 p-0">', '</p> ') },
+                { data: { movementFlag: 'movementFlag', averageSale: 'averageSale' } },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text1 = '';
+                    if (flagshowweek) {
+                        var d = formatbeforedate(data);
+                        var dayLanguage = '';
+                        var getLanguage = $.cookie("MyMenuLanguage");
+                        if (jQuery.isEmptyObject(getLanguage) || getLanguage == 'Th') {
+                            let dayName = new Date(d + 'Z').toLocaleDateString('th-TH', { weekday: "long" });
+                            dayLanguage = dayName.replace('วัน', '');
+                        }else{
+                            dayLanguage = new Date(d + 'Z').toLocaleDateString('en-US', { weekday: "long" });
+                        }
+                        
+                        text1 += "<p class='mb-0 pb-0'>" + dayLanguage; + "</p>";
+                    } else {
+                        text1 += "<p class='mb-0 pb-0'>" + data + "</p>";
+                    }
+                    return text1;
+                },
+            },
+            {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var compare = "";
+                    var number = "";
+                    if (type === 'display') {
+                        number = (data * 1).toFixed(2) + '%';
+                    }
+
+                    if (data.movementFlag == 1 ) { //เพิ่มขึ้น,เขียว,1
+                        compare = "<div class='layout-compare'><div class='layout-sale'><p class='text-center mb-0 p-text-sale mr-3'>" + data.averageSale + '%' + "</p><i class='fa fa-sort-asc me-2'></i></div></div>";
+                    } else if (data.movementFlag == 0) { //คงที่,ไม่แสดง,0
+                        compare = "<div class='layout-compare'><div class='layout-sale'><p class='text-center mb-0 p-text-sale mr-3'>" + data.averageSale + '%' + "</p><i class='fa fa-sort-asc me-2' style='opacity:0'></i></div></div>";
+                    }
+                    else { //ลดลง,แดง,-1
+                        compare = "<div class='layout-compare'><div class='layout-sale'><p class='text-center mb-0 p-text-sale mr-3'>" + data.averageSale + '%' + "</p><i class='fa fa-sort-desc me-2'></i></div></div>";
+                    }
+                    return compare;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-0'>ยังไม่มียอดขายรายสัปดาห์</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>ไม่พบข้อมูล</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>Loading..</p><br/><br/><br/><br/>",
+            },
+            searching: false,
+            paging: false,
+            ordering: false,
+            info: false,
+        });
+
+        const chaetdataweek = new Chart("myChartweek", {
+            type: 'line',
+            data: {
+                labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+
+                datasets: [{
+                    label: '',
+                    data: datatotal,
+                    fill: false,
+                    borderColor: 'rgb(170, 214, 199)',
+                    backgroundColor: 'rgb(170, 214, 199)',
+                    tension: 0.5
+                }]
+            },
+            options: {
+                //responsive: true,
+                maintainAspectRatio: false,
+                //maintainAspectRatio: false,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                layout: {
+                    padding: 1
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'white'
+                        },
+                        beginAtZero: true
+                    },
+                    x: {
+                        grid: {
+                            color: 'white'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            boxWidth: 0,
+                            padding: 0
+                        }
+                    }
+                }
+            }
+
+        });
+        chaetdataweek.update();
+    @*window.alert("chaetdataWeek" + datatotal);*@
+    @*window.alert(navigator.userAgent)*@
+
+
+        var chaetdatamonth = new Chart("myChartmonth", {
+            type: 'line',
+            data: {
+                labels: numberday,
+                datasets: [{
+                    label: '',
+                    data: datatotalMonth,
+                    fill: false,
+                    borderColor: 'rgb(170, 214, 199)',
+                    backgroundColor: 'rgb(170, 214, 199)',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                //responsive: true,
+                maintainAspectRatio: false,
+                //maintainAspectRatio: false,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'white'
+                        },
+                        stacked: true,
+                        beginAtZero: true,
+                    },
+                    x: {
+                        grid: {
+                            color: 'white'
+                        },
+                        beginAtZero: true,
+                        time: {
+                            unit: 'month'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            boxWidth: 0,
+                            padding: 0
+                        }
+                    }
+                }
+            }
+        });
+        chaetdatamonth.update();
+    @*window.alert("chaetdataMonth" + datatotalMonth);*@
+
+
+    });
+
+    function daysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+    }
+
+    const date = new Date();
+    const Year = date.getFullYear();
+    const Month = date.getMonth() + 1;
+    const days = daysInMonth(Month, Year);
+    //const YearTH = Year + 543;
+
+    var MonthName = '';
+    var getLanguage = $.cookie("MyMenuLanguage");
+    if (jQuery.isEmptyObject(getLanguage) || getLanguage == 'Th') {
+        let _monthName = new Date(date + 'Z').toLocaleDateString('th-TH', { month: "long" });
+        MonthName = _monthName.replace('เดือน', '');
+    }else{
+        MonthName = new Date(date + 'Z').toLocaleDateString('en-US', { month: "long" });
+    }
+    dataWeek = @Json.Serialize(Model);
+    dataWeek.summaryDaily.forEach((x) => {
+        dataDateWeek.push(x.dateTimeLocal);
+    });
+
+    // console.log(dataDateWeek);
+    var textlabelWeek = @Html.Raw(Json.Serialize(Localizer["ยอดขายรายสัปดาห์ ประจำวันที่"].Value)) + ' ' + dataDateWeek[0] + ' - ' + dataDateWeek[(dataDateWeek.length - 1)];
+    var textlabelMonth = @Html.Raw(Json.Serialize(Localizer["ยอดขายรายเดือน ประจำเดือน"].Value)) + ' ' + MonthName + '  ' + @Html.Raw(Json.Serialize(Localizer["ปี"].Value))+ ' ' + Year;
+    var numberday = new Array();
+    var numberday = [];
+    for (let i = 1; i <= days; i++) {
+        numberday[i - 1] = i;
+    }
+
+    document.getElementById('textSellTable').outerHTML = '<p class="size-text-sell" id="textSellTable">' + textlabelWeek + '</p>';
+    document.getElementById('textChartSell').outerHTML = '<p class="size-text-sell" id="textChartSell">' + textlabelWeek + '</p>';
+
+    function showweek() {
+        flagshowweek = true;
+        $('#textsummary').text(@Html.Raw(Json.Serialize(Localizer["ยอดขายรายสัปดาห์"].Value)));
+        $('#compareTableSell').text(@Html.Raw(Json.Serialize(Localizer["เปรียบเทียบระหว่างสัปดาห์"].Value)));
+
+        document.getElementById('textChartSell').outerHTML = '<p class="size-text-sell" id="textChartSell">' + textlabelWeek + '</p>';
+        document.getElementById('textSellTable').outerHTML = '<p class="size-text-sell" id="textSellTable">' + textlabelWeek + '</p>';
+        document.getElementById("myChartweek").hidden = false;
+        document.getElementById("myChartmonth").hidden = true;
+        var tables = $('#TableSell').DataTable();
+        tables.clear();
+        tables.rows.add(Cal.summaryDaily);
+        tables.draw();
+    }
+    function showmonth() {
+        flagshowweek = false;
+        $('#textsummary').text(@Html.Raw(Json.Serialize(Localizer["ยอดขายรายเดือน"].Value)));
+        $('#compareTableSell').text(@Html.Raw(Json.Serialize(Localizer["เปรียบเทียบระหว่างเดือน"].Value)));
+
+        document.getElementById('textChartSell').outerHTML = '<p class="size-text-sell" id="textChartSell">' + textlabelMonth + '</p>';
+        document.getElementById('textSellTable').outerHTML = '<p class="size-text-sell" id="textSellTable">' + textlabelMonth + '</p>';
+        document.getElementById("myChartweek").hidden = true;
+        document.getElementById("myChartmonth").hidden = false;
+        var tables = $('#TableSell').DataTable();
+        tables.clear();
+        tables.rows.add(Cal.summaryMonth);
+        tables.draw();
+    }
+
+    function mybranch() {
+        const radioButtons = document.querySelectorAll("#FormModalBranch input[type='radio']");
+        for (let i = 0; i < radioButtons.length; i++) {
+            var aaa = radioButtons[i].id;
+            var bbb = aaa.replace('branch_', '');
+            var namebranch = document.getElementById("branch_" + (bbb) + "");
+            var namelabelbranch = document.getElementById("labelbranch_" + (bbb) + "");
+            if (namebranch?.checked == true) {
+                namelabelbranch.classList.add("on-radio-branch");
+            } else {
+                namelabelbranch.classList.remove("on-radio-branch");
+            }
+        }
+        ChackDefaultBranch();
+    }
+    function ChackDefaultBranch() {
+        var DefaultBranch = "@ViewBag.BranchID";
+        var ChackBranch = $('#FormModalBranch input[type="radio"][name="branchs"]:checked').attr('value');
+        if (DefaultBranch == ChackBranch){
+            document.getElementById('SubmitBranch').disabled = true;
+        }else{
+            document.getElementById('SubmitBranch').disabled = false;
+        }
+    }
+    function Close() {
+        const radioButtons = document.querySelectorAll("input[type='radio']");
+        for (let i = 0; i < radioButtons.length; i++) {
+            var aaa = radioButtons[i].id;
+            var bbb = aaa.replace('branch_', '');
+            var namebranch = document.getElementById("branch_" + (bbb) + "");
+            var namelabelbranch = document.getElementById("labelbranch_" + (bbb) + "");
+            if (namebranch.checked == true) {
+                namebranch.checked = false;
+                namelabelbranch.classList.remove("on-radio-branch");
+            } else {
+                namelabelbranch.classList.remove("on-radio-branch");
+            }
+        }
+    }
+
+    function ChangeBranch() {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetBranch","Dashboard")',
+            data: {
+            },
+            dataType: 'json',
+            success: function (message) {
+                listBranch = [];
+                listBranch.push(message);
+                // console.log(message);
+
+                var branch = '';
+                $.each(listBranch, function (i, item) {
+                    $.each(item, function (index,value)  {
+                        branch += '<div class="mx-1 mb-2 ">' +
+                            '<div class="form-check box-lists " >' +
+                            '<div class="row-lists " >';
+                        if ("@ViewBag.BranchID" === value.branchID) {
+                            branch += '<label class="form-check-label box-label font-boxs-label on-radio-branch showcursor" for="branch_' + value.branchID + '" id ="labelbranch_' + value.branchID + '">';
+                            branch += '<small class="mb-0 text-label-branch">' + value.branchName +'</small>';
+                            branch += '</label>' +
+                                '<input class= "" type="radio" name="branchs" id = "branch_' + value.branchID + '" value = "' + value.branchID + '" hidden checked="checked">' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                            document.getElementById('SubmitBranch').disabled = true;
+
+                        } else {
+                            branch += '<label class="form-check-label box-label font-boxs-label showcursor" for="branch_' + value.branchID + '" id ="labelbranch_' + value.branchID + '">';
+                            branch += '<small class="mb-0 text-label-branch">' + value.branchName + '</small>';
+                            branch += '</label>' +
+                                '<input class= "" type="radio" name="branchs" id = "branch_' + value.branchID + '" value = "' + value.branchID + '" hidden >' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                        }
+
+                    });
+                });
+                $('#divShowdata').html(branch);
+
+
+                $('#ModalMenuinfo').modal('ModalBranch');
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+        });
+    }
+
+    function ChangeCurrentBranch() {
+        var _selectBranch = $("input[type='radio'][name='branchs']:checked").val();
+        $("#branchID").val(_selectBranch);
+        $("#ChangeBranch").submit();
+    }
+
+    function formatDate(date) {
+        var aaaa = new Date(date + 'Z');
+        var d = new Date(aaaa),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        var aaa = [day, month, year].join('/');
+
+        return aaa;
+    }
+
+    function PageAllOrder(){
+        window.location = '@Url.Action("AllOrders","Order")';
+    }
+
+    function PageTable(){
+        window.location = '@Url.Action("Index","Table")';
+    }
+
+    function PageHistoryReceipt(){
+        window.location = '@Url.Action("Index","ReceiptHistory")';
+    }
+
+    function formatbeforedate(x){
+        var aaa = x;
+        var aaaa = x.split('/');
+        //2023/10/15
+        var aaa = [aaaa[2], aaaa[1], aaaa[0]].join('/');
+        return aaa;
+    }
+</script>

@@ -1,0 +1,365 @@
+﻿﻿@using MyMenu.ORM.Master;
+@model Merchant
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<body id="EditProfile">
+    <div class="container mb-5">
+        <form onkeyup="EditProfile();" id="editmerchant">
+            <div class="form-row">
+                <div class="col-12 mb-4 ">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="Merchant" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h1 class="font-weight-bold menu-header">@Localizer["แก้ไขข้อมูลร้านค้า"]</h1>
+                            <ul class="breadcrumb ">
+                                <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                                <li class="breadcrumb-item color-a-breadcrumb text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="Merchant" asp-action="Index">@Localizer["จัดการร้านค้า"]</a></li>
+                                <li class="breadcrumb-item active text-ellipsis " aria-current="page">@Localizer["แก้ไขข้อมูลร้านค้า"]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+
+                        <div class="d-flex justify-content-end">
+                            @if (string.IsNullOrEmpty(Model.BackgroundPath))
+                            {
+                                <img class="card-img-top size-img bgimg" src="/mymenumerchant/images/BackGroundShop.png" id="backgroundimg" alt="รูปภาพพื้นหลัง">
+
+                            }
+                            else
+                            {
+                                <img class="card-img-top size-img bgimg" src="@Model.BackgroundPath" id="backgroundimg" alt="รูปภาพพื้นหลัง">
+
+                            }
+
+                            @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin")
+                            {
+                                <div class="upload-btn-wrapper" id="btnimg">
+                                    <button type="button" class="btn-image m-3 " id="btnaddbackground"><img class="img-edit-wheite-bg" src="/mymenumerchant/images/Edit.png" /></button>
+                                    <input type="button" name="myfile" id="backgroundinput"  onclick="AddImageBackground()" hidden />
+                                </div>
+                                <div class="delete-btn-wrapper" id="btnDeleteImg" style="display:inline;">
+                                    <button type="button" class="btn-delete-image m-3 " onclick="DeleteImg();"><i class="fa fa-trash-o" style="font-size:23px;"></i></button>
+                                </div>
+                            }
+                        </div>
+
+
+                        
+                        <div class="card-body">
+                            <div class="profile-img-edit">
+                                @if (string.IsNullOrEmpty(Model.LogoPath))
+                                {
+                                    <img src="/mymenumerchant/images/LogoShop.png" class="pfimg" id="profileimg" alt="" />
+                                }
+                                else
+                                {
+                                    <img src="@Model.LogoPath" class="pfimg" id="profileimg" alt="" />
+                                }
+
+                                @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin")
+                                {
+                                    <input type="button" id="profileinput" onclick="AddImageLogo()" hidden />
+                                    <label for="profileinput" class="btn-image-profile"><img class="img-edit-wheite" src="/mymenumerchant/images/EditWhite.png" /></label>
+                                }
+                            </div>
+
+                            <br /><br /><br />
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-md-12 ">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head examine" for="ProfileName">@Localizer["ชื่อร้านค้า"] <i style="color:#69a993;">*</i>  </label>
+                                            <input type="text" class="form-control" id="ProfileName" placeholder="@Localizer["ชื่อร้านค้า"]" value="@Model.Name" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" ? "" : "disabled='disabled'")>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 ">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head examine" for="ProfileName">@Localizer["ชื่อบริษัท (สำหรับออกใบกำกับภาษี)"] <i style="color:#69a993;">*</i></label>
+                                            <input type="text" class="form-control" id="TaxName" placeholder="@Localizer["ชื่อบริษัท (สำหรับออกใบกำกับภาษี)"]" value="@Model.TaxName" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" ? "" : "disabled='disabled'")>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 ">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold color-name-head examine-tax" for="TaxID">@Localizer["หมายเลขผู้เสียภาษี (TAX ID)"]<small class="ml-2 font-weight-bold" id="info"></small></label>
+                                            <input type="tel" class="form-control" id="TaxID" placeholder="หมายเลขผู้เสียภาษี" maxlength="13" oninput="checkName(this)" value="@Model.TaxID" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" ? "" : "disabled='disabled'")>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+
+                                            <label class="font-weight-bold color-name-head examine" for="ProfileSlogan">@Localizer["สโลแกนร้านค้า"] <i style="color:#69a993;">*</i></label>
+                                            <input type="text" class="form-control" id="ProfileSlogan" placeholder="@Localizer["สโลแกนร้านค้า"]" value="@Model.Slogans" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" ? "" : "disabled='disabled'")>
+                                            <input type="text" class="form-control" id="picold" value="@Model.LogoPath" hidden>
+                                            <input type="text" class="form-control" id="picold2" value="@Model.BackgroundPath" hidden>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-12  mb-2">
+                    @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin")
+                    {
+                        <div class="d-flex justify-content-end">
+                            <div class="">
+                                        <button type="submit" class="btn-save" id="SaveProfile" disabled="disabled">@Localizer["บันทึก"]</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <br />
+    <footer class="footer-help">
+        <div class="row">
+            <div class="media">
+                <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png" />
+                <div class="media-body layout-body">
+                    <p class="font-weight-bold color-header-help p-margin">รูปโลโก้ <small class="color-sub-help">@Localizer["ขนาด 500x500 px"]</small> </p>
+                    <p class="font-weight-bold color-header-help p-margin">รูปพื้นหลัง <small class="color-sub-help">@Localizer["ขนาด 1,065x525 px และเป็นไฟล์ JPG, JPEG และ PNG เท่านั้น"]</small></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+<script>
+
+    var formData = new FormData();
+    $(document).ready(function () {
+        EditProfile();
+        $("#editmerchant").on("submit", function (e) {
+            e.preventDefault();
+
+            // const fileInput = document.getElementById('profileinput');
+            // const file = fileInput.files[0];
+            // const fileInput2 = document.getElementById('backgroundinput');
+            // const file2 = fileInput2.files[0];
+            // const formData = new FormData();
+
+            // formData.append('FilePicture', file2);
+            // formData.append('FileLogo', file);
+            
+            var ItemInfoModel =
+            {
+                Name: $("#ProfileName").val(),
+                Slogans: $("#ProfileSlogan").val(),
+                TaxName: $("#TaxName").val(),
+                TaxID: $("#TaxID").val(),
+                LogoPath: $("#picold").val(),
+                BackgroundPath: $("#picold2").val(),
+            }
+            formData.append('value', JSON.stringify(ItemInfoModel));
+
+            // alert(dataString); return false;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditMerchant", "Merchant")",
+                data: formData,
+                contentType: false, // Set to false to prevent jQuery from automatically setting the content type
+                processData: false,
+                success: function (message) {
+                    window.location.href = "@Url.Action("Index", "Merchant")";
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+
+            });
+            e.preventDefault();
+        });
+
+        $("#btnaddbackground").click(function(){
+           $('#backgroundinput').click();
+        });
+        
+    });
+
+    var loadFileBackGround = function (event) {
+        var BackGround = document.getElementById('backgroundimg');
+        BackGround.src = URL.createObjectURL(event.target.files[0]);
+        BackGround.onload = function () {
+            URL.revokeObjectURL(BackGround.src)
+        }
+    }
+
+    var loadFileProFile = function (event) {
+        var ProFile = document.getElementById('profileimg');
+        ProFile.src = URL.createObjectURL(event.target.files[0]);
+        ProFile.onload = function () {
+            URL.revokeObjectURL(ProFile.src)
+        }
+    }
+
+    function DeleteImg() {
+        var backgroundimg = document.getElementById("backgroundimg");
+        var backgroundinput = document.getElementById("backgroundinput");
+
+        backgroundimg.src = "/images/BackGroundShop.png";
+        backgroundinput.value = ""
+        $("#picold2").val("");
+    }
+    function EditProfile() {
+        //document.getElementById('SaveProfile').disabled = false;
+        var btn = document.getElementById('SaveProfile');
+        if (btn == null || typeof btn == 'undefined') {
+            return;
+        }
+
+        document.getElementById('SaveProfile').disabled = false;
+        var inputtext = document.querySelectorAll(".examine");
+        inputtext.forEach((x) => {
+            if (x.value == "") {
+                document.getElementById('SaveProfile').disabled = true;
+            }
+        });
+        var ValueTaxID = document.getElementById("TaxID").value;
+        if (ValueTaxID != "") {
+            if (ValueTaxID.length == 13) {
+                document.getElementById('SaveProfile').disabled = false;
+
+            } else {
+                document.getElementById('SaveProfile').disabled = true;
+            }
+        }
+
+    }
+    function checkName(input) {
+
+        const inputValue = input.value;
+        const isValid = /^\d{1,13}$/.test(inputValue); // ใช้ regular expression เพื่อตรวจสอบว่ามีเฉพาะตัวเลข 0-9
+
+        if (inputValue != "") {
+            if (inputValue.length < 13) {
+                document.getElementById("info").classList.remove("color-password-greem");
+                document.getElementById("info").classList.add("color-password-red");
+                document.getElementById("info").innerHTML = '<img class="img-password  mr-2" src="/mymenumerchant/images/PasswordFalse.png" /> กรุณากรอกหมายเลขผู้เสียภาษี 13 หลัก';
+
+            } else {
+                document.getElementById("info").innerHTML = "";
+            }
+        } else {
+            document.getElementById("info").innerHTML = "";
+        }
+    }
+
+    document.getElementById("TaxID").addEventListener("keypress", function (event) {
+        const key = event.key;
+
+        // Check if the pressed key is not a digit (0-9)
+        if (!/^\d$/.test(key)) {
+            event.preventDefault(); // Prevent the input of non-numeric characters
+        }
+    });
+
+    function AddImageLogo() {
+
+        var userAgent = window.navigator.userAgent.toLowerCase(),
+            safari = /safari/.test(userAgent),
+            ios = /iphone|ipod|ipad/.test(userAgent);
+
+        if (ios) {
+            if (safari) {
+                //browser
+            } else if (!safari) {
+
+                window.webkit.messageHandlers.SaveLogoimage.postMessage("");
+            };
+        } else {
+            Device.saveLogoimage(); //<-- executes C# code
+        };
+        //Device.saveLogoimage();
+
+    }
+    function AddImageBackground() {
+
+        var userAgent = window.navigator.userAgent.toLowerCase(),
+            safari = /safari/.test(userAgent),
+            ios = /iphone|ipod|ipad/.test(userAgent);
+
+        if (ios) {
+            if (safari) {
+                //browser
+            } else if (!safari) {
+
+                window.webkit.messageHandlers.SaveBackgroundimage.postMessage("");
+            };
+        } else {
+            Device.saveBackgroundimage(); //<-- executes C# code
+        };
+        //Device.saveLogoimage();
+
+    }
+    
+
+    function setLogobase64String(file) {
+        //Convert64 to image 
+        var base64String = file;
+
+        // Convert the Base64 string to a Blob
+        var byteCharacters = atob(base64String);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var blob = new Blob([byteArray], { type: 'image/png' });
+
+        // Create a Blob URL
+        var blobUrl = URL.createObjectURL(blob);
+
+        // Convert Blob URL to Blob
+        fetch(blobUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                // Create a FormData object and append the Blob
+                //formData = new FormData();
+                formData.append("FileLogo", blob, "imageProfile.png");
+            });
+
+
+        // Set the Blob URL as the source of the image preview
+        $("#profileimg").attr("src", blobUrl);
+    }
+
+    function setBackgroundbase64String(file){
+        //Convert64 to image
+        var base64String = file;
+
+        // Convert the Base64 string to a Blob
+        var byteCharacters = atob(base64String);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var blob = new Blob([byteArray], { type: 'image/png' });
+
+        // Create a Blob URL
+        var blobUrl = URL.createObjectURL(blob);
+
+        // Convert Blob URL to Blob
+        fetch(blobUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                // Create a FormData object and append the Blob
+                //formData = new FormData();
+                formData.append("FilePicture", blob, "imageBackground.png");
+            });
+
+
+        // Set the Blob URL as the source of the image preview
+        $("#backgroundimg").attr("src", blobUrl);
+    }
+</script>

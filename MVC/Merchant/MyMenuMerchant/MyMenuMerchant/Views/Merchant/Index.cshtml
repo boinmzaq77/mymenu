@@ -1,0 +1,534 @@
+﻿@using MyMenu.JAM;
+@model MerchantMenageModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Merchant";
+}
+<style>
+    .font-merchant-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9 !important;
+    }
+
+    .bg-merchant {
+        background: #ffffff url(/mymenumerchant/images/MenuMerchantC.png) 0px 17px no-repeat;
+        background-size: 24px 24px;
+    }
+</style>
+<body id="Merchant">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12 mb-4">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <h2 class="font-weight-bold menu-header">@Localizer["การจัดการร้านค้า"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item">@Localizer["การจัดการร้านค้า"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-2 ">
+                <div class="card mb-3 border-0">
+                    @if (string.IsNullOrEmpty(Model.Merchant.BackgroundPath))
+                    {
+                        <img class="card-img-top size-img bgimg" src="/mymenumerchant/images/BackGroundShop.png" alt="Card image cap">
+                    }
+                    else
+                    {
+                        <img class="card-img-top size-img bgimg" src="@Model.Merchant.BackgroundPath" alt="Card image cap">
+                    }
+                    <div class="card-body border-0">
+                        <div class="media">
+                            @if (string.IsNullOrEmpty(Model.Merchant.LogoPath))
+                            {
+                                <img class="align-self-center mr-3 size-logo-merchant" src="/mymenumerchant/images/LogoMerchant.png" />
+                            }
+                            else
+                            {
+                                <img class="align-self-center mr-3 size-logo-merchant" src="@Model.Merchant.LogoPath" />
+                            }
+                            <div class="media-body">
+                                <div class="text-groud-body">
+                                    <div class="layout-text-profile">
+                                        <p class="text-h-header">@Localizer["ข้อมูลร้านค้า"]</p>
+                                        <p class="text-h-market">@Model.Merchant.Name</p>
+                                        <p class="text-h-submarket">@Model.Merchant.Slogans</p>
+                                        @*  <p class="text-h-market">@Model.merChant.Name</p>
+                                        <p class="text-h-submarket">สโลแกน @Model.merChant.Slogans</p>*@
+                                    </div>
+                                    <div class="layout-button-edit">
+                                        <a class="btn button-size-edit" asp-controller="Merchant" asp-action="EditProfile"><i class="fa fa-edit "></i> @Localizer["แก้ไข"]</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*            <div class="card rounded-body">
+                <div class="card-body ">
+                <div class="container-ml">
+                <div class="media">
+                @if (string.IsNullOrEmpty(Model.merChant.LogoPath))
+                {
+                <img class="align-self-center mr-3 size-logo-merchant" src="/mymenumerchant/images/LogoMerchant.png" />
+                }
+                else
+                {
+                <img class="align-self-center mr-3 size-logo-merchant" src="@Model.merChant.LogoPath" />
+                }
+                <div class="media-body">
+                <div class="text-groud-body">
+                <div class="layout-text-profile">
+                <p class="text-h-header">ข้อมูลร้านค้า</p>
+                <p class="text-h-market">@Model.merChant.Name</p>
+                <p class="text-h-submarket">สโลแกน @Model.merChant.Slogans</p>
+                </div>
+                <div class="layout-button-edit">
+                <a  class="btn button-size-edit" asp-controller="Merchant" asp-action="EditProfile"><i class="fa fa-edit "></i> แก้ไข</a>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>*@
+            </div>
+            <a class="col-sm-6 mb-2" asp-controller="Merchant" asp-action="Branchs">
+                <div class="card rounded-body border-0 mr-sm-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/BranchW.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["สาขา"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.BrachCount</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            @*            <a class="col-md-6 col-lg-6 col-xl-6 col-12 mb-4 pr-md-3" asp-controller="Merchant" asp-action="Branchs">
+            <div class="card rounded-body border-0">
+            <div class="card-body">
+            <div class="container-ml">
+            <div class="media">
+            <div class="align-self-start mr-3  box-border-radius">
+            <img class="size-icon-w" src="/mymenumerchant/images/BranchW.png">
+            </div>
+            <div class="media-body">
+            <p class="text-p-heder">สาขา</p>
+            <p class="text-p-list text-weight color-branch-p">@Model.BrachCount</p>
+            <p type="button"  class="float-right btn color-branch-p  btn-all text-btn text-p-btn" >ดูทั้งหมด <i class="i-wd i-padding fa fa-angle-right"></i></p>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </a>*@
+            <a class="col-sm-6 mb-2" asp-controller="Merchant" asp-action="Personnel">
+                <div class="card rounded-body border-0 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/EmployeeW.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["พนักงาน"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.EmpCount</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            @*            <a class="col-md-6 col-lg-6 col-xl-6 col-12  mb-4" asp-controller="Merchant" asp-action="Personnel">
+            <div class="card rounded-body border-0">
+            <div class="card-body">
+            <div class="container-ml">
+            <div class="media">
+            <div class="align-self-start mr-3  box-border-radius">
+            <img class="size-icon-w" src="/mymenumerchant/images/EmployeeW.png">
+            </div>
+            <div class="media-body">
+            <p class="text-p-heder">พนักงาน</p>
+            <p class="text-p-list text-weight color-branch-p">@Model.EmpCount</p>
+            <p type="button"  class="float-right btn color-branch-p  btn-all text-btn text-p-btn"  >ดูทั้งหมด <i class="i-wd i-padding fa fa-angle-right"></i></>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </a>*@
+            <a class="col-sm-6 mb-2" asp-controller="Merchant" asp-action="SetDiscounts">
+                <div class="card rounded-body border-0 mr-sm-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Merchant_Discount.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["กำหนดส่วนลด"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.DiscountCount</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            @*<a class="col-md-6 col-lg-6 col-xl-6 col-12  mb-4 pr-md-3" asp-controller="Merchant" asp-action="SetDiscounts">
+            <div class="card rounded-body border-0">
+            <div class="card-body">
+            <div class="container-ml">
+            <div class="media">
+            <div class="align-self-start mr-3  box-border-radius">
+            <img class="size-icon-w" src="/mymenumerchant/images/Merchant_Discount.png">
+            </div>
+            <div class="media-body">
+            <p class="text-p-heder">กำหนดส่วนลด</p>
+            <p class="text-p-list text-weight color-branch-p">@Model.DiscountCount </p>
+            <p type="button" class="float-right btn color-branch-p  btn-all text-btn text-p-btn">ดูทั้งหมด <i class="i-wd i-padding fa fa-angle-right"></i></>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </a>*@
+            <a class="col-sm-6 mb-2" asp-controller="Merchant" asp-action="SetVat">
+                <div class="card rounded-body border-0 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/VAT.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["ภาษีมูลค่าเพิ่ม (VAT)"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.Merchant.TaxRate %</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            @*            <a class="col-md-6  col-lg-6 col-xl-6 col-12  mb-4 " asp-controller="Merchant" asp-action="SetVat" >
+            <div class="card rounded-body border-0 ">
+            <div class="card-body">
+            <div class="container-ml">
+            <div class="media">
+            <div class="align-self-start mr-3  box-border-radius">
+            <img class="size-icon-w" src="/mymenumerchant/images/EmployeeW.png">
+            </div>
+            <div class="media-body">
+            <p class="text-p-heder">ภาษีมูลค่าเพิ่ม (VAT)</p>
+            <p class="text-p-list text-weight color-branch-p">@Model.Merchant.TaxRate %</p>
+            <p type="button" class="float-right btn color-branch-p  btn-all text-btn text-p-btn">ดูทั้งหมด <i class="i-wd i-padding fa fa-angle-right"></i></>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </a>*@
+            <div class="col-sm-6 mb-2" data-toggle="modal" data-target="#ModelBonusCode" style="cursor:pointer;">
+                <div class="card rounded-body border-0 mr-sm-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Package.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">myMenu Code</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a class="col-sm-6 mb-2" asp-controller="Merchant" asp-action="DetailsPrivacyPolicy">
+                <div class="card rounded-body border-0 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/Term.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15 pr-3">@Localizer["นโยบายความเป็นส่วนตัว และข้อตกลงและ เงื่อนไขการใช้บริการระบบ myMenu"]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <div class="col-12" hidden>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelNotBonusCode">
+                    @Localizer["ไม่พบ Code"]
+                </button>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelBonusCodeExpire">
+                    @Localizer["Code นี้หมดอายุ"]
+                </button>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelNotBonusCodeActivated">
+                    @Localizer["Code นี้ยังไม่เปิดให้ใช้งาน"]
+                </button>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#ModelBonusCodeSucceed">
+                    @Localizer["ลงทะเบียนสำเร็จ"]
+                </button>
+            </div>
+
+
+
+            @*        <div class="col-12 mb-3">
+            <h1  class="font-weight-bold menu-header">ตั้งค่าเครื่องพิมพ์ และการแจ้งเตือน</h1>
+            </div>
+
+            <div class="col-12 mb-3">
+            <div class="card">
+            <div class="card-body">
+            <div class="container">
+            <div class="form-row">
+            <label class="font-weight-bold mb-4 font-size">ตั้งค่าเครื่องพิมพ์</label>
+            <div class="col-12 mb-3">
+            <div class="col-ml-6">
+            <div class="form-row container">
+            <div class=" col card-text d-flex justify-content-start  font-color">Option Print Auto การสั่งอาหาร</div>
+            <div class=" input-group-prepend  d-flex justify-content-end" >
+            <label class=" switch" >
+            @if (Model.branch.AutoPrintOrders == 1)
+            {
+            <input type="checkbox" id="CheckboxPrintOrder" checked>
+            }
+            else
+            {
+            <input type="checkbox" id="CheckboxPrintOrder">
+            }
+            <span class="slider round"></span>
+            </label>
+            </div>
+            </div>
+            </div>
+            <div class="col-ml-auto mb-3"></div>
+            <div class="col-ml-6">
+            <div class="form-row container">
+            <div class=" col card-text d-flex justify-content-start  font-color">Option Print Auto การกดคิดเงิน</div>
+            <div class=" input-group-prepend  d-flex justify-content-end" >
+            <label class=" switch" >
+            @if (Model.branch.AutoPrintCheckBill == 1)
+            {
+            <input type="checkbox" id="CheckboxPrintCheckBill" checked>
+            }
+            else
+            {
+            <input type="checkbox" id="CheckboxPrintCheckBill">
+            }
+
+            <span class="slider round"></span>
+            </label>
+            </div>
+            </div>
+            </div>
+            <div class="col-ml-auto"></div>
+            </div>
+            <div class="col-12"><hr /></div>
+            <div class="col-ml-12 mb-2">
+            <div class="d-flex">
+            <div class="p-2"><img class="size-icon-help" src="/mymenumerchant/images/Help.png" /></div>
+            <div class="p-2">
+            <p class="text-help font-info-color ">กำหนดเครื่องพิมพ์ได้ที่เมนูตั้งค่าบนอุปกรณ์ของคุณ</p>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+            <div class="col-12 mb-2">
+            <div class="card">
+            <div class="card-body">
+            <div class="container">
+            <div class="form-row">
+            <label class="font-weight-bold mb-4 font-size">การแจ้งเตือน</label>
+            <div class="col-12 mb-3">
+            <div class="col-ml-6">
+            <div class="form-row container">
+            <div class=" col card-text d-flex justify-content-start  font-color">เปิดการแจ้งเตือน LINE Notify</div>
+            <div class=" input-group-prepend  d-flex justify-content-end" >
+            <label class=" switch" >
+            @if (Model.branch.QrCodeGenerateType == 1)
+            {
+            <input type="checkbox" id="CheckboxAllday" checked >
+            }else
+            {
+            <input type="checkbox" id="CheckboxAllday">
+            }
+            <span class="slider round"></span>
+            </label>
+            </div>
+            </div>
+            </div>
+            <div class="col-ml-auto mb-2"></div>
+
+            </div>
+
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>*@
+        </div>
+    </div>
+
+    @* ModelBonusCode *@
+    <div class="modal fade" id="ModelBonusCode" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row my-1">
+                        <div class="mr-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class=""><h5 class="text-branch-modal mb-0">@Localizer["myMenu Code"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="myMenuCode">myMenu Code</label>
+                        <input type="text" class="form-control" id="myMenuCode" placeholder="myMenu Code" onkeyup="addcode()">
+                    </div>
+                </div>
+                <div class="modal-branch modal-footer modal-border-top">
+                    <button type="button" class="btn btn-save-bonus-code" id="SubmitBonusCode" data-dismiss="modal" onclick="PostmyMenuCode()" disabled="disabled">@Localizer["ตกลง"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ModelNotBonusCode *@
+    <div class="modal fade" id="ModelNotBonusCode" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textNotBonusCode" style="color:#404040; text-align: center;">@Localizer["ขออภัย ไม่พบ Code นี้"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="Cleartext()">
+                        กลับ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ModelBonusCodeExpire *@
+    <div class="modal fade" id="ModelBonusCodeExpire" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textExpire" style="color:#404040; text-align: center;">@Localizer["ขออภัย Code นี้หมดอายุ"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="Cleartext()">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ModelNotBonusCodeActivated *@
+    <div class="modal fade" id="ModelNotBonusCodeActivated" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textNotActivated" style="color:#404040; text-align: center;">@Localizer["ขออภัย Code นี้ยังไม่เปิดให้ใช้งาน"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="Cleartext()">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* ModelBonusCodeSucceed *@
+    <div class="modal fade" id="ModelBonusCodeSucceed" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" style="color:#404040; text-align: center;">@Localizer["ลงทะเบียนสำเร็จ"]</p>
+                    <p class="mb-0 mx-4" id="textSuccess" style="color:#404040; text-align: center;">@Localizer["วันหมดอายุการใช้งาน"] 31/12/2567</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #7CBFA7; border: 1px solid #7CBFA7;" data-dismiss="modal" onclick="Cleartext()">
+                        ตกลง
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+
+<script>
+     const options = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    };
+    $(document).ready(function () {
+        var date = '"2024-01-03T03:50:06.8434679Z"';
+        var bbb = new Date(date.replace(/\"/g,''));
+        //console.log(bbb.toLocaleDateString('th-TH',options))
+    });
+    function PostmyMenuCode(){
+        var MerchantLicenceModel = {
+            PromotionCode: $('#myMenuCode').val(),
+            ProductName : 'MyMenu',
+        };
+        $.ajax({
+            url: "@Url.Action("PostPromotion", "Merchant")",
+            type: 'POST',
+            async: false,
+            data: MerchantLicenceModel,
+            success: function (res) {
+                if (res.status) {
+                    $('#ModelBonusCodeSucceed').modal('show');
+                    //console.log(res);
+                    $('#textSuccess').text("@Localizer["วันหมดอายุการใช้งาน"] " + res.message);
+                } else {
+                    if (res.message == '114') { //Bonus_code_expires
+                        $('#ModelBonusCodeExpire').modal('show');
+                    }
+                    else {
+                        $('#ModelNotBonusCode').modal('show');
+                    }
+                }
+            }, error: function (res) {
+                //console.log(res);
+                if (res.message == '114') { //Bonus_code_expires
+                        $('#ModelBonusCodeExpire').modal('show');
+                }
+                else {
+                    $('#ModelNotBonusCode').modal('show');
+                }
+            }
+        });
+    }
+
+    function addcode(){
+        var code = $('#myMenuCode').val();
+        if (!jQuery.isEmptyObject(code)) {
+             document.getElementById('SubmitBonusCode').disabled = false;
+        }else{
+            document.getElementById('SubmitBonusCode').disabled = true;
+        }
+    }
+
+    function Cleartext(){
+         $('#myMenuCode').val('');
+    }
+</script>

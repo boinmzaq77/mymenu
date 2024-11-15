@@ -1,0 +1,193 @@
+﻿@using MyMenu.ORM.Master;
+@model Merchant;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<style>
+    #EditProfile .flex-menu-head {
+        display: flex;
+        align-items: center;
+    }
+
+</style>
+<form id="save">
+    <body id="SetVat">
+        <div class="container">
+            <div class="form-row">
+                <div class="col-12  mb-4">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="Merchant" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["ภาษีมูลค่าเพิ่ม (VAT)"]</h2>
+                            <ul class="breadcrumb ">
+                                <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Merchant" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                                <li class="breadcrumb-item color-a-breadcrumb text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="Merchant" asp-action="Index">@Localizer["จัดการร้านค้า"]</a></li>
+                                <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["ภาษีมูลค่าเพิ่ม (VAT)"]</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+
+                                    <div class="col-md-12 mb-2">
+                                        <div class="row flex-menu-head">
+                                            <div class="form-row col-md-6 ">
+                                                <input id="TypeVAT" value="@Model.TaxType" hidden />
+                                                <label class="font-weight-bold color-name-head" for="VatType">@Localizer["ประเภท ภาษีมูลค่าเพิ่ม"]</label>
+                                                
+                                                <select class="form-select custom-select my-1 mr-sm-2 examine" name="TaxType" id="RoleTypeVAT" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" ? "" : "disabled='disabled'")>
+                                                    @if (Model.TaxType == 'I')
+                                                    {
+                                                        <option value="I" selected>@Localizer["Include VAT"]</option>
+                                                        <option value="E">@Localizer["Exclude VAT"]</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="I">@Localizer["Include VAT"]</option>
+                                                        <option value="E" selected>@Localizer["Exclude VAT"]</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-row col-md-6">
+                                                <input type="text" id="vatOld" value="@Model.TaxRate" hidden />
+                                                <label class="font-weight-bold color-name-head" for="BrancTime">@Localizer["ภาษีมูลค่าเพิ่ม"]</label>
+                                                <input type="text" class="form-control" name="TaxRate" value="@Model.TaxRate" oninput="VatInput()" autocomplete="off" id="VAT" max="100" min="0" placeholder="%" @(ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" ? "" : "disabled='disabled'")>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-12  mb-2">
+                    @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin")
+                    {
+                        <div class="d-flex justify-content-end">
+                            <div>
+                                <button type="submit" class="btn-save" id="SaveSettingVat" disabled>@Localizer["บันทึก"]</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @*  Modal Post not Success Error*@
+                <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body layout-model m-3 p-0 ">
+                                <div class="modal-m-text">
+                                    <div class="row text-center mt-4 mb-4">
+                                        <h5 class="text-center mb-5 my-5 " id="namealert"></h5>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</form>
+<script>
+    $(document).ready(function () {
+
+        $("#RoleTypeVAT").change(function () {
+            var _TypeVATOld = $('#TypeVAT').val();
+            var _TypeVAT= $(this).val();
+
+            if (_TypeVATOld != _TypeVAT) {
+                document.getElementById('SaveSettingVat').disabled = false;
+            } else {
+                document.getElementById('SaveSettingVat').disabled = true;
+            }
+        });
+
+        $(document).on('change', 'input', function () {
+            var _vat = $('#VAT').val();
+            var _vatOld = $('#vatOld').val();
+
+            if (jQuery.isEmptyObject(_vat)) {
+                _vat = $('#vatOld').val();
+            }
+
+            if (_vat != _vatOld) {
+                document.getElementById('SaveSettingVat').disabled = false;
+            } else {
+                document.getElementById('SaveSettingVat').disabled = true;
+            }
+        });
+
+        $("#save").on("submit", function (e) {
+            var dataString = $(this).serialize();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("EditTax", "Merchant")",
+                data: dataString,
+                success: function (message) {
+                    window.location.href = "@Url.Action("Index", "Merchant")";
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                    if (message.responseText == "Update vat Error") {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    } else {
+                        $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+    });
+    function VatInput() {
+        const display = document.getElementById("VAT");
+        const currentValue = display.value;
+
+        const chack = currentValue.split("");
+        if (currentValue.length > 1) {
+            if (chack[0] == "0") {
+                if (parseInt(chack[0]) <= parseInt(chack[1])) {
+                    display.value = chack[1];
+                }
+            }
+        }
+
+        const integerValue = parseInt(currentValue);
+        if (isNaN(integerValue)) {
+            display.value = "";
+            return;
+        }
+        if (integerValue >= 100) {
+            display.value = "100";
+        } else {
+            display.value = display.value;
+        }
+
+    }
+
+    // ป้องกันการป้อนอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    document.getElementById("VAT").addEventListener("keypress", function (e) {
+        if (e.key.match(/[^0-9]/) && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+
+    // ป้องกันการกดปุ่มอักขระที่ไม่ใช่ตัวเลขผ่านคีย์บอร์ด
+    document.getElementById("VAT").addEventListener("keydown", function (e) {
+        if (e.key.match(/[^0-9]/) && e.key !== "Backspace") {
+            e.preventDefault();
+        }
+    });
+
+</script>

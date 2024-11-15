@@ -1,0 +1,390 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+﻿@{
+    ViewData["Title"] = "Category";
+}
+
+<body id="Category">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="ManageMenu" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["หมวดหมู่"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="ManageMenu" asp-action="Index">@Localizer["จัดการเมนูอาหาร"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["หมวดหมู่"]</li>
+                        </ul>
+                        <a class="breadcrumb button-add text-center layout-add" asp-controller="ManageMenu" asp-action="CategoryAdd" id="btnaddCategory"><img class="img-icon-add" src="/mymenumerchant/images/Add.png" /> @Localizer["เพิ่มหมวดหมู่"]</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-3 search">
+                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["ชื่อหมวดหมู่, จำนวนสินค้า"]" style="height: 45px;" autocomplete="off">
+            </div>
+
+            <div class="col-md-12 mb-2">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <label class="font-weight-bold mb-0 font-size ">@Localizer["หมวดหมู่ทั้งหมด"]  <span class="size-small font-weight-bold ms-2" id="count"> @Localizer["จำนวนทั้งหมด"] 0</span> <span class="size-small font-weight-bold" style="margin-left: -5;">/20</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table " id="TableCategory" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">@Localizer["ลำดับ"]</th>
+                                                <th scope="col" class="size-th-name">@Localizer["ชื่อหมวดหมู่"]</th>
+                                                <th scope="col" class="size-th-number text-center">@Localizer["จำนวนสินค้า"]</th>
+                                                <th scope="col" class="size-th-edit"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*ModalDetailsInfo*@
+        <div class="modal fade bd-example-modal-xl" id="ModalDetailsInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <div class="d-flex flex-row mb-2">
+                            <div class="pt-2 pl-0 pr-0"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                            <div class="pt-1 pm-0 pl-3 pr-0"><h5 class="text-branch mb-0">@Localizer["รายละเอียดหมวดหมู่"]</h5></div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card-body p-0">
+                            <div class="col-12">
+                                <div class="modal-header-table">
+                                    <div class="form-row">
+                                        <label class="font-weight-bold mb-0 font-size16 color-header-dack">@Localizer["ชื่อหมวดหมู่ :"]  <small class="size-small font-weight-bold ms-2" id="namedetail"> กาแฟ</small></label>
+                                    </div>
+                                    <div class="form-row">
+
+                                        <label class="font-weight-bold mb-0 font-size16 color-header-dack">@Localizer["จำนวนสินค้าทั้งหมด :"]  <small class="size-small font-weight-bold ms-2" id="countdetail"> 0</small></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="card-body p-0">
+                            <div class="form-row">
+                                <div class="col-md-12 mb-2">
+                                    <div class="table-responsive">
+                                        <table class="table " id="TableCategoryDetail" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="td-size-subnumber">@Localizer["ลำดับ"]</th>
+                                                    <th scope="col" class="size-th-name">@Localizer["ชื่อหมวดหมู่ย่อย"]</th>
+                                                    <th scope="col" class="size-th-number text-center">@Localizer["จำนวนสินค้า"]</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*ModalCategoryDelete*@
+        <div class="modal fade " id="ModalCategoryDelete" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                        <h5 class="text-center mb-5 my-5 " id="namedelete"></h5>
+                        <div class=" d-flex justify-content-center">
+                            <input id="iddelete" value="" hidden />
+                            <button type="button" class="font-weight-bold btn button-modal-delete" onclick="fnDelete()">@Localizer["ลบ"]</button>
+                            <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <form hidden id="EditCatagory" asp-action="CategoryEdit">
+        <input name="category" id="CategoryModel" value="" />
+    </form>
+
+    <!--Modal Post not Success-->
+    <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบหมวดหมู่ได้ เนื่องจากมีการใช้งานอยู่"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถลบหมวดหมู่ได้"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+<script>
+
+    function sentdata(d) {
+        var data = $('#TableCategory').DataTable().row(d).data();
+        var test = JSON.stringify(data);
+        $("#CategoryModel").val(test);
+        $("#EditCatagory").submit();
+    }
+
+
+
+    var _role;
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+        $('#TableCategory').on('click', 'tbody td button.dt-control', function () {
+
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            var icon = $(this).closest("button");
+            if (row.child.isShown()) {
+                icon.html('แสดงหมวดหมู่ย่อย <i class="fa fa-angle-down"></i>');
+                row.child.hide();
+            } else {
+                icon.html('แสดงหมวดหมู่ย่อย <i class="fa fa-angle-up"></i>');
+                row.child(format(row.data())).show();
+            }
+
+        });
+
+
+        //$('#TableCategory').on('requestChild.dt', function (e, row) {
+        //    row.child(format(row)).show();
+        //});
+
+        var table = $('#TableCategory').DataTable({
+
+            ajax: {
+                url: "@Url.Action("GetMenuCategory", "ManageMenu")",
+                //url: "../MyMenuMerchant/data/Menus.txt",
+                dataSrc: ''
+            },
+            //processing: false,
+            //serverSide: false,
+            stateSave: false,
+            columns: [
+                { data: 'id' },
+                { data: { categoryName: 'categoryName', subcategorymodel: 'subcategorymodel' } },
+                { data: { count: 'count', subcategorymodel: 'subcategorymodel' } },
+                { data: 'id' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table'>" + (meta.row + meta.settings._iDisplayStart + 1) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text1 = "<p class='p-padding-table'>" + data.categoryName + "</p><div class='sub-category display-sub-category'>";
+                    for (var i = 0; i < data.subcategorymodel.length; i++) {
+                        text1 += "<p class='p-padding-table'><i class='fa fa-square me-3 icon-type-size'></i>" + data.subcategorymodel[i].subCategoryName + "</p>";
+                    }
+                    text1 += "</div>";
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text3 = "<p class='p-padding-table text-center'>" + data.count + "</p><div class='sub-category display-sub-category'>";
+                    for (var i = 0; i < data.subcategorymodel.length; i++) {
+                        text3 += "<p class='p-padding-table text-center'>" + data.subcategorymodel[i].count + "</p>";
+                    }
+                    text3 += "</div>";
+
+                    return text3;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    
+                    var disibleedit = "";
+                    var disibledelete = "";
+                    if (_role == "editor" || _role == "invoice" || _role == "officer" || _role == "cashier") {
+                        if (_role != "editor") {
+                            disibleedit = "block-a";
+                        }
+                        disibledelete = "block-a";
+                    }
+                    var edit1 = "<div class='group-btn-table'><button type='button' class='btn btn-green-info mr-2 ' data-toggle='modal' data-target='#ModalDetailsInfo'  onclick='OnInfoCategoryDetali(" + meta.row + ")'><img class='size-img-list-menu' src= '/mymenumerchant/images/Detail20.png' /></button> <button type='button' class='btn btn-blue-edit mr-2 " + disibleedit + "'   onclick='sentdata(" + meta.row + ")' ><img class='size-img-list-menu' src='/mymenumerchant/images/Edit20.png' /></button><button type='button' class='btn btn-red-delete " + disibledelete + "' data-toggle='modal'  onclick='btnDelete(" + meta.row + ")' data-target='#ModalCategoryDelete'><img class='size-img-list-menu' src='/mymenumerchant/images/Delete20.png' /></button></div>";
+                    return edit1;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีหมวดหมู่"].Value)) +  " </p><br/><br/><br/><br/> ",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) +  "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value)) + " </p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            "initComplete": function (settings, json) {
+                $('#count').text(@Html.Raw(Json.Serialize(Localizer["จำนวนทั้งหมด"].Value)) + " " + table.data().count());
+                var count = table.data().count();
+                var btn = document.getElementById("btnaddCategory");
+                if (count >= 20) {
+                    $("#btnaddCategory").attr('style', 'opacity:0.5');
+                    btn.style.pointerEvents = "none";
+                    btn.style.cursor = "default";
+                } else {
+                    $("#btnaddCategory").attr('style', 'opacity:1');
+                    btn.style.pointerEvents = "auto";
+                    btn.style.cursor = "pointer";
+                }
+
+            },
+        });
+        $('#TableCategory tbody').on('click', 'tr td:not(:nth-child(4))', function () {
+            var tr = $(this).closest('tr');
+            tr.find('div.sub-category').toggleClass('display-sub-category');
+        });
+
+        var tables = $('#TableCategory').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+        if ( _role == "invoice" || _role == "officer" || _role == "cashier") {
+            $("#btnaddCategory").addClass("block-a");
+        }
+        
+
+    });
+    function OnInfoCategoryDetali(d) {
+        var data = $('#TableCategory').DataTable().row(d).data();
+        //console.log(data);
+        $('#namedetail').text(data.categoryName);
+        $('#countdetail').text(data.count);
+        var table = $('#TableCategoryDetail').DataTable({
+
+            data: data.subcategorymodel,
+
+            stateSave: false,
+            columns: [
+                { data: 'id', },
+                { data: 'subCategoryName' },
+                { data: 'count' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+
+                    var text1 = '<p class="p-0 m-0">' + data + '</p>'
+                    return text1;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text2 = '<p class="p-0 m-0 text-center">' + data + '</p>'
+                    return text2;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ยังไม่มีหมวดหมู่"].Value)) + "</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["ไม่พบข้อมูล"].Value)) + "</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>" + @Html.Raw(Json.Serialize(Localizer["Loading.."].Value)) + "</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+
+
+        });
+
+    }
+    function Close() {
+        $('#TableCategoryDetail').dataTable().fnDestroy();
+        //$('#TableCategoryDetail').DataTable().clear().draw();
+    }
+    function btnDelete(id) {
+        var data = $('#TableCategory').DataTable().row(id).data();
+        //console.log(data);
+        $('#iddelete').val(data.categoryID);
+        $('#namedelete').text(@Html.Raw(Json.Serialize(Localizer["คุณต้องการลบ หมวดหมู่"].Value))+ ' ' +'"'+ data.categoryName +'"'+  ' ' + @Html.Raw(Json.Serialize(Localizer["หรือไม่?"].Value)));
+    }
+
+    function fnDelete() {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteCategory", "ManageMenu")",
+            data: {
+                id: $('#iddelete').val(),
+            },
+            success: function (message) {
+                location.reload();
+            }, error: function (message) {
+                //alert(message.responseText);
+                if (message.responseText == "Category is use") {
+                    $('#ModalCategoryDelete').modal().hide();
+                    $('#ModalPostnotSuccess').modal('show');
+                } else {
+                    $('#ModalCategoryDelete').modal().hide();
+                    $('#ModalPostnotSuccessError').modal('show');
+                }
+            }
+        });
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+</script>

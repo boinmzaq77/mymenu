@@ -1,0 +1,176 @@
+﻿@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.JAM;
+@model TableWithOrderModel;
+@using MyMenuMerchant.Controllers;
+@inject IViewLocalizer Localizer
+@if(Model!= null)
+{
+    switch (Model.Status.ToString().ToLower())
+    {
+        case "d":
+        case "e":
+            @* ปกติ *@
+            <div class="card card-h-items">
+                <div class="card-header card-header-no-table">
+                    <p class="mb-0 font-weight-bold table-name-text">@Model.FoodTableName</p>
+                </div>
+                <div class="card-body card-body-no-table">
+                    @if (Model.Status.ToString().ToLower() == "d")
+                    {
+                        <div class="no-table">
+                            <button type="button" class="btn btn-opentable-color font-weight-bold btnopentable" onclick="OnTableQRCode(event,@Model.FoodTableNO);">@Localizer["เปิดโต๊ะ"]</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-table-Static">
+                        </div>
+                    }
+                </div>
+            </div>
+            break;
+        case "p":
+            @* รอดำเนินการ แบบปิดโต๊ะได้ : 0 ออเดอร์ *@
+            <div class="card card-h-items">
+                <div class="card-header card-header-table card-header-table-orange pb-2" id="click_@Model.OpenOrdersID" onclick="OnTables(@Model.countOrder,'@Model.OpenOrdersID');">
+                    <p class="mb-0 font-weight-bold table-name-text">@Model.FoodTableName</p>
+                    <div class="w-100">
+                        <div class="order-flex">
+                            <p class="mb-2 font-weight-bold" id="countorder_@Model.OpenOrdersID">@Model.countOrder @Localizer["ออเดอร์"]</p>
+                            <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model.DateCreated)</p>
+                        </div>
+                        <div class="order-money-flex">
+                            <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model.OpenOrdersID">@TableController.ConvertToCurrency(@Model.Total ?? 0)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-body-table card-body-table-orange pt-0">
+                    <div class="order-button-flex-rl">
+                        <div class="grid-1">
+                            <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model.OpenOrdersID" data-openorderid="@Model.OpenOrdersID" data-foodtableno="@Model.FoodTableNO" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                            <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model.OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                            <button type="button" class="btn btn-table-color-cancel openmenu" id="btnclosetable_@Model.OpenOrdersID" data-toggle="modal" data-target="#ModalTableDelete" onclick="SetClose('@Model.OpenOrdersID','@Model.FoodTableName')">@Localizer["ปิดโต๊ะ"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            break;
+        case "w":
+            @* รอเสิร์ฟ แบบมี ออเดอร์ *@
+            <div class="card card-h-items">
+                <div class="card-header card-header-table card-header-table-yellow pb-2" id="click_@Model.OpenOrdersID" onclick="OnTables(@Model.countOrder,'@Model.OpenOrdersID');">
+                    <p class="mb-0 font-weight-bold table-name-text">@Model.FoodTableName</p>
+                    <div class="w-100">
+                        <div class="order-flex">
+                            <p class="mb-2 font-weight-bold" id="countorder_@Model.OpenOrdersID">@Model.countOrder @Localizer["ออเดอร์"]</p>
+                            <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model.DateCreated)</p>
+                        </div>
+                        <div class="order-money-flex">
+                            <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model.OpenOrdersID">@TableController.ConvertToCurrency(@Model.Total ?? 0)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-body-table card-body-table-yellow pt-0">
+                    <div class="order-button-flex-l">
+                        <div class="grid-1">
+                            <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model.OpenOrdersID" data-openorderid="@Model.OpenOrdersID" data-foodtableno="@Model.FoodTableNO" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                            <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model.OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            break;
+        case "s":
+            @* เสิร์ฟครบ *@
+            <div class="card card-h-items">
+                <div class="card-header card-header-table card-header-table-green pb-2" id="click_@Model.OpenOrdersID" onclick="OnTables(@Model.countOrder,'@Model.OpenOrdersID');">
+                    <p class="mb-0 font-weight-bold table-name-text">@Model.FoodTableName</p>
+                    <div class="w-100">
+                        <div class="order-flex">
+                            <p class="mb-2 font-weight-bold" id="countorder_@Model.OpenOrdersID">@Model.countOrder @Localizer["ออเดอร์"]</p>
+                            <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model.DateCreated)</p>
+                        </div>
+                        <div class="order-money-flex">
+
+                            <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model.OpenOrdersID">@TableController.ConvertToCurrency(@Model.Total ?? 0)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-body-table card-body-table-green pt-0">
+                    <div class="order-button-flex-l">
+                        <div class="grid-1">
+                            <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model.OpenOrdersID" data-openorderid="@Model.OpenOrdersID" data-foodtableno="@Model.FoodTableNO" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                            <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model.OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            break;
+        case "b":
+            @* รอคิดเงิน *@
+            <div class="card card-h-items">
+                <div class="card-header card-header-table card-header-table-blue pb-2" id="click_@Model.OpenOrdersID" onclick="OnTables(@Model.countOrder,'@Model.OpenOrdersID');">
+                    <p class="mb-0 font-weight-bold table-name-text">@Model.FoodTableName</p>
+                    <div class="w-100">
+                        <div class="order-flex">
+                            <p class="mb-2 font-weight-bold" id="countorder_@Model.OpenOrdersID">@Model.countOrder @Localizer["ออเดอร์"]</p>
+                            <p class="mb-2 font-weight-bold">@TableController.ConverttimeLocal(@Model.DateCreated)</p>
+                        </div>
+                        <div class="order-money-flex">
+
+                            <p class="mb-0 font-weight-bold table-text-money" id="grandtotal_@Model.OpenOrdersID">@TableController.ConvertToCurrency(@Model.Total ?? 0)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-body-table card-body-table-blue pt-0">
+                    <div class="order-button-flex-rl">
+                        <div class="grid-1">
+                            <button type="button" class="btn btn-table-color-delete" id="btnmovetable_@Model.OpenOrdersID" data-openorderid="@Model.OpenOrdersID" data-foodtableno="@Model.FoodTableNO" data-foodtablename="@Model.FoodTableName" onclick="OnClickModalMoveTable(this)"><img class="w-img-table-c" src="/mymenumerchant/images/TableChangeTable.png" /></button>
+                            <button type="button" class="btn btn-table-menu-color-details openmenu" data-openorderid="@Model.OpenOrdersID" onclick="additem(this)"><img class="w-img-table" src="/mymenumerchant/images/TableAddMenuInside.png" /></button>
+                            <button type="button" class="btn btn-table-color-check openmenu" data-openorderid="@Model.OpenOrdersID" onclick="btnPayment(this)">@Localizer["คิดเงิน"]</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            break;
+        default:
+            @* ปกติ *@
+            <div class="card card-h-items">
+                <div class="card-header card-header-no-table">
+                    <p class="mb-0 font-weight-bold table-name-text">@Model.FoodTableName</p>
+                </div>
+                <div class="card-body card-body-no-table">
+                    @if (Model.Status.ToString().ToLower() == "d")
+                    {
+                        <div class="no-table">
+                            <button type="button" class="btn btn-opentable-color font-weight-bold btnopentable" onclick="OnTableQRCode(event,@Model.FoodTableNO);">@Localizer["เปิดโต๊ะ"]</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-table-Static">
+                        </div>
+                    }
+                </div>
+            </div>
+            break;
+    }
+}
+<script>
+    var sortModel = [];
+    $(document).ready(function () {
+        console.log("table");
+        var newstatus = @Html.Raw(Json.Serialize(Model.Status.ToString().ToLower()));
+        var OpenOrdersID_newstatus = @Html.Raw(Json.Serialize(Model.OpenOrdersID));
+        
+        CountTableStatusNewStatus(newstatus, OpenOrdersID_newstatus);
+    });
+</script>
+
+

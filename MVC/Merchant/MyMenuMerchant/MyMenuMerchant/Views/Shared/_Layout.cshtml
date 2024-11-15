@@ -1,0 +1,1536 @@
+﻿
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimum-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/mymenumerchant/images/LogoMyMenu.png" />
+    <title>MyMenuMerchant</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyMenuMerchant.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> @*capture image*@
+
+
+
+</head>
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body>
+
+    <div class="wrapper">
+        <nav id="sidebar">
+            @*            <div id="dismiss" class="clocr-icon">
+            <i class="fa fa-chevron-left "style="font-size:15px" ></i>
+            </div>*@
+
+            <div class="sidebar-header logo " onclick="testsent()">
+                <img src="/mymenumerchant/images/LogomyMenuText.png">
+            </div>
+            <div class="mt-2 mb-0 member-list">
+                <p class="color-menu-member text-menu-member mb-0" id="ShowMerchantID"></p>
+                <p class="color-menu-state text-menu-member mb-0 text-menu-list-member" id="ShowUserName">Owner</p>
+            </div>
+            <div class="mb-2 member-list-package">
+                <div class="text-member-list">
+                    <p class="mb-0 font-size16 mr-1">Package :</p>
+                    <p class="mb-0 font-size16 color-package text-line-orient" id="packageName"></p>
+                </div>
+                <div class="text-member-list">
+                    <p class="mb-0 font-size16 mr-1">Exp :</p>
+                    <p class="mb-0 font-size16 text-line-orient" id="activeUntilDate"></p>
+                </div>
+            </div>
+            <div class="br-menu">
+            </div>
+            <input id="datelastnoti" value="" hidden />
+            <div class="tems">
+                <ul class="list-unstyled components">
+                    <li class="active">
+                        @*<a class="ashodow font-dashboard-bold" asp-controller="Dashboard" asp-action="Index" ><img src="/mymenumerchant/images/MenuDashboardG.png" class=" me-3 color-menu-hover img-dashboard-bold" width="9%" > Dashboard</a>*@
+                        <a class="ashodow font-dashboard-bold bg-dashboard" asp-controller="Dashboard" asp-action="Index">@Localizer["Dashboard"]</a>
+                    </li>
+                    <li class="body-top-color">
+                        @* <a class="ashodow font-order-bold" asp-controller="Order" asp-action="Index"><img src="/mymenumerchant/images/MenuOrderG.png" class="me-3 color-menu-hover img-order-bold" width="9%">ออเดอร์ทั้งหมด</a>*@
+                        <a class="ashodow font-order-bold bg-order" asp-controller="Order" asp-action="Index">@Localizer["ออเดอร์ทั้งหมด"]</a>
+                    </li>
+                    <li class="body-top-color">
+                        @* <a class="ashodow font-table-bold" asp-controller="Table" asp-action="Index"><img src="/mymenumerchant/images/MenuTebleG.png" class="me-3 color-menu-hover img-table-bold" width="9%">โต๊ะ</a>*@
+                        <a class="ashodow font-table-bold bg-table" asp-controller="Table" asp-action="Index">@Localizer["โต๊ะ"]</a>
+                    </li>
+                    <li class="body-top-color">
+                        @* <a class="ashodow font-managemenu-bold" asp-controller="ManageMenu" asp-action="Index"><img src="/mymenumerchant/images/MenuMenuManageG.png" class=" me-3 color-menu-hover img-managemenu-bold" width="9%"> จัดการเมนูอาหาร</a>*@
+                        <a class="ashodow font-managemenu-bold bg-managemenu" asp-controller="ManageMenu" asp-action="Index">@Localizer["จัดการเมนูอาหาร"]</a>
+                    </li>
+                    <li class="body-top-color">
+                        @*<li class="body-top-color disabled-menu">*@
+                        @*<a class="ashodow font-receipthistory-bold" asp-controller="ReceiptHistory" asp-action="Index"><img src="/mymenumerchant/images/MenuDashboardGcopy2.png" class=" me-3 color-menu-hover img-receipthistory-bold" width="9%"> ประวัติใบเสร็จรับเงิน</a>*@
+                        <a class="ashodow font-receipthistory-bold bg-receipthistory" asp-controller="ReceiptHistory" asp-action="Index">@Localizer["ประวัติใบเสร็จรับเงิน"]</a>
+                        @*<p class="px-0 my-0 ashodow font-receipthistory-bold" style="color:#808080"><img src="/mymenumerchant/images/MenuDashboardGcopy2.png" class=" me-3 color-menu-hover img-receipthistory-bold" width="9%"> ประวัติใบเสร็จรับเงิน</p>*@
+                    </li>
+                    @*                <li  class="body-top-color">
+                    <a class="ashodow font-orderhistory-bold" asp-controller="OrderHistory" asp-action="Index"><img src="/mymenumerchant/images/MenuDashboardGcopy2.png" class=" me-3 color-menu-hover img-orderhistory-bold" width="9%"> ประวัติออเดอร์</a>
+                    </li>*@
+                    @*                <li  class="body-top-color">
+                    <a class="ashodow font-taxinvoice-bold" asp-controller="TaxInvoice" asp-action="Index"><img src="/mymenumerchant/images/MenuDashboardGcopy.png" class=" me-3 color-menu-hover img-taxinvoice-bold" width="9%"> ใบกำกับภาษีเต็มรูปแบบ</a>
+                    </li>*@
+                    <li class="body-top-color">
+                        @* <a class="ashodow font-branchmanagement-bold" asp-controller="BranchManagement" asp-action="Index"><img src="/mymenumerchant/images/Branchcopy2.png" class="me-3 color-menu-hover img-branchmanagement-bold" width="9%">การจัดการสาขา</a>*@
+                        <a class="ashodow font-branchmanagement-bold bg-branchmanagement" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a>
+                    </li>
+                    <li class="body-top-color">
+                        <a class="ashodow font-merchant-bold bg-merchant" asp-controller="Merchant" asp-action="Index">@Localizer["การจัดการร้านค้า"]</a>
+                        @*<a class="ashodow font-merchant-bold" asp-controller="Merchant" asp-action="Index"><img src="/mymenumerchant/images/MenuMerchantG.png" class=" me-3 color-menu-hover img-merchant-bold" width="9%"> การจัดการร้านค้า</a>*@
+                    </li>
+
+                    @*                <li>
+                    <a class="ashodow font-receipt-bold" asp-controller="Receipt" asp-action="Index" ><img src="/mymenumerchant/images/MenuBillG.png" class="me-3 color-menu-hover img-receipt-bold" width="9%">รายการรอเก็บเงิน</a>
+                    </li>
+                    <li>
+                    <a class="ashodow font-qrcodee-bold" asp-controller="QRCodeGenerate" asp-action="Index"><img src="/mymenumerchant/images/MenuQRCodeG.png" class="me-3 color-menu-hover img-qrcodee-bold" width="9%">สร้าง QR Code</a>
+                    </li>*@
+
+                </ul>
+            </div>
+            <div class="CTAs">
+                <div class="position-relative" onclick="reloadpage2()">
+                    <img class="logoSNS" src="/mymenumerchant/images/PoweredBySNS.png" />
+                </div>
+                <p class="mb-0">@Localizer["Version 1.1"]</p>
+            </div>
+        </nav>
+
+
+        <div id="content">
+            <header class="navbar navbar-default ">
+                <div class="logo-mymenu-layout" id="logo-mymenu" onclick="reloadpage()">
+                    <img src="/mymenumerchant/images/LogomyMenuText.png">
+                </div>
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a id="sidebarCollapse" class="btn navbar-btn navbar-btn-sidebar">
+                            <i class="fa fa-bars" style="font-size:24px"></i>
+                        </a>
+                    </div>
+
+
+
+                    <div class="ml-auto">
+                        <div class="container-fluid" id="head-fluid">
+                            <div class="dropdown dropdown-bell">
+                                @*<a class="me-4 position-relative" id="dropdownBell" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled="" style="pointer-events: none;opacity:0.5;"><img class="color-img-bell" src="/mymenumerchant/images/Noti.png" style="width:25px;" /></a>*@
+                                <a class="me-4 position-relative" id="dropdownBell" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="OnChackInfoItemMenu()"><img class="color-img-bell" src="/mymenumerchant/images/Noti.png" style="width:25px;" /> <span class="notification" style="display:none;" id="NotiItemMenu"></span></a>@*<span class="notification"></span> คือเพิ่มจุดสีแดงแจ้งเตือน*@
+                                <div class="dropdown-menu dropdown-menu-right color-menu  dropdown-menu-bell border-0 menu-width-order py-3 shadow-sm" aria-labelledby="dropdownBell">
+
+                                    <div class="bell-sum-order px-3">
+                                        <p class="text-color-sumnumber mb-0 mr-2 font-weight-bold text-info-now" id="countlistmenu"></p>
+                                        <p class="text-color-text mb-0 text-info-now">@Localizer["การแจ้งเตือนใหม่"]</p>
+                                        @* <audio id="myAudio" controls style="display:none;" preload="none" >
+                                        <source src="/mymenumerchant/Sound/Bell.mp3" type="audio/mpeg">
+                                        </audio> *@
+                                        @*<audio id="myAudio" muted="muted" controls>
+                                        <source src="/mymenumerchant/Sound/Bell.mp3" type="audio/mp3">
+                                        </audio>*@
+
+                                    </div>
+
+                                    <div class="list-group scroll-menu-info">
+                                        <table id="TableMenuInfo" class="TableInfo-bg ">
+                                            <thead>
+                                                <tr style="display:none;">
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @*                                                <tr>
+                                                <th>
+                                                <div class="bell-order-flex p-3 table-striped-order">
+                                                <div>
+                                                <div class="text-order-flex">
+                                                <p class="text-color-head-order mb-0">โต๊ะ</p>
+                                                <p class="text-color-sub-order mb-0 mr-3">A1</p>
+                                                <p class="text-color-head-order mb-0">เรียกคิดเงิน</p>
+                                                </div>
+                                                <div class="text-order-flex">
+                                                <p class="text-head-order mb-0 mr-1">ยอดชำระ</p>
+                                                <p class="text-color-sub-order mb-0">500.0</p>
+                                                </div>
+                                                </div>
+                                                <div class="text-order-end">
+                                                <p class="text-color-grey mb-0">12:05</p>
+                                                <p class="text-color-grey mb-0">1วิ</p>
+                                                </div>
+                                                </div>
+                                                </th>
+                                                </tr>
+                                                <tr>
+                                                <th>
+                                                <div class="bell-order-flex p-3 table-striped-order">
+                                                <div>
+                                                <div class="text-order-flex">
+                                                <p class="text-color-head-order mb-0">โต๊ะ</p>
+                                                <p class="text-color-sub-order mb-0 mr-3">A2</p>
+                                                <p class="text-color-head-order mb-0">เรียกพนักงาน</p>
+                                                </div>
+                                                <div class="text-order-flex">
+                                                <p class="text-head-order mb-0">ขอช้อนส้อมเพิ่มค่ะ</p>
+
+                                                </div>
+                                                </div>
+                                                <div class="text-order-end">
+                                                <p class="text-color-grey mb-0">11:05</p>
+                                                <p class="text-color-grey mb-0">1น.</p>
+                                                </div>
+                                                </div>
+                                                </th>
+                                                </tr>
+                                                <tr>
+                                                <th>
+                                                <div class="bell-order-flex p-3 table-striped-order">
+                                                <div>
+                                                <div class="text-order-flex">
+                                                <p class="text-color-head-order mb-0">โต๊ะ</p>
+                                                <p class="text-color-sub-order mb-0 mr-1">A2</p>
+                                                </div>
+                                                <div class="text-order-flex">
+                                                <p class="text-head-order mb-0 mr-1">ยอดชำระ</p>
+                                                <p class="text-color-sub-order mb-0 ">50.0</p>
+                                                </div>
+                                                </div>
+                                                <div class="text-order-end">
+                                                <p class="text-color-grey mb-0">11:05</p>
+                                                <p class="text-color-grey mb-0">1น.</p>
+                                                </div>
+                                                </div>
+                                                </th>
+                                                </tr>
+                                                <tr>
+                                                <th>
+                                                <div class="bell-order-flex p-3 table-striped-order">
+                                                <div>
+                                                <div class="text-order-flex">
+                                                <p class="text-color-head-order mb-0">โต๊ะ</p>
+                                                <p class="text-color-sub-order mb-0 ">A2</p>
+                                                </div>
+                                                <div class="text-order-flex">
+                                                <p class="text-head-order mb-0 mr-1">ยอดชำระ</p>
+                                                <p class="text-color-sub-order mb-0">50.0</p>
+                                                </div>
+                                                </div>
+                                                <div class="text-order-end">
+                                                <p class="text-color-grey mb-0">11:05</p>
+                                                <p class="text-color-grey mb-0">1น.</p>
+                                                </div>
+                                                </div>
+                                                </th>
+                                                </tr>
+                                                <tr>
+                                                <th>
+                                                <div class="bell-order-flex px-3 pt-3 ">
+                                                <div>
+                                                <div class="text-order-flex">
+                                                <p class="text-color-head-order mb-0">โต๊ะ</p>
+                                                <p class="text-color-sub-order mb-0">A2</p>
+                                                </div>
+                                                <div class="text-order-flex">
+                                                <p class="text-head-order mb-0 mr-1">ยอดชำระ</p>
+                                                <p class="text-color-sub-order mb-0 ">50.0</p>
+                                                </div>
+                                                </div>
+                                                <div class="text-order-end">
+                                                <p class="text-color-grey mb-0">11:05</p>
+                                                <p class="text-color-grey mb-0">1น.</p>
+                                                </div>
+                                                </div>
+                                                </th>
+                                                </tr>*@
+                                            </tbody>
+
+                                        </table>
+                                        @* <a href="#" class="list-group-item flex-column align-items-start ">
+                                        <div class="media">
+                                        <img class="align-self-center mr-2 align-self-center rounded-circle " width="25" height="25" src="/mymenumerchant/images/dog4.jpg" >
+                                        <div class="media-body">
+                                        <div class="d-flex w-100 justify-content-between ">
+                                        <p class="mb-2">คำสั้งซื้อเลขที่ 2022090125</p>
+                                        <small class="text-muted my-1">13 นาที</small>
+                                        </div>
+                                        <small class="text-muted ">สั่งกลับบ้าน, Meaw MM</small>
+                                        </div>
+                                        </div>
+                                        </a>
+
+                                        <a href="#" class="list-group-item flex-column align-items-start ">
+                                        <div class="media">
+                                        <img class="align-self-center mr-2 align-self-center rounded-circle " width="25" height="25" src="/mymenumerchant/images/dog4.jpg" >
+                                        <div class="media-body">
+                                        <div class="d-flex w-100 justify-content-between ">
+                                        <p class="mb-2">คำสั้งซื้อเลขที่ 2022090125</p>
+                                        <small class="text-muted my-1">13 นาที</small>
+                                        </div>
+                                        <small class="text-muted ">สั่งกลับบ้าน, Meaw MM</small>
+                                        </div>
+                                        </div>
+                                        </a>*@
+                                    </div>
+                                    <div class="allnoti-btn-block  py-1">
+                                        <button type="button" class="btn-all-noti" onclick="ShowAllNotification()">
+                                            @Localizer["ดูการแจ้งเตือนทั้งหมด"]
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" dropdown dropdown-user">
+                                <a href="#" class="rounded-circle " id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img id="logomerchant" src="/mymenumerchant/images/LogoMerchant.png" class="rounded-circle " width="40" /></a>
+                                <div class="dropdown-menu dropdown-menu-right color-menu dropdown-menu-user border-0" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item btn-light font-weight-normal" onclick="DownloadguideMerchant()"> <img class="img-icon-size me-2" src="/mymenumerchant/images/UserGuide.png" />@Localizer["คู่มือการใช้งาน"]</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item btn-light font-weight-normal" data-toggle="modal" data-target="#ModalMenuLanguage"> <img class="img-icon-size me-2" src="/mymenumerchant/images/ChangeLanguage.png" />@Localizer["เปลี่ยนภาษา"]</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item btn-light font-weight-normal " asp-controller="Login" asp-action="Logout"> <img class="img-icon-size me-2" src="/mymenumerchant/images/LogOut.png" /> @Localizer["Log out"]</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div id="content-menu">
+
+            <main role="main" class="pb-3">
+                @*<video id="myAudio" muted="muted" loop controls autoplay muted>*@
+                @*<iframe id="myAudio" width="300" height="30" frameborder="0" allowfullscreen="allowfullscreen" src="/mymenumerchant/Sound/Bell.mp3"></iframe>*@
+                <audio id="myAudio" controls style="display:none;">
+                    <source src="/mymenumerchant/Sound/Bell.mp3" type="audio/mp3">
+                </audio>
+                @RenderBody()
+            </main>
+
+        </div>
+        @*Category QRCode 58mm ใบส่งครัวรายหมวดหมู่*@
+        @*<div class="layout-receipt-58" style="" id="receipt_category58">
+        <div class="card border-0">
+        <div class="card-body">
+        <div class="container">
+        <div class="form-row">
+        <div class="col-md-12">
+        <div class="flex-bg-img">
+        <div class="position-initial">
+        <div class="bg-receipt-58" id="PrintQrCategory58mm">
+        <p class="mb-0 receipt-name-merchant mt-4 pt-2">โต๊ะ 1</p>
+        <div class="receipt-details-merchant">
+        <p class="mb-0">07/08/2566 8:50:26</p>
+        <p class="mb-0">ทานที่ร้าน</p>
+        </div>
+        <div class="receipt-details-merchant">
+        <p class="mb-0">Order No. 45</p>
+        <p class="mb-0">Drink</p>
+        </div>
+        <div class="receipt-listmenu mx-3 py-3">
+        <div class="receipt-list-item">
+        <div class="receipt-number-menu">
+        <p class="mb-0">1</p>
+        </div>
+        <div class="receipt-name-menu">
+        <p class="mb-0">อเมริกาโน่</p>
+        <p class="mb-0">หวานน้อย</p>
+        <p class="mb-0">+กาแฟ 1 ช็อต</p>
+        <p class="mb-0">น้ำแข็งน้อย</p>
+        </div>
+        </div>
+        <div class="receipt-list-item">
+        <div class="receipt-number-menu">
+        <p class="mb-0">1</p>
+        </div>
+        <div class="receipt-name-menu">
+        <p class="mb-0">อเมริกาโน่</p>
+        <p class="mb-0">หวานน้อย</p>
+        <p class="mb-0">+กาแฟ 1 ช็อต</p>
+        <p class="mb-0">น้ำแข็งน้อย</p>
+        </div>
+        </div>
+        </div>
+        <div class="receipt-text-sumorder">
+        <p class="mb-0">จำนวนรายการทั้งหมด :</p>
+        <p class="mb-0">4</p>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>*@
+        @*<button type="button"
+        class="btn btn-top"
+        id="btn-back-to-top">
+        <i class="fa fa-angle-up"></i>
+        </button>*@
+    </div>
+
+
+    <div class="overlay"></div>
+
+
+    @* ModalMenuLanguage *@
+    <div class="modal fade bd-example-modal-sm" id="ModalMenuLanguage" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<div class="d-flex flex-row">*@
+                    <div class="language-flex-head">
+                        <button type="button" class="btn-close header-modal p-0 headder-language" data-dismiss="modal" aria-label="Close" onclick="Close();" aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></button>
+                        <h5 class="text-branch-modal mb-0 ml-2">@Localizer["เลือกภาษาที่ใช้งาน"]</h5>
+                    </div>
+                    @*<div class="p-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close" onclick="Close();"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                    <div class="p-2"><h5 class="text-branch">เลือกสาขา</h5></div>*@
+                    @*</div>*@
+                </div>
+                <div class="modal-body body-language" id="ItemLanguage" onchange="MYLanguage();">
+                    <div class="flex-menu-modal-language mt-3 mx-3">
+
+                        <div class="form-check box-lists mb-3">
+                            <div class="row-lists">
+                                <label class="form-check-label box-label font-boxs-label on-radio-language" for="LanguageTh" id="Language_Th">
+                                    <small class="mb-0 text-label-branch"><img class="img-language mr-4" src="/mymenumerchant/images/TH.png" />@Localizer["ภาษาไทย"]</small>
+                                </label>
+                                <input class="" type="radio" name="Language" id="LanguageTh" value="Th" hidden>
+                            </div>
+                        </div>
+                        <div class="form-check box-lists mb-3">
+                            <div class="row-lists">
+                                <label class="form-check-label box-label font-boxs-label" for="LanguageEn" id="Language_En">
+                                    <small class="mb-0 text-label-branch"><img class="img-language mr-4" src="/mymenumerchant/images/EN.png" />@Localizer["English"]</small>
+                                </label>
+                                <input class="" type="radio" name="Language" id="LanguageEn" value="En" hidden>
+                            </div>
+                        </div>
+                        <div class="form-check box-lists mb-3" hidden>
+                            <div class="row-lists">
+                                <label class="form-check-label box-label font-boxs-label" for="LanguageLao" id="Language_Lao">
+                                    <small class="mb-0 text-label-branch"><img class="img-language mr-4" src="/mymenumerchant/images/LAO.png" />@Localizer["Lao"]</small>
+                                </label>
+                                <input class="" type="radio" name="Language" id="LanguageLao" value="Lao" hidden>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-branch modal-footer">
+                    <button type="button" class="btn btn-save-branch" id="SubmitLanguage" onclick="ChangeLanguage()">@Localizer["ตกลง"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+
+
+    @await Html.PartialAsync("_LeftMenu")
+
+    <div class="container-fluid">
+        @*<main role="main" class="pb-3">
+        @RenderBody()
+        </main>
+        *@
+        <main role="main" class="pb-3">
+            @{
+                RenderBody();
+            }
+            @*@await Html.PartialAsync("_WelcomeScreenPartial")*@
+        </main>
+
+
+    </div>
+    <form hidden id="ChangeLanguage" asp-action="ChangeLanguage" asp-controller="Login" method="post">
+        <input name="Languageid" id="Languageid" value="" />
+    </form>
+    <script type="text/javascript">
+        var listnewnotify = []; //status = 'N','O' N = newNoti , O = oldNoti
+        var listshownewnotify = []; //status = 'N','O' N = newNoti , O = oldNoti
+
+        function ChangeLanguage() {
+            var _selectLanguage = $("input[type='radio'][name='Language']:checked").val();
+
+            $("#Languageid").val(_selectLanguage);
+            $("#ChangeLanguage").submit();
+        }
+
+        function OnTablesonly(total, id, dateCreated) {
+            if (id != null || id != 0) {
+
+                // stamp 'O' ไปที่ listnewnotify
+                var noti = listnewnotify.find(x => x.dateCreated == dateCreated && x.openOrderID == id);
+                if (noti != null) {
+                    noti.status = 'O';
+                }
+
+                localStorage.setItem("listnewnotify", JSON.stringify(listnewnotify));
+                window.location.href = "@Url.Action("TableDetails", "Table")?id=" + id.toString();
+            }
+        }
+        $(document).ready(function () {
+            var aaa = JSON.parse(localStorage.getItem("listnewnotify"));
+            if(aaa != null){
+                listshownewnotify.push(...aaa);
+                listnewnotify.push(...aaa);
+            }
+            
+            FirstCheckLanguage();
+            var table = $('#TableMenuInfo').DataTable({
+                ajax: {
+                    url: "@Url.Action("GetNoti", "Home")",
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: { merchantID: 'merchantID', comments: 'comments', foodTableName: 'foodTableName', notificationType: 'notificationType', dateCreated: 'dateCreated', total: 'total', openOrderID: 'openOrderID' } },
+                    { data: 'dateCreated' }
+                ],
+
+                columnDefs: [{
+                    targets: [0],
+                    render: function (data, type, full, meta) {
+                        var setdata = '';
+                        setdata += '<div onclick="OnTablesonly(' + data.total + ',&apos;' + data.openOrderID + '&apos;' + ',&apos;' + data.dateCreated + '&apos;);" class="dropdown-item  p-3 bell-order-flex table-striped-order newnotify';
+                        var noti = listshownewnotify.find(x => x.dateCreated == data.dateCreated && x.openOrderID == data.openOrderID);
+                        if (noti != null && noti.status == 'O') {
+                            setdata = setdata.replace('newnotify', '');
+                        }
+                        setdata += '">';
+                        setdata += '<div>';
+
+                        setdata += '<div class="text-order-flex">';
+                        setdata += '<p class="text-color-head-order mb-0">@Localizer["โต๊ะ"]</p>';
+                        setdata += '<p class="text-color-sub-order mb-0 mr-3">' + '&nbsp; ' + data.foodTableName + '</p>';
+                        if (data.notificationType == "C") {
+                            setdata += '<p class="text-color-head-order mb-0">@Localizer["เรียกพนักงาน"]</p>';
+
+                        } else {
+                            setdata += '<p class="text-color-head-order mb-0">@Localizer["เรียกคิดเงิน"]</p>';
+
+                        }
+
+                        setdata += '</div>';
+                        setdata += '<div class="text-order-flex">';
+                        if (data.notificationType == "C") {
+                            if (data.comments == "") {
+                                setdata += '<p class="text-head-order text-line mb-0 mr-1">@Localizer["เรียกพนักงาน"]</p>';
+                            } else {
+                                setdata += '<p class="text-head-order text-line mb-0 mr-1">' + data.comments + '</p>';
+                            }
+
+                        } else {
+                            setdata += '<p class="text-head-order mb-0 mr-1">@Localizer["ยอดชำระ"]</p>';
+                            setdata += '<p class="text-color-sub-order mb-0">' + data.total.toFixed(2) + '</p>';
+                        }
+
+                        setdata += '</div>';
+                        setdata += '</div>';
+                        setdata += '<div class="text-order-end text-sticky-order">';
+                        setdata += '<p class="text-color-grey mb-0">' + Formatetime(data.dateCreated) + '</p>';
+                        setdata += '<p class="text-color-grey mb-0 text-ads-0">' + SumHours(data.dateCreated) + '</p>';
+                        setdata += '</div></div>';
+
+
+                        //add to listnewnotify
+                        var noti = listnewnotify.find(x => x.dateCreated == data.dateCreated && x.openOrderID == data.openOrderID);
+                        if (noti == null || noti == typeof undefined) {
+                            listnewnotify.push({
+                                dateCreated: data.dateCreated,
+                                openOrderID: data.openOrderID,
+                                status: 'N',
+                            });
+                        }
+
+                        return setdata;
+                    }
+                }, {
+                    targets: [1],
+                    render: function (data, type, full, meta) {
+                        //console.log(full)
+                        var xxx = '<p style="display:none">' + data + '</p>';
+                        return xxx;
+                    }
+
+                },
+                ],
+                "language": {
+                    "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีรายการ"]</p><br/><br/><br/><br/>",
+                    "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                    "loadingRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+
+                },
+                "initComplete": function (settings, json) {
+                    $('#countlistmenu').text(table.data().count());
+                    if (table.data().count() > 0) {
+                        var xxx = table.data()[0].ticksNumber;
+                        //console.log(xxx)
+                        $('#datelastnoti').val(xxx);
+                    } else {
+                        $('#datelastnoti').val("");
+                    }
+
+                    //var mapsAreEqual = (listnewnotify, listshownewnotify) => listnewnotify.length === listshownewnotify.length && Array.from(listnewnotify.keys()).every((key) => listnewnotify.get(key) === listshownewnotify.get(key));
+                    
+                    
+                    
+
+                    if (!areListsEqual(listnewnotify, listshownewnotify)) {
+                        localStorage.setItem("listnewnotify", JSON.stringify(listnewnotify));
+                    }
+
+                    var countgetItem = localStorage.getItem("countnoti");
+                    var countNoti = table.data().count();
+
+                    if(countgetItem == null){
+                        countgetItem = 0;
+                    }
+
+                    if (countgetItem != countNoti) {
+                        //localStorage.setItem("countnoti", table.data().count());
+                        $('#NotiItemMenu').css('display', 'block');
+                    } else {
+                        $('#NotiItemMenu').css('display', 'none');
+                    }
+                    //console.log("sss");
+                    setInterval(GetNotiAuto, 5000);
+
+                },
+                "order": [[1, 'desc']],
+                searching: false,
+                paging: false,
+                info: false
+
+            });
+
+            function areListsEqual(list1, list2) {
+                // ตรวจสอบความยาวของ list ถ้าไม่เท่ากัน ก็ไม่เท่ากัน
+                if (list1.length !== list2.length) {
+                    return false;
+                }
+
+                // เปรียบเทียบทุกค่าใน list
+                for (let i = 0; i < list1.length; i++) {
+                    // ถ้าค่าใน index เดียวกันของ list ไม่เท่ากัน ก็ไม่เท่ากัน
+                    if (list1[i] !== list2[i]) {
+                        return false;
+                    }
+                }
+
+                // ถ้าผ่านเงื่อนไขทุกอย่าง แสดงว่า list เท่ากัน
+                return true;
+            }
+
+
+            function SumHours(DateTime) {
+                var currentDate = new Date();
+                var givenDate = new Date(DateTime);
+                var timeDifference = givenDate.getTime() - currentDate.getTime();
+                var timeDifferenceInSeconds = Math.abs(timeDifference) / 1000;
+                var days = Math.floor(timeDifferenceInSeconds / (24 * 3600));
+                var hours = Math.floor((timeDifferenceInSeconds % (24 * 3600)) / 3600);
+                var minutes = Math.floor((timeDifferenceInSeconds % 3600) / 60);
+                var seconds = Math.floor(timeDifferenceInSeconds % 60);
+                var dataTime = chackTimes(days, hours, minutes, seconds)
+                return dataTime;
+            }
+
+            function chackTimes(days, hours, minutes, seconds) {
+                var times = "";
+                if (days <= 0) {
+                    times = "";
+                } else {
+                    times = days + " @Localizer["วัน"]";
+                    return times;
+                }
+
+                if (hours <= 0) {
+                    times = "";
+                } else {
+                    times = hours + " @Localizer["ชม."]";
+                    return times;
+                }
+                if (minutes <= 0) {
+                    times = "";
+                } else {
+                    times = minutes + " @Localizer["นาที"]";
+                    return times;
+                }
+                if (seconds <= 0) {
+                    times = seconds + " @Localizer["วิ"]";
+                } else {
+                    times = seconds + " @Localizer["วิ"]";
+                    return times;
+                }
+                return times;
+            }
+            function Formatetime(isoTimeString) {
+                const date = new Date(isoTimeString);
+                const options = {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Asia/Bangkok',
+                    hour12: false
+                };
+                const formattedDate = new Intl.DateTimeFormat('th-TH', options).format(date);
+                return formattedDate;
+            }
+            var aa = 0;
+            var xax = 1;
+            function GetNotiAuto() {
+                //    var qqq = $('#datelastnoti').val();
+                //if ($('#datelastnoti').val() != "") {
+
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    data: {
+                        date: $('#datelastnoti').val()
+                    },
+                    url: "@Url.Action("GetNotiLoop", "Home")",
+                    success: function (message) {
+                        if (message != undefined || message != null) {
+                            var model = JSON.parse(message);
+                            model.forEach((item) => {
+                                var table = $('#TableMenuInfo').DataTable();
+                                table.row.add(item).draw(false);
+                                $('#datelastnoti').val(item.ticksNumber);
+                                xax = 0;
+                            });
+
+                            if (localStorage.getItem("countnoti") != table.data().count() && xax == 0) {
+                                xax += 1;
+                                const yourAudioOrVideoElement = document.getElementById('myAudio');
+                                try {
+                                    if (yourAudioOrVideoElement.paused) {
+                                        yourAudioOrVideoElement.muted = false;
+                                        const playPromise = yourAudioOrVideoElement.play();
+                                        aa += 1;
+                                        //console.log(aa)
+                                        if (playPromise !== undefined) {
+                                            playPromise.then(_ => {
+
+                                            }).catch(error => {
+
+                                                //console.error('Autoplay was prevented: ', error);
+                                            });
+                                        }
+                                    } else {
+                                        yourAudioOrVideoElement.pause();
+                                    }
+                                } catch (error) {
+                                    //console.error('Autoplay was prevented: ', error);
+                                }
+                                $('#NotiItemMenu').css('display', 'block');
+                            }
+
+                            //localStorage.setItem("countnoti", table.data().count());
+                        }
+                    }, error: function (message) {
+                        alert(message.responseText);
+                    }
+                });
+
+                // $('#TableOrder').DataTable().ajax.reload();
+                // var tables = $('#TableOrder').DataTable();
+                //     $('#countlistmenu').text("@Localizer["จำนวนทั้งหมด"] " + table.data().count());
+
+                //}
+            }
+
+        });
+
+        function OnChackInfoItemMenu() {
+            if ($('#NotiItemMenu').css('display') === 'block') {
+                $('#NotiItemMenu').css('display', 'none');
+            } else {
+                $('#NotiItemMenu').css('display', 'none');
+            }
+            var table = $('#TableMenuInfo').DataTable();
+            localStorage.setItem("countnoti", table.data().count());
+            table.ajax.reload();
+        }
+
+        function playSound() {
+            const audio = new Audio("/mymenumerchant/images/LogomyMenuText.png");
+            audio.play();
+        }
+
+    </script>
+    <script type="text/javascript">
+        var printerSetting = [];
+        var paperSize = 58;
+        var IPPrinter = "";
+        var PORTPrinter = "9100";
+
+        // function isInWebView() {
+        //     return /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
+        // }
+
+        // Redirect to a warning page if not loaded in WebView
+
+        // function getMobileOperatingSystem() {
+        //     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        //     // Windows Phone must come first because its UA also contains "Android"
+        //     if (/windows phone/i.test(userAgent)) {
+        //         return "Windows Phone";
+        //     }
+
+        //     if (/android/i.test(userAgent)) {
+        //         return "Android";
+        //     }
+
+        //     // iOS detection from: http://stackoverflow.com/a/9039885/177710
+        //     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        //         return "iOS";
+        //     }
+
+        //     return "unknown";
+        // }
+        function dataFromArgumentToHTML(argument) {
+            alert(argument);
+        }
+
+        function nativeDemand(data) {
+            //alert();
+            location.reload();
+        }
+        function reloadpage(data) {
+            //window.chrome.webview.postMessage('Hi');
+            location.reload();
+            alert();
+            //playSound();
+           
+        }
+        function reloadpage2(data) {
+            //window.chrome.webview.postMessage('Hi');
+
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    window.webkit.messageHandlers.saveimage.postMessage('');
+                };
+            } else {
+                if (window.navigator.platform.indexOf("Win") != 0) {
+                    Device.saveimage(''); //<-- executes C# code
+                }
+
+            };
+        }
+
+
+        function setjwttodevice() {
+            //alert("setjwttodevice");
+            //window.chrome.webview.postMessage('Hi');
+            var merchantid = $.cookie('merchantid');
+            var branchid = $.cookie("branch");
+            var token = $.cookie("access_token");
+            //alert(merchantid + branchid + token);
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    var modelforsent =
+                    {
+                        result1: token,
+                        result2: merchantid,
+                        result3: branchid
+                    }
+                    window.webkit.messageHandlers.Savedatamerchant.postMessage(JSON.stringify(modelforsent));
+                };
+            } else {
+                if (window.navigator.platform.indexOf("Win") != 0) {
+                    Device.Savedatamerchant(token, merchantid, branchid); //<-- executes C# code
+                }
+
+            };
+
+        }
+        function SentPrintertodevice() {
+            //alert("SentPrintertodevice");
+            $.ajax({
+                url: "@Url.Action("GetDataPrints", "BranchManagement")",
+                type: 'GET',
+                async: false,
+                success: function (message) {
+
+                    printerSetting = JSON.parse(message);
+                    //alert(message);
+                    $.each(printerSetting, function (i, item) {
+
+
+                        var merchantid = $.cookie('merchantid');
+                        var branchid = $.cookie("branch");
+                        var ipport = GetlocalstoragePrinter(merchantid, branchid, item.PrinterNO);
+
+                        var userAgent = window.navigator.userAgent.toLowerCase(),
+                            safari = /safari/.test(userAgent),
+                            ios = /iphone|ipod|ipad/.test(userAgent);
+
+                        if (ios) {
+                            if (safari) {
+                                //browser
+                            } else if (!safari) {
+                                var modelforsent =
+                                {
+                                    result1: merchantid + branchid + item.PrinterNO,
+                                    result2: JSON.stringify(ipport)
+                                }
+                                window.webkit.messageHandlers.SavePrinter.postMessage(JSON.stringify(modelforsent));
+                            };
+                        } else {
+                            //alert(merid + branch + item.PrinterNO + ipport);
+                            if (window.navigator.platform.indexOf("Win") != 0) {
+                                Device.SavePrinter(merchantid + branchid + item.PrinterNO, JSON.stringify(ipport)); //<-- executes C# code
+                            }
+
+                        };
+
+
+                    });
+
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+            });
+        }
+
+        function SetPrefer() {
+            //alert("SetPrefer");
+            localStorage.setItem("Webview", "1");
+            setjwttodevice();
+            SentPrintertodevice();
+        }
+
+
+        function testsent() {
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+
+                    window.webkit.messageHandlers.SaveBackgroundimage.postMessage("");
+                };
+            } else {
+                Device.saveBackgroundimage(); //<-- executes C# code
+            };
+        }
+        function commandprint(mode) {
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    window.webkit.messageHandlers.Setting.postMessage('');
+                };
+            } else {
+                if (window.navigator.platform.indexOf("Win") != 0) {
+                    Device.Setting(''); //<-- executes C# code
+                }
+
+            };
+
+        }
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+        var state = 1;
+        $(document).ready(function () {
+            //alert(getMobileOperatingSystem());
+
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('.overlay').on('click', function () {
+                $('body').toggleClass('body-menubar');
+                var screenwidth = document.getElementById("content-menu").offsetWidth;
+                if (screenwidth < 870) {
+                    $('#sidebar, #content, #content-menu, #logo-mymenu').toggleClass('active');
+                } else {
+                    $('#sidebar, #content, #content-menu').toggleClass('active');
+                    if (state == 1) {
+                        document.getElementById("logo-mymenu").classList.add("logo-fixed");
+                        state = 0;
+                    } else {
+                        const myTimeout = setTimeout(logoTime, 300);
+                        state = 1;
+                    }
+                }
+                if (screenwidth < 482) {
+                    const myTimeout = setTimeout(Headfluid, 100);
+                } else {
+                    document.getElementById('head-fluid').hidden = false;
+                }
+                $('.overlay').fadeOut();
+            });
+            $('#sidebarCollapse').on('click', function () {
+
+                $('body').toggleClass('body-menubar');
+                var screenwidth = document.getElementById("content-menu").offsetWidth;
+                if (screenwidth < 870) {
+                    $('#sidebar, #content, #content-menu, #logo-mymenu').toggleClass('active');
+                } else {
+                    $('#sidebar, #content, #content-menu').toggleClass('active');
+                    if (state == 1) {
+                        document.getElementById("logo-mymenu").classList.add("logo-fixed");
+                        state = 0;
+                    } else {
+                        const myTimeout = setTimeout(logoTime, 300);
+                        state = 1;
+                    }
+                }
+                if (screenwidth < 482) {
+                    const myTimeout = setTimeout(Headfluid, 100);
+                } else {
+                    document.getElementById('head-fluid').hidden = false;
+                }
+                $('.overlay').fadeIn();
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+
+
+            var pathImage;
+            var path = $.cookie('logopath');
+            if (path === "" || path === null) {
+                pathImage = "/mymenumerchant/images/LogoMerchant.png";
+            }
+            else {
+                pathImage = path;
+            }
+            $('#logomerchant').attr('src', pathImage);
+
+            var merchantID = $.cookie('merchantid');
+            $('#ShowMerchantID').text(merchantID);
+
+            //Username
+            var username = $.cookie('username');
+            $('#ShowUserName').text(username);
+
+            GetcloudProduct();
+            SetPrefer();
+        });
+
+        function logoTime() {
+            document.getElementById("logo-mymenu").classList.remove("logo-fixed");
+
+        }
+
+        function SetPrinter() {
+
+            $.ajax({
+                url: "@Url.Action("GetDataPrints", "BranchManagement")",
+                type: 'GET',
+                success: function (message) {
+
+                    printerSetting = JSON.parse(message);
+                    if (printerSetting != null) {
+                        $.each(printerSetting, function (i, item) {
+                            //console.log(item);
+                            if (item.PrinterMain == 1) {
+                                var merchantid = $.cookie('merchantid');
+                                var branchid = $.cookie("branch");
+                                var ipport = GetlocalstoragePrinter(merchantid, branchid, item.PrinterNO);
+                                if (ipport != null) {
+                                    ipport.auto = item.AutoPrintCheckBill;
+                                    SetMainPrint(ipport);
+                                }
+
+
+                            }
+
+                        });
+                    }
+                }, error: function (message) {
+                    alert(message.responseText);
+                }
+            });
+        }
+
+
+        function Print(canvas) {
+            
+            
+            var modelprintmanin = GetMainPrint();
+            var imgInfo = canvas.toDataURL("image/png");
+            // imgInfo = imgInfo.replace('data:image/png;base64,', '');
+
+            var submitval = JSON.stringify({ data: imgInfo });
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    var modelforsent =
+                    {
+                        result1: imgInfo,
+                        result2: JSON.stringify(modelprintmanin)
+                    };
+                    console.log("sss");
+                    window.webkit.messageHandlers.Setting.postMessage(JSON.stringify(modelforsent));
+                };
+            } else {
+
+                if (window.navigator.platform.indexOf("Win") != 0) {
+                    Device.Setting(imgInfo, JSON.stringify(modelprintmanin)); //<-- executes C# code
+                }
+            };
+
+
+            // var model = {
+            //     image: imgInfo ,
+            //     type: modelprintmanin.type,
+            //     ip: modelprintmanin.ip,
+            //     port: modelprintmanin.port
+            // }
+
+            // window.chrome.webview.postMessage(JSON.stringify(model));
+
+
+            // $.ajax({
+            //     url: "@Url.Action("Print", "ReceiptHistory")",
+            //     data: formData,
+            //     processData: false,
+            //     contentType: false,
+            //     type: "post",
+            //     complete: function () {
+            //         console.log("Ready");
+            //     },error: function (exception) {
+            //         alert(exception);
+            //     }
+            // });
+        }
+
+        function PrintwithCounter(canvas) {
+            var modelprintmanin = GetMainPrint();
+            var imgInfo = canvas.toDataURL("image/png");
+
+            var submitval = JSON.stringify({ data: imgInfo });
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    var modelforsent =
+                    {
+                        result1: imgInfo,
+                        result2: JSON.stringify(modelprintmanin)
+                    };
+                    console.log("sss");
+                    window.webkit.messageHandlers.SettingPrintCounter.postMessage(JSON.stringify(modelforsent));
+                    //window.webkit.messageHandlers.SettingPrintCounter.postMessage(imgInfo, JSON.stringify(modelprintmanin));
+                };
+            } else {
+
+                if (window.navigator.platform.indexOf("Win") != 0) {
+                    Device.SettingPrintCounter(imgInfo, JSON.stringify(modelprintmanin)); //<-- executes C# code
+                }
+            };
+        }
+       
+
+        function dataURItoBlob(dataURI) {
+            const [metaData, data] = dataURI.split(',');
+            const [prefix, mimeSection] = metaData.split(':');
+            const [mimeString, separator] = mimeSection.split(';')
+
+            const byteString = atob(data);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([arrayBuffer], { type: mimeString });
+        }
+        function Headfluid() {
+
+            var time = document.getElementById('head-fluid');
+
+            if (time.hidden == false) {
+                time.hidden = true;
+            } else {
+                time.hidden = false;
+            }
+        }
+        function GetlocalstoragePrinter(merid, branch, printerno) {
+            var print = localStorage.getItem("Print" + merid + branch + printerno);
+            // var modelprint = {
+            //     type: type,
+            //     ip: $("#ipaddress").val(),
+            //     port: $("#port").val(),
+            //     papersize: $("#exampleFormControlSelect2").val(),
+            //     btname: name,
+            //     btaddress: address
+            // };
+            return JSON.parse(print);
+        }
+        function SetlocalstoragePrinter(merid, branch, printerno, model) {
+
+            localStorage.setItem("Print" + merid + branch + printerno, JSON.stringify(model));
+        }
+        function Kick() {
+            var modelprintmanin = GetMainPrint();
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    window.webkit.messageHandlers.Kick.postMessage(JSON.stringify(modelprintmanin));
+                };
+            } else {
+                Device.Kick(JSON.stringify(modelprintmanin));
+            };
+        }
+        function GetMainPrint() {
+            var print = localStorage.getItem("PrintMain");
+            return JSON.parse(print);
+        }
+        function SetMainPrint(str) {
+            //alert(JSON.stringify(str));
+            var print = localStorage.setItem("PrintMain", JSON.stringify(str));
+        }
+
+        function roundToTwo(num) {
+            return format('th-TH', 'THB', num);
+        }
+
+        function format(locale, currency, number) {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency,
+                currencyDisplay: "code"
+            })
+                .format(number)
+                .replace(currency, "")
+                .trim();
+        }
+
+        function AllIndexOf(txt) {
+            var allIndexOf = [];
+            var index = 0;
+            index = txt.indexOf('.');
+            while (index != -1) {
+                allIndexOf.push(index);
+                index = txt.indexOf('.', index + 1);
+            }
+            return allIndexOf;
+        }
+
+        function cleartextinnumber(x) {
+            const reg = new RegExp('^[0-9.,]+$')
+            var aaaaa = reg.test(x);
+            if (!aaaaa) {
+                return x = x.slice(0, -1);
+            } else {
+                return x;
+            }
+        }
+
+        function numberWithCommas(x) {
+            x = cleartextinnumber(x);
+            var aaa = x.replace(/,/g, "");
+            var parts = aaa.toString().trim().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (parts.length > 1) {
+                if (parts[1].length > 2) {
+                    parts[1] = parts[1].slice(0, -1);
+                }
+            }
+            return parts.join(".");
+        }
+
+        function yourJavaScriptFunction() {
+            return "hello world";
+        }
+
+        function GetcloudProduct() {
+            var cloudproductlicence = JSON.parse(localStorage.getItem("CloudProductLicence"));
+            if (cloudproductlicence != null) {
+                // console.log(cloudproductlicence);
+                //Package
+                if (cloudproductlicence.packageName == null || cloudproductlicence.packageName == '') {
+                    $('#packageName').text('7 Days Free trial');
+                } else {
+                    $('#packageName').text(cloudproductlicence.packageName);
+                }
+
+                //activeUntilDate
+
+                if (cloudproductlicence.activeUntilDate == null || cloudproductlicence.activeUntilDate == '') {
+                    $('#activeUntilDate').text("ไม่มีวันหมดอายุ");
+                } else {
+                    $('#activeUntilDate').text(formatDate(cloudproductlicence.activeUntilDate));
+                }
+            }
+        }
+
+        function formatDate(date) {
+            var aaaa = new Date(date + 'Z');
+            var d = new Date(aaaa),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            var aaa = [day, month, year].join('/');
+
+            return aaa;
+        }
+
+        function formatDatefullOrder(date) {
+            var aaaa = new Date(date + 'Z');
+            var d = new Date(aaaa),
+
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear(),
+
+                hour = '' + d.getHours(),
+                minunte = '' + d.getMinutes();
+            second = '' + d.getSeconds();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            if (hour.length < 2)
+                hour = '0' + hour;
+            if (minunte.length < 2)
+                minunte = '0' + minunte;
+            if (second.length < 2)
+                second = '0' + second;
+
+            var aaa = [day, month, year].join('/');
+            var bbb = [hour, minunte, second].join(':');
+            return aaa + '  ' + bbb;
+        }
+
+        function formatDatefullReceipt(date) {
+            var aaaa = new Date(date);
+            var d = new Date(aaaa),
+
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear(),
+
+                hour = '' + d.getHours(),
+                minunte = '' + d.getMinutes();
+            second = '' + d.getSeconds();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            if (hour.length < 2)
+                hour = '0' + hour;
+            if (minunte.length < 2)
+                minunte = '0' + minunte;
+            if (second.length < 2)
+                second = '0' + second;
+
+            var aaa = [day, month, year].join('/');
+            var bbb = [hour, minunte, second].join(':');
+            return aaa + '  ' + bbb;
+        }
+
+        function saveImageToLocal(canvas, FoodTable) {
+            var foodtableName = FoodTable;
+            var base64String = canvas.toDataURL("image/png").split(",")[1];
+            if (window.navigator.platform.indexOf("Win") != 0) {
+                Device.SaveimagetoLocalDevice(base64String, foodtableName);
+            }
+        }
+
+        function DownloadguideMerchant() {
+            if (window.navigator.platform.indexOf("Win") != 0) {
+                Device.OnDownloadLinkClicked();
+            }else{
+                // alert(window.navigator.platform);
+                // alert(Device);
+                // Device.Wifi("Hello from JavaScript");
+
+            }
+        }
+
+        function btnDownloadFileImport() {
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    window.webkit.messageHandlers.DownloadFileImportMenu.postMessage('');
+                };
+            } else {
+                Device.DownloadFileImportMenu();
+            };
+
+            // if (window.navigator.platform.indexOf("Win") != 0) {
+            //     Device.DownloadFileImportMenu();
+
+
+
+            // }
+        }
+
+        function btnimportfile() {
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    window.webkit.messageHandlers.ChooseFileImportMenu.postMessage('');
+                };
+            } else {
+                Device.ChooseFileImportMenu();
+            };
+            // if (window.navigator.platform.indexOf("Win") != 0) {
+            //     Device.ChooseFileImportMenu();
+            // }
+        }
+
+
+        function MYLanguage() {
+            const radioButtons = document.querySelectorAll("#ItemLanguage input[type='radio']");
+            for (let i = 0; i < radioButtons.length; i++) {
+                var aaa = radioButtons[i].id;
+                var bbb = aaa.replace('Language', '');
+                var namebranch = document.getElementById("Language" + (bbb) + "");
+                var namelabelbranch = document.getElementById("Language_" + (bbb) + "");
+                if (namebranch?.checked == true) {
+                    namelabelbranch.classList.add("on-radio-language");
+                } else {
+                    namelabelbranch.classList.remove("on-radio-language");
+                }
+            }
+            ChackDefaultLanguage();
+        }
+        function ChackDefaultLanguage() {
+            //var getLanguage = $.cookie("MyMenuLanguage");
+            var DefaultBranch = $.cookie("MyMenuLanguage");
+            var ChackBranch = $('#ItemLanguage input[type="radio"][name="Language"]:checked').attr('value');
+            if (DefaultBranch == ChackBranch) {
+                document.getElementById('SubmitLanguage').disabled = true;
+            } else {
+                document.getElementById('SubmitLanguage').disabled = false;
+            }
+        }
+        function FirstCheckLanguage() {
+
+            var DefaultLanguage = $.cookie("MyMenuLanguage");
+            const radioButtons = document.querySelectorAll("#ItemLanguage input[type='radio']");
+            for (let i = 0; i < radioButtons.length; i++) {
+                var aaa = radioButtons[i].id;
+                var bbb = aaa.replace('Language', '');
+                //console.log(bbb)
+                //console.log(DefaultLanguage)
+                var namelabelbranch = document.getElementById("Language_" + (bbb) + "");
+                if (bbb == DefaultLanguage) {
+                    namelabelbranch.classList.add("on-radio-language");
+                } else {
+                    namelabelbranch.classList.remove("on-radio-language")
+                }
+                document.getElementById('SubmitLanguage').disabled = true;
+            }
+        }
+
+        function ShowAllNotification() {
+            window.location.href = '@Url.Action("AllNotification", "Home")';
+        }
+
+        function PrintCounter(BranchID, TranNo) {
+            $.ajax({
+                type: "PUT",
+                url: "@Url.Action("PutPrintCounter", "ReceiptHistory")",
+                data: {
+                    BranchID: BranchID,
+                    Tranno: TranNo,
+                },
+                success: function (message) {
+                    $('#printCount').text(message);
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                }
+            });
+        }
+    </script>
+
+    <link src="~/js/site.js" asp-append-version="true" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

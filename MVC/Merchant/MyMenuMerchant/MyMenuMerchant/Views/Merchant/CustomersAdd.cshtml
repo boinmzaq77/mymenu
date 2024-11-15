@@ -1,0 +1,110 @@
+﻿
+@{
+    ViewData["Title"] = "CustomersAdd";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="CustomersAdd">
+<div class="container">
+    <form onchange="CustomersAdd();">
+    <div class="form-row">
+        <div class="col-md-12  mb-2">
+            <div class="row ">
+                <div class="col-auto">
+                            <a asp-controller="Merchant" asp-action="Customers"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                </div>
+                <div class="col-10">
+                            <h2 class="font-weight-bold menu-header">@Localizer["เพิ่มสาขา"]</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-12"> 
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                            <label class="font-weight-bold" for="UserName">@Localizer["Username"]</label>
+                                    <div class="input-group input-text"> 
+                                        <input type="text" class="form-control examine" id="UserName"  placeholder="Username" />     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12"> 
+                        <div class="d-flex flex-row">
+                            <div class="p-1">
+                                <div class="img-padding">
+                                    <img class="img-help" src="/mymenumerchant/images/Help.png"/>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                        <p class="color-header-help p-margin">@Localizer["Username"] <samp class="color-sub-help">@Localizer["โดยมีภาษาอังกฤษพิมพ์เล็ก ,ตัวเลข, @@ หรือ _ ตัวอัการสูงสุด 32 อักขระ"]</samp> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12  mb-2">
+            <div class="d-flex justify-content-end">
+                <div class="p-2">
+                            <button type="submit" class="btn-save" id="Save" disabled="disabled">@Localizer["บันทึก"]</button>
+                        </div>
+            </div>
+        </div>
+    </div>
+     </form>
+        <button data-toggle="modal" data-target="#ModalExtraAccord">@Localizer["ไม่สามารถใช้งานได้"]</button>
+        <button data-toggle="modal" data-target="#ModalExtraHaveInfo">@Localizer["User มีอยู่ในระบบแล้วคุณต้องการดึงข้อมูลหรือไม่"]</button>
+</div>
+
+
+
+        <!-- ModalExtraAccord -->
+        <div class="modal fade " id="ModalExtraAccord" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                    <h5 class="text-center mt-5 ">@Localizer["Username"] BBB</h5>
+                    <h5 class="text-center mb-5 ">@Localizer["ไม่สามารถใช้งานได้"]</h5>
+                        <div class="col-12">
+                            <button type="button" class="font-weight-bold btn button-modal-accord btn-lg btn-block" data-dismiss="modal">ตกลง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- ModalExtraHaveInfo -->
+        <div class="modal fade " id="ModalExtraHaveInfo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                    <h5 class="text-center mt-5">@Localizer["Username"] AAA @Localizer["มีอยู่ในระบบแล้ว"]</h5>
+                    <h5 class="text-center mb-5">@Localizer["คุณต้องการดึงข้อมูลหรือไม่?"]</h5>
+                        <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-haveinfo">@Localizer["ตกลง"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+<script>
+    function CustomersAdd() {
+        var UserName = document.getElementById("UserName");
+        if (UserName.value == "") {
+            document.getElementById('Save').disabled = true;
+        } else { 
+            document.getElementById('Save').disabled = false;
+        }
+    }
+
+</script>
+

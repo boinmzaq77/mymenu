@@ -1,0 +1,430 @@
+﻿@using MyMenu.JAM;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "PersonnelNewAdd";
+}
+@model useraccount
+
+<body id="PersonnelNewAdd" onchange="PersonnelNewAdd()">
+    <div class="container">
+            <div class="form-row">
+                <div class="col-md-12  mb-2">
+                    <div class="row ">
+                        <div class="col-auto">
+                            <a asp-controller="Merchant" asp-action="Personnel"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        </div>
+                        <div class="col-10">
+                        <h2 class="font-weight-bold menu-header">@Localizer["เพิ่มพนักงาน"]</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12 mb-0">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold" for="UserName">@Localizer["Username"]</label>
+                                                    <div class="input-group input-text">
+                                                        <input type="text" id="MerchantId" value="@Model.MerchantID" hidden />
+                                                    <input type="text" class="form-control examine" id="UserName" value="@Model.UserName" placeholder="@Localizer["Username"]" disabled="disabled" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 mb-0">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold" for="Name">@Localizer["ชื่อ-สกุล"]</label>
+                                                    <div class="input-group input-text">
+                                                    <input type="text" class="form-control examine" id="Name" placeholder="@Localizer["ชื่อ-สกุล"]" autocomplete="off" value="@Model.FullName" maxlength="50" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold" for="Password">@Localizer["รหัสผ่าน"]</label>
+                                                    <div class="input-group input-text">
+                                                    <input type="password" class="form-control examine password-field" id="Password" placeholder="@Localizer["รหัสผ่าน"]" autocomplete="off" oninput="checkPasswords()" maxlength="20" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold " for="ConfirmPassword">@Localizer["ยืนยันรหัสผ่าน"]<small class="color-password-red ml-2 font-weight-bold" id="MessageStatus"></small></label>
+                                                    <div class="input-group input-text">
+                                                    <input type="password" class="form-control examine" id="ConfirmPassword" placeholder="@Localizer["ยืนยันรหัสผ่าน"]" autocomplete="new-password" oninput="checkPasswords()" maxlength="20" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 mb-0">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold" for="RolePersonnel">@Localizer["บทบาทพนักงาน"]</label>  
+                                                <button type="button" class="btn btn-Import input-lg font-weight-bold" id="btnRoleDetali" onclick="ShowModalRoleDetail()">
+                                                    <img class="size-import" src="/mymenumerchant/images/Detail20.png" />
+                                                </button>
+                                                    <select class="form-select custom-select my-1 mr-sm-2" id="RolePersonnel" onchange="OnRolePersonnel()">
+                                                    <option selected disabled hidden value="">@Localizer["เลือกบทบาทพนักงาน"]</option>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Manager">Manager</option>
+                                                        <option value="Invoice">Invoice Officer</option>
+                                                        <option value="Cashier">Cashier</option>
+                                                        <option value="Editor">Editor</option>
+                                                        <option value="Officer">Officer</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 mb-0" style="display:none" id="BranchAM">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="">
+                                                <label class="font-weight-bold">@Localizer["สาขา"] <small class="set-text-small">@Localizer["Manager และ Admin สามารถเลือกสาขาได้มากกว่า 1"]</small></label>
+                                                </div>
+                                                <div class="col">
+                                                    @foreach (var item in ViewBag.listbranch)
+                                                    {
+                                                        <div class="col-8 col-sm-7 col-md-9 form-check mb-2 color-check ">
+                                                            <input class="form-check-input checkbox-branch" name="StatusBranch" value="@item.BranchID" type="checkbox" id='BranchName_@item.BranchID'>
+                                                            <label class="form-check-label" for="BranchName_1">
+                                                                @item.BranchName
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 mb-0" style="display:block" id="BranchUS">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold" for="Branch">@Localizer["สาขา"]</label>
+                                                    <select class="form-select custom-select my-1 mr-sm-2" id="Branch">
+                                                    <option selected disabled hidden value="">@Localizer["เลือกสาขา"]</option>
+                                                        @foreach (var item in ViewBag.listbranch)
+                                                        {
+                                                            <option value="@item.BranchID">@item.BranchName</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 mb-0">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                <label class="font-weight-bold" for="Annotation">@Localizer["หมายเหตุ"]</label>
+                                                    <div class="input-group input-text">
+                                                    <textarea class="form-control " id="Annotation" rows="3" placeholder="@Localizer["หมายเหตุ"]" autocomplete="off">@Model.Comment</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="pt-2">
+                        <button type="button" class="btn-save" id="Save" disabled="disabled" onclick="InsertUserAccount()">@Localizer["เพิ่มพนักงาน"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    @* Modal Post not Success *@
+    <div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 mt-5 " id="namenotSuccess"></h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @* Modal Detail Role *@
+    <div class="modal fade" id="ModalDetailEmpRole" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="role-flex-head">
+                        <button type="button" class="btn header-modal p-0" data-dismiss="modal" aria-label="Close" onclick="Close();" aria-hidden="true"><i class="size-i-back fa fa-angle-left color-branch-p"></i></button>
+                        <h5 class="text-branch-modal mb-0 ml-2">@Localizer["รายละเอียดบทบาทพนักงาน"]</h5>
+                    </div>
+                </div>
+                <div class="modal-body layout-model mt-3 mb-3">
+                    <div class="modal-m-text">
+                        <div class="col-12 mb-order-body order-body">
+                            <div class="card card-body shadow-sm border-role mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Owner"]</label>
+                                            <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["เจ้าของร้านค้า สามารถจัดการร้านค้าได้ทั้งหมด"]</label>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-body shadow-sm border-role mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Admin"]</label>
+                                        <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["ผู้ดูแลระบบ สามารถจัดการข้อมูลร้านค้า, สินค้า, บิล และการตั้งค่าทั้งหมดได้"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-body shadow-sm border-role mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Manager"]</label>
+                                        <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["ผู้จัดการร้านค้า สามารถจัดการข้อมูลสาขาตนเองได้"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-body shadow-sm border-role mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Cashier"]</label>
+                                        <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["พนักงานขาย สามารถจัดการออเดอร์ และหน้าโต๊ะได้"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-body shadow-sm border-role mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Editor"]</label>
+                                        <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["พนักงานแก้ไขข้อมูล สามารถจัดการข้อมูลสินค้าได้"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-body shadow-sm border-role mb-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Invoice Officer"]</label>
+                                        <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["พนักงาน สามารถจัดการข้อมูลบิลได้"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-body shadow-sm border-role">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="font-weight-bold-role" for="UserName">@Localizer["Officer"]</label>
+                                        <div class="input-group input-text">
+                                            <label class="font-weight-bold-roledetail" for="UserName">@Localizer["พนักงานทั่วไป สามารถจัดการออเดอร์ได้"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var flagCheckBranch = false;
+    var flagCheckData = false;
+    var flagBranch = "";
+    var arrBranchPolicy = [];
+
+
+    $(document).ready(function () {
+        $("#ConfirmPassword").prop('disabled', true);
+    });
+
+    function OnRolePersonnel() {
+        var DataPersonnel = document.getElementById("RolePersonnel").value;
+        if (DataPersonnel == "Admin" || DataPersonnel == "Manager") {
+            flagBranch = 'BranchAM';
+            arrBranchPolicy = [];
+            document.getElementById("BranchUS").style.display = "none";
+            document.getElementById("BranchAM").style.display = "block";
+        } else {
+            flagBranch = 'BranchUS';
+            arrBranchPolicy = [];
+            document.getElementById("BranchAM").style.display = "none";
+            document.getElementById("BranchUS").style.display = "block";
+        }
+    }
+
+    function PersonnelNewAdd() {
+        var password = document.getElementById('Password');
+        var confirmpassword = document.getElementById('ConfirmPassword');
+        flagCheckBranch = false;
+        document.getElementById('Save').disabled = true;
+
+        if (password.value != "") {
+            if (password.value != confirmpassword.value) {
+                return;
+            }
+        }
+
+        if (password.value.length < 4) {
+            return;
+        }
+
+        //case choose branch
+        if (flagBranch == 'BranchAM') {
+            var checkfromcheckbox = $('input[name="StatusBranch"]:checked').val();
+            if (checkfromcheckbox != "" && typeof checkfromcheckbox != 'undefined' ) {
+                flagCheckBranch = true;
+                arrBranchPolicy = [];
+                $('input[name="StatusBranch"]:checked').each(function () {
+                    arrBranchPolicy.push({
+                        MerchantID: $('#MerchantId').val(),
+                        UserName: $('#UserName').val(),
+                        BranchID: $(this).val(),
+                    });
+                });
+            }
+        }
+        else if (flagBranch = 'BranchUS') {
+            var checkfromoption = $('select#Branch').children("option").filter(":selected").text();
+            if (checkfromoption != 'เลือกสาขา') {
+                flagCheckBranch = true;
+                var branchid = $('select#Branch').children("option").filter(":selected").val();
+                arrBranchPolicy = [];
+                arrBranchPolicy.push({
+                    MerchantID: $('#MerchantId').val(),
+                    UserName: $('#UserName').val(),
+                    BranchID: branchid,
+                });
+            }
+        }else{
+            flagCheckBranch = false;
+        }
+                
+        var inputtext = document.querySelectorAll(".examine");
+        $.each(inputtext, function (key, x) {
+            if (x.value != "") {
+                flagCheckData = true;
+            } else {
+                flagCheckData = false;
+                return false;
+            }
+        });
+
+
+        if (flagCheckBranch && flagCheckData) {
+            document.getElementById('Save').disabled = false;
+        }
+    }
+
+    function checkPasswords() {
+        var password = document.getElementById("Password").value;
+        var confirmPassword = document.getElementById("ConfirmPassword").value;
+        if (password != "") {
+            $("#ConfirmPassword").prop('disabled', false);
+            if (password != confirmPassword) {
+                document.getElementById("MessageStatus").classList.remove("color-password-greem");
+                document.getElementById("MessageStatus").classList.add("color-password-red");
+                document.getElementById("MessageStatus").innerHTML = '<img class="img-password  mr-2" src="/mymenumerchant/images/PasswordFalse.png" />' + @Html.Raw(Json.Serialize(Localizer["รหัสไม่ตรงกัน"].Value)) ;
+            } else {
+                document.getElementById("MessageStatus").classList.remove("color-password-red");
+                document.getElementById("MessageStatus").classList.add("color-password-greem");
+                document.getElementById("MessageStatus").innerHTML = '<img class="img-password  mr-2" src="/mymenumerchant/images/PasswordTrue.png" />' + @Html.Raw(Json.Serialize(Localizer["รหัสถูกต้อง"].Value));
+            }
+        } else {
+            document.getElementById("MessageStatus").innerHTML = "";
+            document.getElementById("ConfirmPassword").value = "";
+            $("#ConfirmPassword").prop('disabled', true);
+        }
+    }
+
+    function InsertUserAccount() {
+        var userAccountInfo = {
+            MerchantID: $('#MerchantId').val(),
+            UserName: $('#UserName').val(),
+            Comments: $('#Annotation').val(),
+            MainRole: $('#RolePersonnel').val(),
+            FullName: $('#Name').val(),
+            PasswordHash: $('#Password').val(),
+            BranchPolicyName :'-',
+            Totalbranch:'-',
+        };
+
+        var UserAccountResult = {
+            userAccountInfo: userAccountInfo,
+            branchPolicy: arrBranchPolicy,
+        };
+
+        $.ajax({
+            url: "@Url.Action("PostUserAccountwithSeauth", "Merchant")",
+            data: UserAccountResult,
+            type: "POST",
+            success: function (message) {
+                window.location = "@Url.Action("Personnel", "Merchant")";
+            }, error: function (message) {
+                //console.log();
+                if (message.responseText == "จำนวนบัญชีผู้ใช้เต็มแล้ว") {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namenotSuccess').text(@Html.Raw(Json.Serialize(Localizer["จำนวนบัญชีผู้ใช้เต็มแล้ว"].Value)) );
+                } else {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namenotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)) );
+                }
+            }
+        });
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function ShowModalRoleDetail() {
+        $('#ModalDetailEmpRole').modal().show;
+    }
+
+</script>
+
+

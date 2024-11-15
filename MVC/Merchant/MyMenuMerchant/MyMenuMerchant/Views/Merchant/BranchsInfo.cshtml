@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewData["Title"] = "BranchsInfo";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="BranchsInfo">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="Merchant" asp-action="Branchs"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["สำนักงานใหญ่"]</h2>
+                        <a class="breadcrumb button-add text-center layout-add" asp-controller="Merchant" asp-action="BranchsEdit"><p class="btn-color-edit"><i class="fa fa-edit "></i> @Localizer["แก้ไข"]</p></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class=" d-flex mb-1">
+                            <div class="mr-auto p-2">
+                                <h5 class="card-title font-weight-bold"><i class="fa fa-clock-o color-icon" style="font-size: 25px;"></i> @Localizer["ข้อมูลสาขา"]</h5>
+                            </div>
+                        </div>
+                        <div class="container ml-1">
+                            <div class="d-flex">
+                                <div class="p-2 font-weight-bold">@Localizer["รหัสสาขา"]</div>
+                              <div class="p-2 color-branch-p">1</div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="p-2 font-weight-bold">@Localizer["ชื่อสาขา"]</div>
+                                <div class="p-2 color-branch-p">@Localizer["สำนักงานใหญ่"]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 mb-2">
+                <div class="card" style="height:300px;">
+                    <div class="card-body">
+                        <div class=" d-flex mb-1">
+                            <div class="mr-auto p-2">
+                                <h5 class="card-title font-weight-bold"><i class="fa fa-clock-o color-icon" style="font-size: 25px;"></i> @Localizer["เวลาเปิดทำการ"]</h5>
+                            </div>
+                        </div>
+                        <div class="container ">
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text ">จันทร์</div>
+                                <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text ">อังคาร</div>
+                                <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text">พุธ</div>
+                                 <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text">พฤหัสบดี</div>
+                                 <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text">ศุกร์</div>
+                                <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text">เสาร์</div>
+                                <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>
+                            <div class="row mb-1 layout-times">
+                                <div class="card-text">อาทิตย์</div>
+                                <div class="card-text text-times">9:00 - 18:00 น.</div>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 mb-2">
+                <div class="card" style="height:300px;">
+                    <div class="card-body">
+                        <div class=" d-flex mb-1">
+                            <div class="mr-auto p-2">
+                                <h5 class="card-title font-weight-bold"><i class="fa fa-clock-o color-icon" style="font-size: 25px;"></i> @Localizer["ประเภทการสั่งอาหาร"]</h5>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <p class="card-text p-type-order"><i class="fa fa-square me-3 icon-type-size"></i> @Localizer["สั่งกลับบ้าน"]</p>
+                            <p class="card-text p-type-order"><i class="fa fa-square me-3 icon-type-size"></i> @Localizer["ทานที่ร้าน"]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class=" d-flex mb-1">
+                            <div class="mr-auto p-2">
+                                <h5 class="card-title font-weight-bold"><i class="fa fa-clock-o color-icon" style="font-size: 25px;"></i> @Localizer["โต๊ะ"]</h5>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="form-row mb-3 ">
+                                <div class="col-3 mb-2">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A1</p>
+                                </div>
+                                <div class="col-3 mb-2">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A2</p>
+                                </div>
+                                <div class="col-3 mb-2">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A3</p>
+                                </div>
+                                <div class="col-3 mb-2 ">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A4</p>
+                                </div>
+                                <div class="col-3 mb-2">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A5</p>
+                                </div>
+                                <div class="col-3 mb-2 ">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A6</p>
+                                </div>
+                                <div class="col-3 mb-2 ">
+                                    <p class="text-center form-control box-size card-text color-name-table font-weight-bold">A6</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+

@@ -1,0 +1,360 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using MyMenu.ORM.Master
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "MyQR";
+}
+@model List<BranchConfig>
+<body id="MyQR">
+    <form id="save">
+        <div class="container">
+            <div class="form-row">
+                <div class="col-12  mb-3">
+                    <div class="row">
+                        <div class="col-12 header-group">
+                            <div class="flex-header-qrcord">
+                                <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                                <h2 class="font-weight-bold menu-header">myQR</h2>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                                    <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+
+                                </ul>
+                            </div>
+
+                            @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                            {
+                                <div class="flex-header-qrcord" id="setupqrcord">
+                                    <div>
+                                        <input type="file" accept=".jpg, .jpeg, .png" id="Edituploadqrcord" onclick="AddImageQR()" hidden />
+                                        <label for="Edituploadqrcord" class="btn btn-edit-qrcord mb-0"><img class="img-edit-qrcode" src="/mymenumerchant/images/Edit20.png" /></label>
+                                    </div>
+                                    <button type="button" class="btn btn-delete-qrcord ml-2" onclick="DeleteImg()"><img src="/mymenumerchant/images/Delete20.png" /></button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    var qr = Model.Where(x => x.CfgKey == "QRPATH" && !string.IsNullOrEmpty(x.CfgString)).FirstOrDefault();
+                    if (qr == null)
+                    {
+                        <div class="col-12 mb-3 " id="myqrnull" style="display:inline">
+                            <div class="card rounded-body border-0">
+                                <div class="card-body pt-3">
+                                    <div class="container-ml">
+                                        <div class="col-12 mb-3">
+                                            <p class="text-header mb-0">@Localizer["รูปภาพ myQR"]</p>
+                                        </div>
+
+                                        <div class="col-12 mb-3">
+                                            <div class="card-body-qr">
+                                                <img class="size-img-qrcord" src="" id="imgqrcord" alt="@Localizer["ยังไม่ได้ตั้งค่ารูปภาพ myQR"]">
+
+                                                <div class="bg-center">
+                                                    <p class="mb-4" id="textuploadqrcord">@Localizer["ยังไม่ได้ตั้งค่ารูปภาพ myQR"]</p>
+                                                    <input type="file" id="uploadqrcord" accept=".jpg, .jpeg, .png" onclick="AddImageQR()" hidden />
+                                                    @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                                                    {
+                                                        <label class="btn label-btn-upload" for="uploadqrcord" id="labeluploadqrcord"><img class="btn-img-add" src="/mymenumerchant/images/Add.png" />  @Localizer["เพิ่มรูปภาพ myQR"] </label>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3 " id="showmyqr" style="display:none">
+                            <div class="card rounded-body border-0">
+                                <div class="card-body pt-3">
+                                    <div class="container-ml">
+                                        <div class="col-12 mb-3">
+                                            <p class="text-header mb-0">@Localizer["รูปภาพ myQR"]</p>
+                                        </div>
+
+                                        <div class="col-12 mb-3">
+                                            <div class="card-body-qr">
+                                                <img class="size-img-qrcord" src="" id="imgqrcode">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-12 mb-3 " id="myqrnull" style="display:none">
+                            <div class="card rounded-body border-0">
+                                <div class="card-body pt-3">
+                                    <div class="container-ml">
+                                        <div class="col-12 mb-3">
+                                            <p class="text-header mb-0">@Localizer["รูปภาพ myQR"]</p>
+                                        </div>
+
+                                        <div class="col-12 mb-3">
+                                            <div class="card-body-qr">
+                                                <img class="size-img-qrcord" src="" id="imgqrcord" alt="@Localizer["ยังไม่ได้ตั้งค่ารูปภาพ myQR"]">
+
+                                                <div class="bg-center">
+                                                    <p class="mb-4" id="textuploadqrcord">@Localizer["ยังไม่ได้ตั้งค่ารูปภาพ myQR"]</p>
+                                                    <input type="file" id="uploadqrcord" accept=".jpg, .jpeg, .png" onclick="AddImageQR()" hidden />
+                                                    @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                                                    {
+                                                        <label class="btn label-btn-upload" for="uploadqrcord" id="labeluploadqrcord"><img class="btn-img-add" src="/mymenumerchant/images/Add.png" />  @Localizer["เพิ่มรูปภาพ myQR"] </label>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3 " id="showmyqr" style="display:inline">
+                            <div class="card rounded-body border-0">
+                                <div class="card-body pt-3">
+                                    <div class="container-ml">
+                                        <div class="col-12 mb-3">
+                                            <p class="text-header mb-0">@Localizer["รูปภาพ myQR"]</p>
+                                        </div>
+
+                                        <div class="col-12 mb-3">
+                                            <div class="card-body-qr">
+                                                <img class="size-img-qrcord" src="@qr.CfgString " id="imgqrcode">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+                @* <div id="qrcodepic80" style="width:250px;height:250px"></div> *@
+
+            </div>
+        </div>
+    </form>
+</body>
+<footer>
+    <div class="footer-help">
+        <div class="row">
+            <div class="media">
+                <img class="align-self-center mr-3 img-help" src="/mymenumerchant/images/Help.png">
+                <div class="media-body layout-body">
+                    <p class="color-header-help p-margin">@Localizer["myQR"] <samp class="color-sub-help">@Localizer["จะเป็น QR Code รับเงินของร้านค้า จะแสดงที่หน้าชำระเงิน"]</samp> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!--Modal Post not Success-->
+<div class="modal fade" id="ModalPostnotSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body layout-model m-3 p-0 ">
+                <div class="modal-m-text">
+                    <div class="row text-center mt-4 mb-4">
+                        <h5 class="text-center mb-5 my-5 " id="namePutnotSuccess"></h5>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* Gen decodedString to QR เพื่อทดสอบว่าใช้งานได้ไหม *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+@* Get QR Code String *@
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+<script>
+    var formData;
+    var decodedString;
+    var lstbranch = [];
+    $(document).ready(function () {
+
+    });
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function AddImageQR() {
+        Device.saveimageMyQRCode();
+    }
+
+    function setMyQRCodebase64String(file) {
+        //Convert64 to image
+        var base64String = file;
+
+        // Convert the Base64 string to a Blob
+        var byteCharacters = atob(base64String);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var blob = new Blob([byteArray], { type: 'image/png' });
+
+        // Create a Blob URL
+        var blobUrl = URL.createObjectURL(blob);
+
+        // Convert Blob URL to Blob
+        fetch(blobUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                formData = new FormData();
+                formData.append("FileQRPATH", blob, "imageQRCode.png");
+
+                var show = document.getElementById("showmyqr");
+                if (show != null || typeof show != 'undefined') {
+                    show.style.display = "inline";
+                }
+
+                var myqrnull = document.getElementById("myqrnull");
+                if (myqrnull != null || typeof myqrnull != 'undefined') {
+                    myqrnull.style.display = "none";
+                }
+
+                var imgqrcode = document.getElementById("imgqrcode");
+                if (imgqrcode != null || typeof imgqrcode != 'undefined') {
+                    imgqrcode.style.display = "inline";
+                }
+                // Set the Blob URL as the source of the image preview
+                $("#imgqrcode").attr("src", blobUrl);
+
+                //Get QR Code String
+                // Get the image element
+                var img = document.getElementById('imgqrcode');
+                img.src = blobUrl; //path รูปที่แสดง QR Code
+                img.crossOrigin = "Anonymous";
+
+                // Use jsQR to decode the QR code
+                img.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0, img.width, img.height);
+
+                    var imageData = context.getImageData(0, 0, img.width, img.height);
+                    var code = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (!jQuery.isEmptyObject(code)) {
+                        // Access the decoded string
+                        decodedString = code.data;
+                        //Gen decodedString to QR เพื่อทดสอบว่าใช้งานได้ไหม
+                        // var qrc = new QRCode(document.getElementById("qrcodepic80"), {
+                        //     text: code.data,
+                        //     width: 250,
+                        //     height: 250,
+                        //     colorDark: "#000000",
+                        //     colorLight: "#ffffff",
+                        //     correctLevel: QRCode.CorrectLevel.H,
+                        // });
+                    } else {
+                        $('#ModalPostnotSuccess').modal('show');
+                        $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["No QR Code found."].Value)));
+                    }
+
+                    lstbranch = [];
+                    var BranchConfig = {
+                        CfgKey: 'QRPATH',
+                        CfgString: '',
+                    }
+                    lstbranch.push(BranchConfig);
+
+                    var BranchConfig2 = {
+                        CfgKey: 'QRSTATIC ',
+                        CfgString: decodedString,
+                    }
+                    lstbranch.push(BranchConfig2);
+                    formData.append('value', JSON.stringify(lstbranch));
+
+                    //ถ้ามีรูปภาพและ qrstring แล้ว ทำการยิง ajax เลย
+                    $.ajax({
+                        type: "PUT",
+                        url: "@Url.Action("UpdateQRpath", "BranchManagement")",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (message) {
+                            //window.location.href = "@Url.Action("Index", "Merchant")";
+                        }, error: function (message) {
+                            if ("Can not update QRPATH" == message.responseText) {
+                                $('#ModalPostnotSuccess').modal('show');
+                                $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                            } else if ("Update Fail" == message.responseText) {
+                                $('#ModalPostnotSuccess').modal('show');
+                                $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                            }
+                            else {
+                                $('#ModalPostnotSuccess').modal('show');
+                                $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                            }
+                        }
+                    });
+                };
+            });
+    }
+
+    function DeleteImg() {
+        formData = new FormData();
+        lstbranch = [];
+        var BranchConfig = {
+            CfgKey: 'QRPATH',
+            CfgString: '',
+        }
+        lstbranch.push(BranchConfig);
+
+        var BranchConfig2 = {
+            CfgKey: 'QRSTATIC ',
+            CfgString: '',
+        }
+        lstbranch.push(BranchConfig2);
+        formData.append('value', JSON.stringify(lstbranch));
+        $.ajax({
+            type: "PUT",
+            url: "@Url.Action("UpdateQRpath", "BranchManagement")",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (message) {
+                var show = document.getElementById("showmyqr");
+                if (show != null || typeof show != 'undefined') {
+                    show.style.display = "none";
+                }
+
+                var myqrnull = document.getElementById("myqrnull");
+                if (myqrnull != null || typeof myqrnull != 'undefined') {
+                    myqrnull.style.display = "inline";
+                }
+            }, error: function (message) {
+                if ("Can not update QRPATH" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else if ("Update Fail" == message.responseText) {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+                else {
+                    $('#ModalPostnotSuccess').modal('show');
+                    $('#namePutnotSuccess').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,177 @@
+﻿@using MyMenu.ORM.Master;
+@model Branch;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<body id="PaymentReceipt">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12  mb-2">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <a asp-controller="BranchManagement" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                        <h2 class="font-weight-bold menu-header">@Localizer["ตั้งค่าใบเสร็จรับเงิน"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="BranchManagement" asp-action="Index">@Localizer["การจัดการสาขา"]</a></li>
+                            <li class="breadcrumb-item active text-ellipsis" aria-current="page">@Localizer["ตั้งค่าใบเสร็จรับเงิน"]</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3 ">
+                <div class="card rounded-body border-0">
+                    <div class="card-body pt-3">
+                        <div class="container-ml">
+                            <div class="col-12">
+                                <div class="header-card-display">
+                                    <p class="text-h2-header">@Localizer["ตัวอย่างใบเสร็จรับเงิน"]</p>
+                                  @*<button type="button" class="btn btn-payment-receipt-edit" disabled="disabled"> <img class="img-editw mr-1" src="/mymenumerchant/images/EditW.png" /> แก้ไข</button>*@
+                                    @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                                    {
+                                        <a class="btn btn-payment-receipt-edit" asp-controller="BranchManagement" asp-action="PaymentReceiptEdit"> <img class="img-editw mr-1" src="/mymenumerchant/images/EditW.png" /> @Localizer["แก้ไข"]</a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-12 flex-justify-center my-4">
+                                <div class="body-print">
+                                    <div class="bg-print">
+                                        <div id="html-content-holder" class="container">
+                                            <div class="receipt">
+                                                <div class="layout-text-center mt-4 mb-3">
+                                                    <p class="mb-0 p-size-head p-weight">Happy Coffee</p>
+                                                    <p class="mb-0 p-size">บริษัท แฮปปี้ จำกัด</p>
+                                                    <p class="mb-0 p-size">สำนักงานใหญ่</p>
+                                                    <p class="mb-0 p-size">เลขที่ 2991/23 ถนนลาดพร้าว แขวงคลองจั่น เขตบางกะปิ กรุงเทพมหานคร 10240</p>
+                                                    <p class="mb-0 p-size">Tel. 081-234-5678</p>
+                                                </div>
+
+                                                <div class="layout-text-center">
+                                                   
+                                                    @if (string.IsNullOrEmpty(Model.ReceiptName))
+                                                    {
+                                                        <p class="mb-0 p-size-head p-weight">@Localizer["ใบเสร็จรับเงิน"]</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="mb-0 p-size-head p-weight">@Model.ReceiptName</p>
+                                                    }
+                                                    @*<p class="mb-0 p-size-head p-weight">ใบเสร็จรับเงิน/ใบกำกับภาษีอย่างย่อ</p>*@
+                                                </div>
+
+                                                <div class="border-sub-detail my-3">
+                                                    <div class="">
+                                                        <p class="mb-0 p-size">04/09/2566<small class="mb-0 p-size w-s-20 f-w-smalll ml-2">9:52:12</small></p>
+                                                        <p class="mb-0 p-size">เลขที่ : 2023000001</p>
+                                                        <p class="mb-0 p-size">Cashier : Emp01</p>
+                                                        <p class="mb-0 p-size">Table : 15</p>
+                                                    </div>
+                                                </div>
+                                                <div class="border-menu pb-3 mb-3">
+                                                    <div class="layout-lists-menu mb-2">
+                                                        <div class="w-menu-13">
+                                                            <p class="mb-0 p-size">1</p>
+                                                        </div>
+                                                        <div class="w-menu-max">
+                                                            <div class="flex-list-menu">
+                                                                <p class="mb-0 p-size">กาแฟเย็น</p>
+                                                                <p class="mb-0 p-size">50.00</p>
+                                                            </div>
+                                                            <div class="flex-list-menu">
+                                                                <p class="mb-0 p-size">0% ไม่หวาน</p>
+                                                                <p class="mb-0 p-size">0.00</p>
+                                                            </div>
+                                                            <div class="flex-list-menu">
+                                                                <p class="mb-0 p-size">ช็อตกาแฟ</p>
+                                                                <p class="mb-0 p-size">15.00</p>
+                                                            </div>
+                                                            <div class="flex-list-menu">
+                                                                <p class="mb-0 p-size">Note: ใส่น้ำแข็งน้อย</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="layout-lists-menu mb-2">
+                                                        <div class="w-menu-13">
+                                                            <p class="mb-0 p-size">1</p>
+                                                        </div>
+                                                        <div class="w-menu-max">
+                                                            <div class="flex-list-menu">
+                                                                <p class="mb-0 p-size">ลาเต้เย็น</p>
+                                                                <p class="mb-0 p-size">65.00</p>
+                                                            </div>
+                                                            <div class="flex-list-menu">
+                                                                <p class="mb-0 p-size">50% หวานน้อย</p>
+                                                                <p class="mb-0 p-size">0.00</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*<div class="layout-sum-lists mb-2">
+                                                    <p class="mb-0 p-size">จำนวนสินค้า 2 รายการ</p>
+                                                </div>*@
+                                                <div class="border-menu pb-3 mt-3">
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size w-flex-p-140">@Localizer["จำนวน"] 2<small class="mb-0 p-size w-s-20 f-w-smalll">@Localizer["รวมเงิน"]</small></p>
+                                                        <p class="mb-0 p-size">130.00</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size w-flex-p-140">@Localizer["ส่วนลด"]<small class="mb-0 p-size w-s-20 f-w-smalll">10%</small></p>
+                                                        <p class="mb-0 p-size">13.00</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size w-flex-p-140">@Localizer["Service Charge"]<small class="mb-0 p-size w-s-20 f-w-smalll">10%</small></p>
+                                                        <p class="mb-0 p-size">11.70</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size w-flex-p-140">@Localizer["VAT"]<small class="mb-0 p-size w-s-20 f-w-smalll">7%</small></p>
+                                                        <p class="mb-0 p-size">9.01</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size">@Localizer["รวมทั้งหมด"]</p>
+                                                        <p class="mb-0 p-size p-weight">137.71</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size">@Localizer["ชำระเงินสด"]</p>
+                                                        <p class="mb-0 p-size">200.00</p>
+                                                    </div>
+                                                    <div class="layout-flex-space-between">
+                                                        <p class="mb-0 p-size">@Localizer["ทอน"]</p>
+                                                        <p class="mb-0 p-size">62.29</p>
+                                                    </div>
+                                                </div>
+                                               
+                                                <div class="mb-4 mt-3">
+                                                    <p class="mb-0 p-size">@Localizer["หมายเหตุ :"] ย้ายโต๊ะมาจาก โต๊ะ 2</p>
+                                                </div>
+                                                <div class="layout-text-center mb-4">
+                                                    <div>
+                                                        @if (string.IsNullOrEmpty(Model.ReceiptTextFooter))
+                                                        {
+                                                            <p class="p-size">@Localizer["***ขอขอบคุณที่ใช้บริการ***"]</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="p-size">@Model.ReceiptTextFooter</p>
+                                                        }
+                                                        
+                                                        <p class="p-size mb-2">Powered By SeniorSoft</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0 p-size">TAX ID : 1234567891011</p>
+                                                        <p class="mb-0 p-size">POS ID : 00000000000</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

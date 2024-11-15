@@ -1,0 +1,497 @@
+﻿@{
+    ViewData["Title"] = "PrintersEdit";
+}
+@using static MyMenuMerchant.Controllers.BranchManagementController;
+@model PrinterEditModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="PrintersEdit">
+    <div class="container">
+        <form id="edit2" onchange="PrintersEdit();">
+            <div class="form-row">
+                <div class="col-md-12  mb-3">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <div class="group-menu-flex-row">
+                                <a asp-controller="BranchManagement" asp-action="Printers"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                                <h2 class="font-weight-bold menu-header">@Localizer["แก้ไขจุดพิมพ์"]</h2>
+                            </div>
+                            @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager")
+                            {
+                                <button type="button" class="btn btn-delete" data-toggle="modal" data-target="#ModalPrintersDelete"><img class="img-delete mr-2" src="/mymenumerchant/images/Delete20.png" />@Localizer["ลบจุดพิมพ์"]</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="Printername">@Localizer["ชื่อจุดพิมพ์"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="Printername" name="Printername" placeholder="@Localizer["ชื่อจุดพิมพ์"]" maxlength="255" value="@Model.printerModel.PrinterName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="position-checkbox">
+                                            <div class="form-group mb-0">
+                                                <div class="form-check form-check-inline mr-0">
+                                                    <input class="form-check-input check-input-printer" type="checkbox" id="inlineCheckbox1" value="option1" @(Model.printerModel.PrinterMain == 1 ? "checked" : "")>
+                                                    <label class="form-check-label" for="inlineCheckbox1">@Localizer["Set เป็นเครื่องพิมพ์หลัก"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchId">@Localizer["ประเภทเครื่องพิมพ์"]</label>
+                                            <div class="input-group input-text">
+                                                <select class="form-control form-select" id="SelectTypePrinter" onchange="OnSelectTypePrinter(this.value)">
+                                                    @if (Model.printerModel.PrinterType == 'W')
+                                                    {
+                                                        <option value="W" selected>@Localizer["IP Address"]</option>
+                                                        <option value="B">@Localizer["Bluetooth"]</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="W">@Localizer["IP Address"]</option>
+                                                        <option value="B" selected>@Localizer["Bluetooth"]</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchInvoiceID">@Localizer["ขนาดกระดาษ"]</label>
+                                            <select class="form-control form-select" id="exampleFormControlSelect2">
+                                                @if (Model.printerModel.PaperSize == "80")
+                                                {
+                                                    <option value="58">@Localizer["58 mm."]</option>
+                                                    <option value="80" selected>@Localizer["80 mm."]</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="58" selected>@Localizer["58 mm."]</option>
+                                                    <option value="80">@Localizer["80 mm."]</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3" id="SetBluetooths" hidden>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold" for="Bluetooth">@Localizer["รายการ Bluetooth"]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 h-overflow-bluetooth" id="listbluetooth">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" id="SetIPAddress">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchId">@Localizer["IP Address"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="ipaddress" name="BranchID" placeholder="@Localizer["IP Address"]" maxlength="255" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchInvoiceID">@Localizer["Port Number"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="port" name="BranchID" placeholder="@Localizer["Port Number"]" maxlength="255" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-7 col-md-6">
+                                        <div class="col-display-flex">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="">@Localizer["พิมพ์ใบเสร็จอัตโนมัติ"]</label>
+                                            </div>
+                                            <div class=" input-group-prepend  d-flex justify-content-start">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="autobill" @(Model.printerModel.AutoPrintCheckBill == 1 ? "checked" : "")>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-7 col-md-6">
+                                        <div class="col-display-flex">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="">@Localizer["พิมพ์ใบส่งครัวอัตโนมัติ"]</label>
+                                            </div>
+                                            <div class=" input-group-prepend  d-flex justify-content-start">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="autosent" @(Model.printerModel.AutoSendKitchen == 1 ? "checked" : "")>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="font-weight-bold" for="exampleFormControlSelect3">@Localizer["ประเภทการตัดใบรายการใบส่งครัว"]</label>
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-6">
+                                        <div class="input-group ">
+                                            <select class="form-control form-select" id="exampleFormControlSelect3">
+                                                 
+                                                <!option value="O" @(Model.printerModel.CustingPaperMode == 'O' ? "selected" : "")>@Localizer["ตัดรายออเดอร์"]</!option>
+                                                <!option value="C" @(Model.printerModel.CustingPaperMode == 'C' ? "selected" : "")>@Localizer["ตัดรายหมวดหมู่"]</!option>
+                                                <!option value="I" @(Model.printerModel.CustingPaperMode == 'I' ? "selected" : "")>@Localizer["ตัดรายสินค้า"]</!option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="col-md-12 mb-3 mt-3">
+                                <div class="">
+                                    <label class="font-weight-bold color-name-head font-18">@Localizer["กำหนดกลุ่มสินค้าตามจุดพิมพ์"]</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    @for (int i = 0; i < Model.categorys.Count; i++)
+                                                    {
+                                                        <div class="form-check">
+                                                            <input class="form-check-input check-input-product-printer" name="optioncheck" type="checkbox" value="@Model.categorys[i].CategoryID" id="defaultCheck_@i" @(Model.printerModel.Categories.FindIndex(x => x.CategoryID == Model.categorys[i].CategoryID) != -1 ? "checked" : "") >
+                                                            <label class="form-check-label" for="defaultCheck_@i">
+                                                                @Model.categorys[i].CategoryName
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="pt-2">
+                            <button type="button" class="btn-save" id="Save" onclick="PrintersEditsave()">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    @*ModalPrintersDelete*@
+    <div class="modal fade " id="ModalPrintersDelete" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <h5 class="text-center mb-5 my-5  text-h-delete" id="namedelete"></h5>
+                    <div class=" d-flex justify-content-center mr-4 ml-4 mb-3">
+                        <input id="iddelete" value="" hidden />
+                        <button type="button" class="font-weight-bold btn  button-modal-delete" onclick="fnDelete()">@Localizer["ลบ"]</button>
+                        <button type="button" class="font-weight-bold btn ms-5 button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert">@Localizer["ไม่สามารถเพิ่มจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var listcategory = [];
+    var jsonprinter = [];
+    var ipport = [];
+    $(document).ready(function () {
+        console.log(jsonprinter);
+        jsonprinter = @Json.Serialize(Model.printerModel);
+
+        listcategory = @Json.Serialize(Model.categorys);
+        var merchantid = $.cookie('merchantid');
+        var branchid = $.cookie("branch");
+        
+        ipport = GetlocalstoragePrinter(merchantid, branchid, jsonprinter.printerNO);
+        if (ipport !== null) {
+            $("#ipaddress").val(ipport.ip);
+            $("#port").val(ipport.port);
+            OnSelectTypePrinter(jsonprinter.printerType);
+        } else {
+            $("#ipaddress").val("192.168.200.1");
+            $("#port").val("9100");
+            OnSelectTypePrinter(jsonprinter.printerType);
+        }
+       
+        
+        $("#edit2").on("submit", function (e) {
+            e.preventDefault();
+        });
+
+    });
+
+    function PrintersEditsave() {
+        var listoption = [];
+        $('input[name="optioncheck"]:checked').each(function () {
+
+            var catcheck = listcategory.find((x) => x.categoryID == this.value);
+
+            listoption.push(catcheck);
+        });
+        //alert(JSON.stringify( listoption));
+        var Main = document.getElementById("inlineCheckbox1").checked;
+        var autobill = document.getElementById("autobill").checked;
+        var autosent = document.getElementById("autosent").checked;
+        //var modelprinteradd = {
+        //    categories: listoption,
+        //    printerName: $("#Printername").val(),
+        //    printerType: 'W',
+        //    printerMain: (Main === true) ? 1 : 0,
+        //    autoPrintCheckBill: (autobill === true) ? 1 : 0,
+        //    autoSendKitchen: (autosent === true) ? 1 : 0,
+        //    paperSize: $("#exampleFormControlSelect2").val(),
+        //    custingPaperMode: $("#exampleFormControlSelect3").val(),
+        //    ipAdress: $("#ipaddress").val(),
+        //    port: $("#port").val(),
+        //}
+
+        jsonprinter.categories = listoption;
+        jsonprinter.printerName = $("#Printername").val();
+        jsonprinter.printerType = $("#SelectTypePrinter").val();
+        jsonprinter.printerMain = (Main === true) ? 1 : 0;
+        jsonprinter.autoPrintCheckBill = (autobill === true) ? 1 : 0;
+        jsonprinter.autoSendKitchen = (autosent === true) ? 1 : 0;
+        jsonprinter.paperSize = $("#exampleFormControlSelect2").val();
+        jsonprinter.custingPaperMode = $("#exampleFormControlSelect3").val();
+        jsonprinter.ipAdress = $("#ipaddress").val();
+        jsonprinter.port = $("#port").val();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditPrinter", "BranchManagement")",
+            data: jsonprinter,
+            success: function (message) {
+                console.log(message);
+                var merchantid = $.cookie('merchantid');
+                var branchid = $.cookie("branch");
+                var type = $("#SelectTypePrinter").val();
+                //alert(type);
+                var name = $('input[name="exampleRadios"]:checked').data("name");
+                var address = $('input[name="exampleRadios"]:checked').data("address");
+                var modelprint = {
+                    type: type,
+                    ip: $("#ipaddress").val(),
+                    port: $("#port").val(),
+                    papersize: $("#exampleFormControlSelect2").val(),
+                    btname: name,
+                    btaddress: address
+                };
+                //alert(JSON.stringify(modelprint));
+                 SetlocalstoragePrinter(merchantid, branchid, jsonprinter.printerNO, modelprint);
+                 SetPrinter();
+                 SentPrintertodevice();
+                window.location.href = "@Url.Action("Printers", "BranchManagement")";
+                // SetlocalstoragePrinter(merchantid, branchid, jsonprinter.printerNO, modelprint).then(() => {
+                //     SetPrinter().then(() => {
+                //         SentPrintertodevice().then(() => {
+                //             window.location.href = "@Url.Action("Printers", "BranchManagement")";
+                //         })
+                //     })
+                // });
+                
+            }, error: function (message) {
+                $('#ModalPostnotSuccessError').modal('show');
+                if (message.responseText == "Update Fail") {
+                    $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                } else if (message.responseText == "Insert CategoryOnPrinter Fail") {
+
+                }
+                else {
+                    $('#namealert').text(@Html.Raw(Json.Serialize(Localizer["ไม่สามารถแก้ไขจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"].Value)));
+                }
+            }
+
+        });
+    }
+    function A() {
+
+    }
+    $("input[type=radio].chack-status-radio").on('change', function (event) {
+        var id = $(this).data("id");
+        $("#SetConnected" + id).text("Connected");
+        $("#SetConnected" + id).addClass("color-chack-greem");
+        var chack = document.getElementsByClassName("chack-status-radio");
+        for (var i = 1; i <= chack.length; i++) {
+            var radiobluetooth = document.getElementById("exampleRadios" + [i]).checked;
+            if (radiobluetooth == false) {
+                $("#SetConnected" + [i]).text("Not Connected");
+                $("#SetConnected" + [i]).removeClass("color-chack-greem");
+            }
+        }
+    });
+    // function OnSelectTypePrinter(value) {
+    //     //var value = $(this).val();
+    //     if (value == 1) {
+    //         $("#SetBluetooths").attr('hidden', 'hidden');
+    //         $("#SetIPAddress").removeAttr('hidden');
+    //     } else if (value == 2) {
+    //         $("#SetIPAddress").attr('hidden', 'hidden');
+    //         $("#SetBluetooths").removeAttr('hidden');
+    //     }
+    // }
+
+    function fnDelete(){
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeletePrinter", "BranchManagement")",
+            data: {
+                id: jsonprinter.printerNO,
+            },
+            success: function (message) {
+                window.location.href = "@Url.Action("Printers", "BranchManagement")";
+            }, error: function (message) {
+                alert(message.responseText);
+            }
+
+        });
+    }
+    function OnLoadBTEnd(value) {
+        // close load
+        //alert(value);
+        var x = JSON.parse(value);
+        var text = "";
+        x.forEach(function (value, i) {
+            if(ipport!=null){
+                if (value.Address != ipport.btaddress && ipport) {
+                    text += '<div class="form-check border-list-bluetooth">' +
+                        '<input class="form-check-input chack-status-radio" type="radio" data-id="' + i + '" name="exampleRadios" data-name="' + value.NameBluetooth + '" data-address="' + value.Address + '" id="exampleRadios' + i + '" value="option1" hidden onchange="onchangeinputbtn(' + i + ')">' +
+                        '<label class="row" for= "exampleRadios' + i + '" ><div class= "col-6" ><label class= "form-check-label" for= "exampleRadios' + i + '">' + value.NameBluetooth + '</label></div>' +
+                        '<div class= "col-6" ><p class= "mb-0" id = "SetConnected' + i + '" > Not Connected </p></div></label></div>';
+                } else {
+                    text += '<div class="form-check border-list-bluetooth">' +
+                        '<input class="form-check-input chack-status-radio" type="radio" checked data-id="' + i + '" name="exampleRadios" data-name="' + value.NameBluetooth + '" data-address="' + value.Address + '" id="exampleRadios' + i + '" value="option1" hidden onchange="onchangeinputbtn(' + i + ')">' +
+                        '<label class="row" for= "exampleRadios' + i + '" ><div class= "col-6" ><label class= "form-check-label" for= "exampleRadios' + i + '">' + value.NameBluetooth + '</label></div>' +
+                        '<div class= "col-6" ><p class= "mb-0 color-chack-greem" id = "SetConnected' + i + '" > Connected </p></div></label></div>';
+                }
+            }else{
+                text += '<div class="form-check border-list-bluetooth">' +
+                    '<input class="form-check-input chack-status-radio" type="radio" data-id="' + i + '" name="exampleRadios" data-name="' + value.NameBluetooth + '" data-address="' + value.Address + '" id="exampleRadios' + i + '" value="option1" hidden onchange="onchangeinputbtn(' + i + ')">' +
+                    '<label class="row" for= "exampleRadios' + i + '" ><div class= "col-6" ><label class= "form-check-label" for= "exampleRadios' + i + '">' + value.NameBluetooth + '</label></div>' +
+                    '<div class= "col-6" ><p class= "mb-0" id = "SetConnected' + i + '" > Not Connected </p></div></label></div>';
+            }
+            
+        });
+        $("#listbluetooth").html(text);
+    }
+    function OnSelectTypePrinter(value) {
+
+        //var value = $(this).val();
+        if (value !== null) {
+            if (value == 'W') {
+                $("#SetBluetooths").attr('hidden', 'hidden');
+                $("#SetIPAddress").removeAttr('hidden');
+
+            } else if (value == 'B') {
+                $("#SetIPAddress").attr('hidden', 'hidden');
+                $("#SetBluetooths").removeAttr('hidden');
+
+                // open load
+                var userAgent = window.navigator.userAgent.toLowerCase(),
+                    safari = /safari/.test(userAgent),
+                    ios = /iphone|ipod|ipad/.test(userAgent);
+
+                if (ios) {
+                    if (safari) {
+                        //browser
+                    } else if (!safari) {
+                        window.webkit.messageHandlers.SearchBT.postMessage('');
+                    };
+                } else {
+                    Device.SearchBT(''); //<-- executes C# code
+                };
+
+            }
+        } else {
+
+        }
+        
+    }
+    function onchangeinputbtn(x) {
+
+        var id = x;
+
+        $("#SetConnected" + id).text("Connected");
+        $("#SetConnected" + id).addClass("color-chack-greem");
+        var chack = document.getElementsByClassName("chack-status-radio");
+        for (var i = 0; i <= chack.length; i++) {
+            var radiobluetooth = document.getElementById("exampleRadios" + [i]).checked;
+            if (radiobluetooth == false) {
+                $("#SetConnected" + [i]).text("Not Connected");
+                $("#SetConnected" + [i]).removeClass("color-chack-greem");
+            }
+        }
+    }
+</script>
+

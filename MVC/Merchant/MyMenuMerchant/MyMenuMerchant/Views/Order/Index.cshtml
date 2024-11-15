@@ -1,0 +1,86 @@
+﻿@using MyMenu.JAM;
+@model ManageOrderModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<style>
+    .font-order-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9!important;
+    }
+
+    .bg-order{
+        background: #ffffff url(/mymenumerchant/images/MenuOrderC.png) 0px 17px no-repeat;
+        background-size: 24px 28px;
+    }
+</style>
+<body id="Order">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-12  mb-4">
+                <div class="row ">
+                    <div class="col-12 header-group">
+                        <h2 class="font-weight-bold menu-header">@Localizer["ออเดอร์ทั้งหมด"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item">@Localizer["ออเดอร์ทั้งหมด"]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <a class="col-sm-6 mb-2" asp-controller="Order" asp-action="AllOrders">
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/OrderAll.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["ออเดอร์ทั้งหมด"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.CountOrder</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+            <a class="col-sm-6 mb-2" asp-controller="Order" asp-action="OrderRegister">@*disabled style="pointer-events: none;opacity:0.5;"*@
+                <div class="card rounded-body border-0 mr-3 mb-3">
+                    <div class="card-body card-body-main">
+                        <div class="media-body-text">
+                            <div class="align-self-center mr-3 box-border-radius">
+                                <img class="size-icon-w" src="/mymenumerchant/images/OrderPrinter.png">
+                            </div>
+                            <div class="media-body">
+                                <p class="text-p-heder font-weight-bold font-size15">@Localizer["ออเดอร์ตามจุดพิมพ์"]</p>
+                                <p class="text-p-list text-weight color-branch-p">@Model.CountOrderDetail</p>
+                            </div>
+                        </div>
+                        <div class="set-p-img-all"><p class="set-p-all mb-0 mr-2 font-size15">@Localizer["ดูทั้งหมด"]</p><img class="i-right-all" src="/mymenumerchant/images/NextGreen.png" /></div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+    <br />
+    <br />
+    <footer class="footer-help">
+        <div class="row footer-row-flex">
+            <div class="col-2">
+                <div class="img-padding">
+                    <img class="img-help" src="/mymenumerchant/images/Help.png" />
+                </div>
+            </div>
+            <div class="col-10">
+                <p class="font-weight-bold color-header-help  p-margin ml-3">@Localizer["ระบบจะ"] <small class="font-weight-bold color-sub-help ">@Localizer["Clear Order ทุกๆ 24 ชั่วโมง"]</small> </p>
+               
+            </div>
+        </div>
+    </footer>
+</body>
+
+
+
+
+

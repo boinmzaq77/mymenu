@@ -1,0 +1,378 @@
+﻿@{
+    ViewData["Title"] = "PrintersAdd";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using MyMenu.JAM ;
+@model List<CategoryModel>;
+<body id="PrintersAdd">
+    <div class="container">
+        <form id="save" onchange="PrintersAdd(); ">
+            <div class="form-row">
+                <div class="col-md-12  mb-3">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="BranchManagement" asp-action="Printers"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["เพิ่มจุดพิมพ์"]</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="Printername">@Localizer["ชื่อจุดพิมพ์"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="Printername" name="Printername" placeholder="@Localizer["ชื่อจุดพิมพ์"]" maxlength="255" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="position-checkbox">
+                                            <div class="form-group mb-0">
+                                                <div class="form-check form-check-inline mr-0">
+                                                    <input class="form-check-input check-input-printer" type="checkbox" id="inlineCheckbox1">
+                                                    <label class="form-check-label" for="inlineCheckbox1">@Localizer["Set เป็นเครื่องพิมพ์หลัก"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchId">@Localizer["ประเภทเครื่องพิมพ์"]</label>
+                                            <div class="input-group input-text">
+                                                <select class="form-control form-select" id="SelectTypePrinter" onchange="OnSelectTypePrinter(this.value)">
+                                                    <option value="W">@Localizer["IP Address"]</option>
+                                                    <option value="B">@Localizer["Bluetooth"]</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchInvoiceID">@Localizer["ขนาดกระดาษ"]</label>
+                                            <select class="form-control form-select" id="exampleFormControlSelect2">
+                                                <option value="58">@Localizer["58 mm."]</option>
+                                                <option value="80">@Localizer["80 mm."]</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3" id="SetBluetooths" hidden>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold" for="Bluetooth">@Localizer["รายการ Bluetooth"]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 h-overflow-bluetooth" id="listbluetooth">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" id="SetIPAddress">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchId">@Localizer["IP Address"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="ipaddress" name="BranchID" placeholder="@Localizer["IP Address"]" maxlength="255" value="192.168.200.1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchInvoiceID">@Localizer["Port Number"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="port" name="BranchID" placeholder="@Localizer["Port Number"]" maxlength="255" value="9100" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-7 col-md-6">
+                                        <div class="col-display-flex">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="">@Localizer["พิมพ์ใบเสร็จอัตโนมัติ"]</label>
+                                            </div>
+                                            <div class=" input-group-prepend  d-flex justify-content-start">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="autobill">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-7 col-md-6">
+                                        <div class="col-display-flex">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="">@Localizer["พิมพ์ใบส่งครัวอัตโนมัติ"]</label>
+                                            </div>
+                                            <div class=" input-group-prepend  d-flex justify-content-start">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="autosent">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="font-weight-bold" for="exampleFormControlSelect3">@Localizer["ประเภทการตัดใบรายการใบส่งครัว"]</label>
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-6">
+                                        <div class="input-group ">
+                                            <select class="form-control form-select" id="exampleFormControlSelect3">
+                                                <option value="O">@Localizer["ตัดรายออเดอร์"]</option>
+                                                <option value="C">@Localizer["ตัดรายหมวดหมู่"]</option>
+                                                <option value="I">@Localizer["ตัดรายสินค้า"]</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="col-md-12 mb-3 mt-3">
+                                <div class="">
+                                    <label class="font-weight-bold color-name-head font-18">@Localizer["กำหนดกลุ่มสินค้าตามจุดพิมพ์"]</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    @for (int i = 0; i < Model.Count; i++)
+                                                    {
+                                                        <div class="form-check">
+                                                            <input class="form-check-input check-input-product-printer" name="optioncheck" type="checkbox" value="@Model[i].CategoryID" id="defaultCheck_@i" checked>
+                                                            <label class="form-check-label" for="defaultCheck_@i">
+                                                                @Model[i].CategoryName
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="pt-2">
+                            <button type="submit" class="btn-save" id="Save">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namedelete">@Localizer["ไม่สามารถเพิ่มจุดพิมพ์ได้ กรุณาลองใหม่อีกครั้ง"]</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var listcategory = [];
+    $(document).ready(function () {
+        listcategory = @Json.Serialize(Model);
+        $("#save").on("submit", function (e) {
+            var listoption = [];
+            $('input[name="optioncheck"]:checked').each(function () {
+
+                var catcheck = listcategory.find((x) => x.categoryID == this.value);
+
+                listoption.push(catcheck);
+            });
+            var Main = document.getElementById("inlineCheckbox1").checked;
+            var autobill = document.getElementById("autobill").checked;
+            var autosent = document.getElementById("autosent").checked;
+
+            var modelprinteradd = {
+                categories: listoption,
+                printerName: $("#Printername").val(),
+                printerType: $("#SelectTypePrinter").val(),
+                printerMain: (Main === true) ? 1 : 0,
+                autoPrintCheckBill: (autobill === true) ? 1 : 0,
+                autoSendKitchen: (autosent === true) ? 1 : 0,
+                paperSize: $("#exampleFormControlSelect2").val(),
+                custingPaperMode: $("#exampleFormControlSelect3").val(),
+                ipAdress: $("#ipaddress").val(),
+                port: $("#port").val(),
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddPrinter", "BranchManagement")",
+                data: modelprinteradd,
+                success: function (message) {
+                    console.log(message);
+
+                    var merchantid = $.cookie('merchantid');
+                    var branchid = $.cookie("branch");
+                    var type = $("#SelectTypePrinter").val();
+
+                    var name = $('input[name="exampleRadios"]:checked').data("name");
+
+                    var address = $('input[name="exampleRadios"]:checked').data("address");
+
+
+                    var modelprint = {
+                        type: type,
+                        ip: $("#ipaddress").val(),
+                        port: $("#port").val(),
+                        papersize: $("#exampleFormControlSelect2").val(),
+                        btname: name,
+                        btaddress: address
+                    };
+
+                    SetlocalstoragePrinter(merchantid, branchid, message, modelprint);
+                    SetPrinter();
+                    SentPrintertodevice();
+                    window.location.href = "@Url.Action("Printers", "BranchManagement")";
+                }, error: function (message) {
+                    $('#ModalPostnotSuccessError').modal('show');
+                }
+            });
+            e.preventDefault();
+        });
+    });
+
+
+    function PrintersAdd() {
+
+    }
+    $("input[type=radio].chack-status-radio").on('change', function (event) {
+
+    });
+    function OnSelectTypePrinter(value) {
+
+        //var value = $(this).val();
+        if (value == 'W') {
+            $("#SetBluetooths").attr('hidden', 'hidden');
+            $("#SetIPAddress").removeAttr('hidden');
+        } else if (value == 'B') {
+            $("#SetIPAddress").attr('hidden', 'hidden');
+            $("#SetBluetooths").removeAttr('hidden');
+
+
+            // open load
+            var userAgent = window.navigator.userAgent.toLowerCase(),
+                safari = /safari/.test(userAgent),
+                ios = /iphone|ipod|ipad/.test(userAgent);
+
+            if (ios) {
+                if (safari) {
+                    //browser
+                } else if (!safari) {
+                    window.webkit.messageHandlers.SearchBT.postMessage('');
+                };
+            } else {
+                Device.SearchBT(''); //<-- executes C# code
+            };
+
+        }
+    }
+    function OnLoadBTEnd(value) {
+        // close load
+        var x = JSON.parse(value);
+        alert(value);
+        //alert(value);
+        var text = "";
+        x.forEach(function (value, i) {
+
+            text += '<div class="form-check border-list-bluetooth">' +
+                '<input class="form-check-input chack-status-radio" type="radio" data-id="' + i + '" name="exampleRadios" data-name="' + value.NameBluetooth + '" data-address="' + value.Address + '" id="exampleRadios' + i + '" value="option1" hidden onchange="onchangeinputbtn(' + i + ')">' +
+                '<label class="row" for= "exampleRadios' + i + '" ><div class= "col-6" ><label class= "form-check-label" for= "exampleRadios' + i + '">' + value.NameBluetooth + '</label></div>' +
+                '<div class= "col-6" ><p class= "mb-0" id = "SetConnected' + i + '" > Not Connected </p></div></label></div>';
+        });
+        $("#listbluetooth").html(text);
+    }
+    function OnLoadBTEndios(value) {
+        // close load
+        alert("ssss");
+        var x = JSON.parse(value);
+        
+        alert(value);
+        var text = "";
+        x.forEach(function (value, i) {
+
+            text += '<div class="form-check border-list-bluetooth">' +
+                '<input class="form-check-input chack-status-radio" type="radio" data-id="' + i + '" name="exampleRadios" data-name="' + "sssss" + value + '" data-address="' + value.Address + '" id="exampleRadios' + i + '" value="option1" hidden onchange="onchangeinputbtn(' + i + ')">' +
+                '<label class="row" for= "exampleRadios' + i + '" ><div class= "col-6" ><label class= "form-check-label" for= "exampleRadios' + i + '">' + "sssss" + value.NameBluetooth + '</label></div>' +
+                '<div class= "col-6" ><p class= "mb-0" id = "SetConnected' + i + '" > Not Connected </p></div></label></div>';
+        });
+        $("#listbluetooth").html(text);
+    }
+    function onchangeinputbtn(x) {
+
+        var id = x;
+
+        $("#SetConnected" + id).text("Connected");
+        $("#SetConnected" + id).addClass("color-chack-greem");
+        var chack = document.getElementsByClassName("chack-status-radio");
+        for (var i = 0; i <= chack.length; i++) {
+            var radiobluetooth = document.getElementById("exampleRadios" + [i]).checked;
+            if (radiobluetooth == false) {
+                $("#SetConnected" + [i]).text("Not Connected");
+                $("#SetConnected" + [i]).removeClass("color-chack-greem");
+            }
+        }
+    }
+
+</script>
+
+
+
+
+

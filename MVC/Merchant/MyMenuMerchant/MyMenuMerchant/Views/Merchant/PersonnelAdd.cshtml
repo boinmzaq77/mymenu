@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewData["Title"] = "PersonnelAdd";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<body id="PersonnelAdd">
+<div class="container">
+    <form onkeyup="PersonnelAdd();">
+    <div class="form-row">
+        <div class="col-md-12  mb-2">
+            <div class="row ">
+                <div class="col-auto">
+                    <a asp-controller="Merchant" asp-action="Personnel"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                </div>
+                <div class="col-10">
+                            <h2 class="font-weight-bold menu-header">@Localizer["เพิ่มพนักงาน"]</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-2">
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="col-md-12"> 
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                            <label class="font-weight-bold" for="UserName">@Localizer["Username"] <small class="ml-2 font-weight-bold" id="info"></small></label>
+                                    <div class="input-group input-text">
+                                            <input type="text" class="form-control examine" id="UserName" placeholder="Username" maxlength="32" oninput="checkName(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12"> 
+                        <div class="d-flex flex-row">
+                            <div class="p-1">
+                                <div class="img-padding">
+                                    <img class="img-help" src="/mymenumerchant/images/Help.png"/>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                        <p class="color-header-help p-margin font-weight-bold mb-0">@Localizer["Username"] <small class="color-sub-help font-size15">@Localizer["โดยมีภาษาอังกฤษพิมพ์เล็ก, ตัวเลข, @@ หรือ _ ตัวอักษรสูงสุด 32 อักขระ"]</small> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12  mb-2">
+            <div class="d-flex justify-content-end">
+                <div class="p-2">
+                            <button type="button" class="btn-save" id="Save" onclick="btnAddEmployee()" disabled="disabled">@Localizer["เพิ่มพนักงาน"]</button>
+                        </div>
+            </div>
+        </div>
+    </div>
+     </form>
+      @*    <button data-toggle="modal" data-target="#ModalExtraAccord">ไม่สามารถใช้งานได้</button>
+         <button data-toggle="modal" data-target="#ModalExtraHaveInfo">User มีอยู่ในระบบแล้วคุณต้องการดึงข้อมูลหรือไม่</button>
+        <button><a type="button" asp-controller="Merchant" asp-action="PersonnelNewAdd"> User ใหม่</a></button> *@
+    </div>
+
+
+
+        <!-- ModalExtraAccord -->
+        <div class="modal fade " id="ModalExtraAccord" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                    <h5 class="font-weight-bold text-center mt-5 " id="modalusername">@Localizer["Username"] BBB</h5>
+                    <h5 class="font-weight-bold text-center mb-5 ">@Localizer["ไม่สามารถใช้งานได้"]</h5>
+                        <div class="col-12 d-flex justify-content-center mb-3">
+                        <button type="button" class="font-weight-bold btn button-modal-accord size-btn-accord" data-dismiss="modal">@Localizer["ตกลง"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- ModalExtraHaveInfo -->
+        <div class="modal fade " id="ModalExtraHaveInfo" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body ">
+                    <h5 class="font-weight-bold text-center mt-5" id="modalhaveusername">@Localizer["Username"] AAA @Localizer["มีอยู่ในระบบแล้ว"]</h5>
+                        <h5 class="font-weight-bold text-center mb-5">คุณต้องการดึงข้อมูลหรือไม่?</h5>
+                        <div class=" d-flex justify-content-center mb-3">
+                        <a class="font-weight-bold btn button-modal-haveinfo" onclick="SelectUserAccount()">@Localizer["ตกลง"]</a>
+                        <button type="button" class="font-weight-bold btn ms-5  button-modal-close" data-dismiss="modal">@Localizer["ยกเลิก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    @*  Modal Post not Success Error*@
+    <div class="modal fade" id="ModalPostnotSuccessError" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="row text-center mt-4 mb-4">
+                            <h5 class="text-center mb-5 my-5 " id="namealert"></h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel" onclick="closemodel();">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function PersonnelAdd() {
+        var pattern = /^[a-z0-9@@_]{1,32}$/;
+        var UserName = document.getElementById("UserName");
+        if (UserName.value == "") {
+            document.getElementById('Save').disabled = true;
+        } else {
+            if (pattern.test(UserName.value)) {
+                document.getElementById('Save').disabled = false;
+            }else{
+                document.getElementById('Save').disabled = true;
+            }
+        }
+    }
+    function checkName(inputElement) {
+        var inputValue = inputElement.value;
+        var pattern = /^[a-z0-9@@_]{1,32}$/;
+        var errorTextElement = document.getElementById("info");
+        if (!pattern.test(inputValue)) {
+            if(inputValue != ""){
+                errorTextElement.classList.add("color-password-red");
+                errorTextElement.innerHTML = '<img class="img-password  mr-2" src="/mymenumerchant/images/PasswordFalse.png" />@Localizer["ไม่สามารถใช้งานได้"]';
+                inputElement.style.borderColor = "#F75474";
+            }else{
+                errorTextElement.classList.remove("color-password-red");
+                errorTextElement.innerHTML = "";
+                inputElement.style.borderColor = "";
+            }
+           
+        } else {
+            errorTextElement.classList.remove("color-password-red");
+            errorTextElement.innerHTML = "";
+            inputElement.style.borderColor = "";
+        }
+    }
+
+    function btnAddEmployee(){
+        var _userName = $('#UserName').val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("PostCheckUserName", "Merchant")",
+            data: {
+                userName: _userName,
+            },
+            success: function (message) {
+                $('#ModalExtraHaveInfo').modal('show');
+                $('#modalhaveusername').text("Username " + _userName + " @Localizer["มีอยู่ในระบบแล้ว"]");
+            }, error: function (message) {
+                var message = message.responseText;
+                if (message == "This name cannot be used.") {
+                    $('#ModalExtraAccord').modal('show');
+                    $('#modalusername').text("Username " + _userName);
+                } else if (message == "No Content") {
+                    window.location = "@Url.Action("PersonnelNewAdd", "Merchant")?userName=" + _userName
+                }else{
+                    $('#ModalPostnotSuccessError').modal('show');
+                    $('#namealert').text("กรุณาลองใหม่อีกครั้ง");
+                }
+            }
+        });
+    }
+
+    function closemodel() {
+        $('#ModalPostnotSuccess').modal().hide();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+
+    function SelectUserAccount() {
+        var _userName = $('#UserName').val();
+        window.location = "@Url.Action("PersonnelOldAdd", "Merchant")?userName=" + _userName
+    }
+
+</script>
+

@@ -1,0 +1,88 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "username": "Admin",
+      "name": "admin",
+      "bearings": "admin",
+      "branch": "1"
+    },
+    {
+      "id": "2",
+      "username": "User1",
+      "name": "Gun",
+      "bearings": "user",
+      "branch": "2"
+    },
+    {
+      "id": "3",
+      "username": "User2",
+      "name": "Junior Technical Author",
+      "bearings": "user",
+      "branch": "4"
+    },
+    {
+      "id": "4",
+      "username": "User3",
+      "name": "Senior Javascript Developer",
+      "bearings": "user",
+      "branch": "3"
+    },
+    {
+      "id": "5",
+      "username": "User4",
+      "name": "Accountant",
+      "bearings": "user",
+      "branch": "1"
+    },
+    {
+      "id": "6",
+      "username": "User5",
+      "name": "Integration Specialist",
+      "bearings": "user",
+      "branch": "1"
+    },
+    {
+      "id": "7",
+      "username": "User6",
+      "name": "Sales Assistant",
+      "bearings": "user",
+      "branch": "2"
+    },
+    {
+      "id": "8",
+      "username": "User7",
+      "name": "Integration Specialist",
+      "bearings": "user",
+      "branch": "1"
+    },
+    {
+      "id": "9",
+      "username": "User8",
+      "name": "Javascript Developer",
+      "bearings": "user",
+      "branch": "2"
+    },
+    {
+      "id": "10",
+      "username": "User9",
+      "name": "Software Engineer",
+      "bearings": "user",
+      "branch": "4"
+    },
+    {
+      "id": "11",
+      "username": "User10",
+      "name": "Office Manager",
+      "bearings": "user",
+      "branch": "3"
+    },
+    {
+      "id": "12",
+      "username": "User11",
+      "name": "Support Lead",
+      "bearings": "user",
+      "branch": "2"
+    }
+  ]
+}

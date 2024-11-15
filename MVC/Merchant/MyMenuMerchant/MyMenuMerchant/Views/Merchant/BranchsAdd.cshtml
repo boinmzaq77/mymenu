@@ -1,0 +1,243 @@
+﻿@{
+    ViewData["Title"] = "BranchsAdd";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="BranchsAdd">
+    <div class="container">
+        <form id="Save">
+            <div class="form-row">
+                <div class="col-md-12  mb-3">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="Merchant" asp-action="Branchs"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h2 class="font-weight-bold menu-header">@Localizer["เพิ่มสาขา"]</h2>
+                        </div>
+                    </div>
+                </div>
+                @*        <div class="col-md-12 mb-2">
+                <div class="card">
+                <div class="card-body">
+                <div class="col-md-12">
+                <div class="row">
+                <div class="col">
+                <div class="form-group">
+                <label class="font-weight-bold" for="BranchId">รหัสสาขา</label>
+                <div class="input-group input-text">
+                <input type="text" class="form-control examine" id="BranchId"  placeholder="รหัสสาขา" value="1" disabled/>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                <div class="col-md-12">
+                <div class="row">
+                <div class="col">
+                <div class="form-group">
+                <label class="font-weight-bold" for="BranchName">ชื่อสาขา</label>
+                <div class="input-group input-text">
+                <input type="text" class="form-control examine" id="BranchName"  placeholder="ชื่อสาขา" />
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>*@
+                <div class="col-md-12 mb-2">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="col-md-12 ">
+                                <div class="">
+                                    <label class="font-weight-bold color-name-head font-18">@Localizer["ข้อมูลสาขา"]</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchId">@Localizer["รหัสสาขา"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="BranchId" name="BranchID" placeholder="@Localizer["รหัสสาขา"]" maxlength="255" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchInvoiceID">@Localizer["รหัสสาขา"] @Localizer["(สำหรับใบกำกับภาษี)"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="BranchId" name="TaxBranchID" placeholder="@Localizer["รหัสสาขา"] @Localizer["(สำหรับใบกำกับภาษี)"])" maxlength="255" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="BranchName">@Localizer["ชื่อสาขา"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" name="BranchName" id="BranchName" maxlength="255" placeholder="@Localizer["ชื่อสาขา"]" onkeyup="enableButton()" required />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="TimeSet">@Localizer["เวลาเปิดทำการ"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="text" class="form-control examine" id="TimeSet" name="OpeningHours" maxlength="255" placeholder="@Localizer["เวลาเปิดทำการ"]" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="Address1">@Localizer["รายละเอียดที่อยู่"]</label>
+                                            <div class="input-group input-text">
+                                                <input class="form-control" id="Address1" name="Address1" maxlength="250" placeholder="@Localizer["รายละเอียดที่อยู่"] 1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <div class="input-group input-text">
+                                                <input class="form-control" id="Address2" name="Address2" maxlength="250" placeholder="@Localizer["รายละเอียดที่อยู่"] 2" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" for="Tel">@Localizer["เบอร์โทรศัพท์"]</label>
+                                            <div class="input-group input-text">
+                                                <input type="tel" class="form-control examine" id="Tel" name="Tel" maxlength="12" placeholder="000-000-0000"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div class="pt-2">
+                            <button type="submit" class="btn-save" id="btnsave" disabled="">@Localizer["บันทึก"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="ModalAlert" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body ">
+                    <div class="my-5">
+                        <h5 class="text-center font-weight-bold  my-5-adddiscount fo " id="txt1"></h5>
+                        <h5 class="text-center font-weight-bold  my-5-adddiscount fo "id="txt2"></h5>
+                    </div>
+
+                    <div class=" d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal">@Localizer["ตกลง"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<style>
+    /* ต้องปรับ dialog อีกที*/
+    .my-5-adddiscount {
+        margin-top: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#Save").on("submit", function (e) {
+            var dataString = $(this).serialize();
+
+            // alert(dataString); return false;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddBranch", "Merchant")",
+                data: dataString,
+                success: function (message) {
+                    window.location.href = "@Url.Action("Branchs", "Merchant")";
+                }, error: function (message) {
+                    console.log(message.responseText);
+                    $('#ModalAlert').modal('show');
+                    if (message.responseText == "BranchID is Null") {
+                        $('#txt1').text("@Localizer["กรุณากรอกรหัสสาขา"]");
+                    } else if (message.responseText == "Dublicate BranchID") {
+                        $('#txt1').text("@Localizer["รหัสสาขานี้ไม่สามารถใช้งานได้"]");
+                        $('#txt2').text("@Localizer["เนื่องจาก ซ้ำกับสาขาอื่น"]");
+                    }  else {
+                        $('#txt1').text("@Localizer["เพิ่มสาขาไม่สำเร็จ"]");
+                        $('#txt2').text("@Localizer["กรุณาลองใหม่อีกครั้ง"]");
+                    }
+                }
+            });
+            e.preventDefault();
+        });
+    });
+
+    const phoneInput = document.getElementById('Tel');
+    phoneInput.addEventListener('input', () => {
+        var unformattedNumber = phoneInput.value.replace(/-/g, '');
+
+        //เพิ่มเช็คตัวอักษร
+        const matchstr = unformattedNumber.match('^[0-9]+$');
+        if (!matchstr) {
+            console.log(matchstr);
+            unformattedNumber = unformattedNumber.slice(0, -1);
+        }
+
+        const match = unformattedNumber.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        if (match) {
+            const formattedNumber = [match[1], match[2], match[3]].filter(Boolean).join('-');
+            phoneInput.value = formattedNumber;
+        }
+    });
+
+
+    function enableButton() {
+        var branchName = $('#BranchName').val();
+        var btn = $('#btnsave');
+        if (jQuery.isEmptyObject(branchName)) {
+            btn.prop("disabled", true); //Disable
+        } else {
+            btn.prop("disabled", false); //Enable
+        }
+    }
+
+
+</script>
+
+
+
+
+

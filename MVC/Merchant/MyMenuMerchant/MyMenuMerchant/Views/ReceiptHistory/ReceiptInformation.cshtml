@@ -1,0 +1,872 @@
+﻿@{
+    ViewData["Title"] = "ReceiptInformation";
+}
+@using MyMenu.JAM;
+@using MyMenuMerchant.Controllers;
+@model TranDetailModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="ReceiptInformation">
+    <div class="container mb-5">
+        <form id="save" onkeyup="TableManagementAdd1();">
+            <div class="form-row">
+                <div class="col-12 mb-2 ">
+                    <div class="row ">
+                        <div class="col-12 header-group">
+                            <a asp-controller="ReceiptHistory" asp-action="index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                            <h1 class="font-weight-bold menu-header">@Localizer["ใบเสร็จรับเงิน เลขที่"] @Model.TranNo</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <p class="font-weight-bold text-head-receipt">@Localizer["รายละเอียดใบเสร็จรับเงิน"]</p>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="flex-body-text">
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["เลขที่ใบเสร็จ"] :</p>
+                                                <p class="mb-0 font-weight-bold color-bold-text">@Model.TranNo</p>
+                                            </div>
+                                            <p class="mb-0 text-receipt">@Model.DateTran</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <div class="flex-body-text">
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["ประเภทออเดอร์"] :</p>
+                                                @if (Model.OpenOrdersType == 'D')
+                                                {
+                                                    <p class="mb-0 font-weight-bold color-bold-text">@Localizer["ทานที่ร้าน"]</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="mb-0 font-weight-bold color-bold-text">@Localizer["สั่งกลับบ้าน"]</p>
+                                                }
+                                            </div>
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["โต๊ะ"] : @Model.FoodTableName</p>
+                                                <p class="mb-0 font-weight-bold color-table-text"> </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @{
+                                        var groupList = Model.TranDetailItemModels.GroupBy(u => u.RefOrdersID)
+                                        .Select(grp => grp.ToList())
+                                        .ToList();
+                                    }
+                                    @for (int i = 0; i < groupList.Count; i++)
+                                    {
+
+                                        var nub = i + 1;
+
+
+                                        <div class="col-md-12 mb-4">
+                                            <div>
+                                                <p class="mb-2 font-weight-bold">@Localizer["ออเดอร์"] @nub </p>
+                                            </div>
+                                            <div>
+                                                <div class="table-responsive">
+                                                    <table class="table mb-0 " width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col" class="color-th size-th-name">@Localizer["ชื่อเมนู"]</th>
+                                                                <th scope="col" class="color-th size-th-payment text-right">@Localizer["ราคา"]</th>
+                                                                <th scope="col" class="color-th size-th-order text-center">@Localizer["จำนวน"]</th>
+                                                                <th scope="col" class="color-th size-th-order-all text-right">@Localizer["ราคารวม"]</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="border-tbody">
+                                                            @for (int ii = 0; ii < groupList[i].Count; ii++)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="padding-td">
+                                                                            <p class="mb-0">@groupList[i][ii].ItemName</p>
+                                                                            @for (int iii = 0; iii < groupList[i][ii].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 text-suborder-color ml-3">@groupList[i][ii].TranDetailItemOptionExtra[iii].OptionExtraDetailName (@TableController.ConvertToCurrency(groupList[i][ii].TranDetailItemOptionExtra[iii].Price))</p>
+                                                                            }
+                                                                            @if (!string.IsNullOrEmpty(groupList[i][ii].Comments))
+                                                                            {
+                                                                                <p class="mb-0 text-suborder-color ml-3">@groupList[i][ii].Comments</p>
+                                                                            }
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><div class="padding-td text-right"><p class="mb-0">@TableController.ConvertToCurrency(groupList[i][ii].Price + groupList[i][ii].SumOptionExtraPrice)</p></div></td>
+                                                                    <td><div class="padding-td text-center"><p class="mb-0">@groupList[i][ii].Quantity.ToString("###") </p></div></td>
+                                                                    <td><div class="padding-td text-right"><p class="mb-0">@TableController.ConvertToCurrency(groupList[i][ii].Amount)</p></div></td>
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="col-md-12 mb-4">
+                                        <div class="flex-body-text text-order-all pb-4">
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["จำนวนออเดอร์"] :</p>
+                                                <p class="mb-0 color-bold-text text-receipt">@groupList.Count</p>
+                                            </div>
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["จำนวนรายการทั้งหมด"] :</p>
+                                                <p class="mb-0 color-bold-text text-receipt">@Model.TranDetailItemModels.Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <div class="flex-body-text">
+                                            @if (!string.IsNullOrEmpty(Model.Comments))
+                                            {
+                                                <p class="mb-0 text-receipt">@Localizer["หมายเหตุ"] : @Model.Comments </p> @* หมายเหตุ จะเป็นหมายเหตุของฝั่งร้านค้า ไม่ใช่หมายเหตุของ tran *@
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <div class="flex-body-text">
+                                            <p class="mb-0 text-receipt">@Localizer["ราคาก่อน VAT"]</p>
+                                            <p class="mb-0 text-receipt">@TableController.ConvertToCurrency(Model.SubTotalHaveVat + Model.SubTotalNoneVat)</p>
+                                        </div>
+
+                                        @if (Model.ServicechargeType == 'A')
+                                        {
+                                            @if (Model.TranTradDiscounts.Count != 0)
+                                            {
+                                                @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                {
+                                                    <div class="flex-body-text">
+                                                        <p class="mb-0 text-receipt">Discount @Model.TranTradDiscounts[i].FmlDiscount  </p>
+                                                        <p class="mb-0 text-receipt">+@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                    </div>
+                                                }
+
+                                            }
+                                            @if (Model.ServiceCharge != 0)
+                                            {
+                                                <div class="flex-body-text">
+                                                    <p class="mb-0 text-receipt">Service Charge @Model.FmlServiceCharge %</p>
+                                                    <p class="mb-0 text-receipt">+@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @if (Model.ServiceCharge != 0)
+                                            {
+                                                <div class="flex-body-text">
+                                                    <p class="mb-0 text-receipt">Service Charge @Model.FmlServiceCharge %</p>
+                                                    <p class="mb-0 text-receipt">+@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                </div>
+                                            }
+                                            @if (Model.TranTradDiscounts.Count != 0)
+                                            {
+                                                @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                {
+                                                    <div class="flex-body-text">
+                                                        <p class="mb-0 text-receipt">Discount @Model.TranTradDiscounts[i].FmlDiscount  </p>
+                                                        <p class="mb-0 text-receipt">+@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                    </div>
+                                                }
+
+                                            }
+                                        }
+
+
+                                        <div class="flex-body-text">
+                                            @if (Model.TaxRate > 0)
+                                            {
+                                                @if (Model.TranTaxType == 'E')
+                                                {
+                                                    <p class="mb-0 text-receipt" id="pvat0">VAT Exclude @TableController.ConvertToCurrency(Model.TaxRate ?? 0) %</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="mb-0 text-receipt" id="pvat0">VAT Include @TableController.ConvertToCurrency(Model.TaxRate ?? 0) %</p>
+                                                }
+                                                <p class="mb-0 text-receipt">+@TableController.ConvertToCurrency(Model.TotalVat)</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <div>
+                                            <p class="mb-2 text-receipt">@Localizer["ราคารวม"]</p>
+                                            <div class="bg-money">
+                                                <p class="text-money color-bold-text text-receipt">@TableController.ConvertToCurrency(Model.GrandTotal)</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div>
+                                            <p class="mb-0 text-receipt">@Localizer["การชำระเงิน"]</p>
+                                        </div>
+                                        @for (int i = 0; i < Model.TranPayments.Count; i++)
+                                        {
+                                            var textpayment = "";
+                                            switch (Model.TranPayments[i].PaymentType)
+                                            {
+                                                case "CH":
+                                                    textpayment = "เงินสด";
+                                                    break;
+                                                case "Dr":
+                                                    textpayment = "Debit Card";
+                                                    break;
+                                                case "QRCR":
+                                                    textpayment = "Qr Credit";
+                                                    break;
+                                                case "MYQR":
+                                                    textpayment = "MY QR";
+                                                    break;
+                                                case "Cr":
+                                                    textpayment = "Crdit Card";
+                                                    break;
+                                                default:
+                                                    textpayment = "เงินสด";
+                                                    break;
+                                            }
+
+                                            <div class="flex-body-text">
+                                                <p class="mb-0 text-receipt">@textpayment </p>
+                                                <p class="mb-0 text-receipt">@TableController.ConvertToCurrency(Model.TranPayments[i].PaymentAmount)</p>
+                                            </div>
+                                        }
+
+                                        <div class="flex-body-text">
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["เวลาที่ชำระเงิน"] :</p>
+                                                <p class="mb-0 text-receipt">@TableController.ConverttimeLocalcheckNull(Model.TranPayments[0].RequestDateTime) </p>
+                                            </div>
+                                            <div class="flex-menu">
+                                                <p class="mb-0 mr-2 text-receipt">@Localizer["Cashier"] :</p>
+                                                <p class="mb-0 text-receipt">@Model.SellerName</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12  mb-2">
+                    <div class="d-flex justify-content-end">
+                        <div>
+                            <button type="button" class="btn btn-save-print mr-2" onclick="Printrecript()">@Localizer["พิมพ์ใบเสร็จ"]</button>
+                            @if (ViewBag.role.ToString().ToLower() == "owner" || ViewBag.role.ToString().ToLower() == "admin" || ViewBag.role.ToString().ToLower() == "manager" || ViewBag.role.ToString().ToLower() == "invoice")
+                            {
+                                <button type="button" class="btn btn-save-tax-invoice  mb-0" onclick="GenerateTaxInvoice()" id="fulltax">@Localizer["ออกใบกำกับภาษีแบบเต็มรูปแบบ"]</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @* Print Receipt *@
+        @* set-print-txt *@
+        <div class="col-12 mb-4  ">
+            <div class="col-12 mb-4 ">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <p class="mb-0 font-weight-bold  menu-header">@Localizer["ตัวอย่างใบเสร็จรับเงิน"]</p>
+                                    <div class="col-12 flex-justify-center my-4">
+                                        <div class="body-print">
+                                            <div class="bg-QR-80 bg-print" id="divprint80mm">
+                                                <div class="container">
+                                                    <div class="receipt">
+                                                        @* เพื่มรูปร้านค้า *@
+                                                        @if (!string.IsNullOrEmpty(Model.LogoPath))
+                                                        {
+                                                            <div class="layout-text-center mt-3" id="showlogo80">
+                                                                <img class="align-self-center size-logo-merchant" id="imagelogo80" src="@Model.LogoPath">
+                                                            </div>
+                                                        }
+
+                                                        <div class="layout-text-center mt-3 mb-2">
+                                                            <p class="mb-0 p-size p-namemer" id="namemer80">@Model.MerchantName</p>
+                                                            <p class="mb-0 p-size p-branchmer" id="branchmer80">@Model.BranchName</p>
+                                                            @if (!string.IsNullOrEmpty(Model.BranchAddress1) || !string.IsNullOrEmpty(Model.BranchAddress2))
+                                                            {
+                                                                <p class="mb-0 p-size p-addressmer" id="addressmer801">@Model.BranchAddress1</p>
+                                                                <p class="mb-0 p-size p-addressmer" id="addressmer802">@Model.BranchAddress2</p>
+                                                            }
+                                                            @if (!string.IsNullOrEmpty(@Model.BranchTel))
+                                                            {
+                                                                <p class="mb-0 p-size p-telmer" id="telmer80">Tel. @Model.BranchTel </p>
+                                                            }
+                                                        </div>
+
+                                                        <div class="layout-text-center">
+                                                            @if (Model.ReceiptName == "ใบเสร็จรับเงิน")
+                                                            {
+                                                                <p class="mb-0 p-size mb-2">@Localizer["ใบเสร็จรับเงิน"]</p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="mb-0 p-size mb-2">@Model.ReceiptName</p>
+                                                            }
+                                                        </div>
+                                                        <div class="color-br"></div>
+                                                        <div class="border-sub-detail my-2">
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size">@Model.DateTran @* @Model.TranDate.ToString("HH:mm") *@</p>
+                                                            </div>
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size" id="tranno80">@Localizer["เลขที่"] : @Model.TranNo</p>
+                                                            </div>
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size">@Localizer["Cashier"] : @Model.SellerName</p>
+                                                            </div>
+                                                            <div class="lists-sub-detail">
+                                                                @{
+                                                                    var showstatustype = "";
+                                                                    var showcusname = "";
+                                                                    var showcustel = "";
+                                                                    var displaytel = "";
+                                                                    var classmr = "";
+                                                                    var setlinetext58 = "set-p-name-58";
+                                                                    var setlinetext80 = "set-p-name-80";
+                                                                    if (string.IsNullOrEmpty(Model.FoodTableName))
+                                                                    {
+                                                                        showstatustype = "";
+                                                                        showcusname = Model.CustomerName;
+                                                                        showcustel = "," + Model.CustomerTel;
+                                                                        displaytel = "display-show";
+                                                                        classmr = "";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        showstatustype = "Table : ";
+                                                                        showcusname = Model.FoodTableName;
+                                                                        displaytel = "display-hide";
+                                                                        classmr = "mr-1";
+                                                                    }
+                                                                }
+                                                                <p class="mb-0 p-size set-p-food-name @classmr">@showstatustype<samp class="@setlinetext80">@showcusname</samp><samp class="set-p-tel @displaytel">@showcustel</samp></p>
+                                                            </div>
+                                                            <div class="mt-1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="color-br"></div>
+                                                        <div class="border-menu  mb-2">
+                                                            @for (int i = 0; i < Model.TranDetailItemModels.Count; i++)
+                                                            {
+                                                                @if (Model.TranDetailItemModels[i].Price == 0)
+                                                                {
+                                                                    <div class="layout-lists-menu mb-2 pricezero">
+                                                                        <div class="w-menu-30">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                        </div>
+                                                                        <div class="w-menu-130">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                            }
+                                                                            @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                            {
+                                                                                <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                            }
+
+                                                                        </div>
+                                                                        <div class="w-menu-60">
+                                                                            <p class="mb-0 p-size">
+                                                                                @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                            </p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="layout-lists-menu mb-2">
+                                                                        <div class="w-menu-30">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                        </div>
+                                                                        <div class="w-menu-130">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                            }
+                                                                            @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                            {
+                                                                                <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                            }
+
+                                                                        </div>
+                                                                        <div class="w-menu-60">
+                                                                            <p class="mb-0 p-size">
+                                                                                @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                            </p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="color-br"></div>
+                                                        <div class="layout-sum-lists mb-0">
+                                                            @*  <p class="mb-0 p-size">จำนวนสินค้า @Model.TranDetailItemModels.Count รายการ</p> *@
+                                                            <input type="hidden" id="ItemCountnotZero" value="@Model.TranDetailItemModels.Where(x=>x.Price > 0).Count()" />
+                                                        </div>
+                                                        <div class="my-2">
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size  w-flex-p-135">จำนวน<small id="itemCount80" class="mb-0 mr-1 p-size f-w-smalll">@Model.TranDetailItemModels.Count</small><small class="mb-0 p-size w-s-20 f-w-smalll">@Localizer["รวมเงิน"]</small></p>
+                                                                <p class="mb-0 p-size"> <small class="mb-0 p-size w-s-20 f-w-smalll">@TableController.ConvertToCurrency(@Model.SubTotalHaveVat + Model.SubTotalNoneVat)</small></p>
+                                                            </div>
+
+                                                            @if (Model.ServicechargeType == 'A')
+                                                            {
+                                                                @if (Model.TranTradDiscounts.Count != 0)
+                                                                {
+                                                                    @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                                    {
+                                                                        <div class="layout-flex-space-between">
+                                                                            <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                            <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                                @if (Model.ServiceCharge != 0)
+                                                                {
+                                                                    <div class="layout-flex-space-between">
+                                                                        <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                        <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @if (Model.ServiceCharge != 0)
+                                                                {
+                                                                    <div class="layout-flex-space-between">
+                                                                        <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                        <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                                    </div>
+                                                                }
+                                                                @if (Model.TranTradDiscounts.Count != 0)
+                                                                {
+                                                                    @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                                    {
+                                                                        <div class="layout-flex-space-between">
+                                                                            <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                            <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            <div class="layout-flex-space-between">
+                                                                @if (Model.TaxRate > 0)
+                                                                {
+                                                                    <p class="mb-0 p-size w-flex-p-135">VAT @(Model.TranTaxType == 'I' ? "Include" : "Exclude") <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TaxRate?.ToString("0.##")%</small></p>
+                                                                    <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TotalVat)</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="layout-flex-space-between mb-2">
+                                                            <p class="mb-0 p-size p-weight">@Localizer["รวมทั้งหมด"]</p>
+                                                            <p class="mb-0 p-size p-weight">@TableController.ConvertToCurrency(Model.GrandTotal)</p>
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <div class="layout-flex-space-between">
+                                                                @{
+                                                                    decimal amount = 0;
+                                                                }
+                                                                @for (int i = 0; i < Model.TranPayments.Count; i++)
+                                                                {
+                                                                    if (Model.TranPayments[i].PaymentType == "CH")
+                                                                    {
+                                                                        amount += Model.TranPayments[i].ReceivedAmount;
+                                                                    }
+                                                                    else if (Model.TranPayments[i].PaymentType == "MYQR")
+                                                                    {
+                                                                        amount += Model.TranPayments[i].ReceivedAmount;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        //เคสจ่ายเงินแบบอื่นที่ไม่ใช่เงินสด ในอนาคต
+                                                                    }
+                                                                }
+                                                                <p class="mb-0 p-size">ชำระเงินสด</p>
+                                                                <p class="mb-0 p-size" id="txtpay80">@TableController.ConvertToCurrency(amount)</p>
+                                                            </div>
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size">ทอน</p>
+                                                                <p class="mb-0 p-size" id="txtton80">@TableController.ConvertToCurrency(Model.Change)</p>
+                                                            </div>
+                                                        </div>
+                                                        @if (!string.IsNullOrEmpty(Model.Comments))
+                                                        {
+                                                            <p class="mb-0 p-size">@Localizer["หมายเหตุ"] : @Model.Comments </p> @* หมายเหตุ จะเป็นหมายเหตุของฝั่งร้านค้า ไม่ใช่หมายเหตุของ tran *@
+                                                        }
+                                                        <div class="layout-text-center mb-4">
+                                                            <div>
+                                                                @if (string.IsNullOrEmpty(Model.ReceiptTextFooter))
+                                                                {
+                                                                    <p class="p-size mb-0"></p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p class="p-size mb-0">@Model.ReceiptTextFooter</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="layout-text-center mb-4">
+                                                            <div>
+                                                                <p class="p-size">Powered By SeniorSoft</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layout-text-center mb-4">
+                                                            <div>
+                                                                @if (!string.IsNullOrEmpty(Model.TaxID))
+                                                                {
+                                                                    <p class="p-size" id="txttaxid80" hidden>TAX ID : xxxxxxxx</p>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(Model.PosID))
+                                                                {
+                                                                    <p class="p-size" id="txtposid80" hidden>POS ID : xxxxxxx</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-QR-58 bg-print" id="divprint58mm">
+                                                <div class="container">
+                                                    <div class="receipt">
+                                                        @* เพื่มรูปร้านค้า *@
+                                                        @if (!string.IsNullOrEmpty(Model.LogoPath))
+                                                        {
+                                                            <div class="layout-text-center mt-3" id="showlogo58">
+                                                                <img class="align-self-center size-logo-merchant" id="imagelogo58" src="@Model.LogoPath">
+                                                            </div>
+                                                        }
+                                                        <div class="layout-text-center mt-3 mb-2">
+                                                            <p class="mb-0 p-size p-namemer" id="namemer58">@Model.MerchantName</p>
+                                                            <p class="mb-0 p-size p-branchmer" id="branchmer58">@Model.BranchName</p>
+                                                            @if (!string.IsNullOrEmpty(Model.BranchAddress1) || !string.IsNullOrEmpty(Model.BranchAddress2))
+                                                            {
+                                                                <p class="mb-0 p-size p-addressmer" id="addressmer581">@Model.BranchAddress1</p>
+                                                                <p class="mb-0 p-size p-addressmer" id="addressmer582">@Model.BranchAddress2</p>
+                                                            }
+                                                            @if (!string.IsNullOrEmpty(@Model.BranchTel))
+                                                            {
+                                                                <p class="mb-0 p-size p-telmer" id="telmer58">Tel. @Model.BranchTel </p>
+                                                            }
+                                                        </div>
+
+                                                        <div class="layout-text-center">
+                                                            @if (Model.ReceiptName == "ใบเสร็จรับเงิน")
+                                                            {
+                                                                <p class="mb-0 p-size mb-2">@Localizer["ใบเสร็จรับเงิน"]</p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="mb-0 p-size mb-2">@Model.ReceiptName</p>
+                                                            }
+                                                        </div>
+                                                        <div class="color-br58"></div>
+                                                        <div class="border-sub-detail my-2">
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size">@Model.DateTran @* @Model.TranDate.ToString("HH:mm") *@</p>
+                                                            </div>
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size" id="tranno58">@Localizer["เลขที่"] : @Model.TranNo</p>
+                                                            </div>
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size">@Localizer["Cashier"] : @Model.SellerName</p>
+                                                            </div>
+                                                            <div class="lists-sub-detail">
+                                                                <p class="mb-0 p-size set-p-food-name @classmr">@showstatustype<samp class="@setlinetext58">@showcusname</samp><samp class="set-p-tel @displaytel">@showcustel</samp></p>
+                                                            </div>
+                                                            <div class="mt-1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="color-br58"></div>
+                                                        <div class="border-menu  mb-2">
+                                                            @for (int i = 0; i < Model.TranDetailItemModels.Count; i++)
+                                                            {
+                                                                @if (Model.TranDetailItemModels[i].Price == 0)
+                                                                {
+                                                                    <div class="layout-lists-menu mb-2 pricezero">
+                                                                        <div class="w-menu-30">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                        </div>
+                                                                        <div class="w-menu-130">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                            }
+                                                                            @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                            {
+                                                                                <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                            }
+
+                                                                        </div>
+                                                                        <div class="w-menu-60">
+                                                                            <p class="mb-0 p-size">
+                                                                                @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                            </p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="layout-lists-menu mb-2">
+                                                                        <div class="w-menu-30">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].Quantity.ToString("###")</p>
+                                                                        </div>
+                                                                        <div class="w-menu-130">
+                                                                            <p class="mb-0 p-size">@Model.TranDetailItemModels[i].ItemName</p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size">@Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].OptionExtraDetailName @*(@TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price))*@</p>
+                                                                            }
+                                                                            @if (!string.IsNullOrEmpty(@Model.TranDetailItemModels[i].Comments))
+                                                                            {
+                                                                                <p class="mb-0 p-size">Note: @Model.TranDetailItemModels[i].Comments</p>
+                                                                            }
+
+                                                                        </div>
+                                                                        <div class="w-menu-60">
+                                                                            <p class="mb-0 p-size">
+                                                                                @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].Price * Model.TranDetailItemModels[i].Quantity)
+                                                                            </p>
+                                                                            @for (int iii = 0; iii < Model.TranDetailItemModels[i].TranDetailItemOptionExtra.Count; iii++)
+                                                                            {
+                                                                                <p class="mb-0 p-size"> @TableController.ConvertToCurrency(Model.TranDetailItemModels[i].TranDetailItemOptionExtra[iii].Price * Model.TranDetailItemModels[i].Quantity) </p>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="color-br58"></div>
+                                                        <div class="layout-sum-lists mb-0">
+                                                            @*  <p class="mb-0 p-size">จำนวนสินค้า @Model.TranDetailItemModels.Count รายการ</p> *@
+                                                            <input type="hidden" id="ItemCountnotZero" value="@Model.TranDetailItemModels.Where(x=>x.Price > 0).Count()" />
+                                                        </div>
+                                                        <div class="my-2">
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size  w-flex-p-135">จำนวน<small id="itemCount58" class="mb-0 mr-1 p-size f-w-smalll">@Model.TranDetailItemModels.Count</small><small class="mb-0 p-size w-s-20 f-w-smalll">@Localizer["รวมเงิน"]</small></p>
+                                                                <p class="mb-0 p-size"> <small class="mb-0 p-size w-s-20 f-w-smalll">@TableController.ConvertToCurrency(@Model.SubTotalHaveVat + Model.SubTotalNoneVat)</small></p>
+                                                            </div>
+
+                                                            @if (Model.ServicechargeType == 'A')
+                                                            {
+                                                                @if (Model.TranTradDiscounts.Count != 0)
+                                                                {
+                                                                    @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                                    {
+                                                                        <div class="layout-flex-space-between">
+                                                                            <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                            <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                                @if (Model.ServiceCharge != 0)
+                                                                {
+                                                                    <div class="layout-flex-space-between">
+                                                                        <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                        <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @if (Model.ServiceCharge != 0)
+                                                                {
+                                                                    <div class="layout-flex-space-between">
+                                                                        <p class="mb-0 p-size w-flex-p-135">@Localizer["ค่าบริการ"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.FmlServiceCharge%</small></p>
+                                                                        <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.ServiceCharge)</p>
+                                                                    </div>
+                                                                }
+                                                                @if (Model.TranTradDiscounts.Count != 0)
+                                                                {
+                                                                    @for (int i = 0; i < Model.TranTradDiscounts.Count; i++)
+                                                                    {
+                                                                        <div class="layout-flex-space-between">
+                                                                            <p class="mb-0 p-size w-flex-p-135">@Localizer["ส่วนลด"] <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TranTradDiscounts[i].FmlDiscount</small></p>
+                                                                            <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TranTradDiscounts[i].TradeDiscHaveVat + Model.TranTradDiscounts[i].TradeDiscNoneVat)</p>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            <div class="layout-flex-space-between">
+                                                                @if (Model.TaxRate > 0)
+                                                                {
+                                                                    <p class="mb-0 p-size w-flex-p-135">VAT @(Model.TranTaxType == 'I' ? "Include" : "Exclude") <small class="mb-0 p-size w-s-20 f-w-smalll">@Model.TaxRate?.ToString("0.##")%</small></p>
+                                                                    <p class="mb-0 p-size">@TableController.ConvertToCurrency(Model.TotalVat)</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="layout-flex-space-between mb-2">
+                                                            <p class="mb-0 p-size p-weight">@Localizer["รวมทั้งหมด"]</p>
+                                                            <p class="mb-0 p-size p-weight">@TableController.ConvertToCurrency(Model.GrandTotal)</p>
+                                                        </div>
+                                                        <div class="mb-5">
+                                                            <div class="layout-flex-space-between">
+                                                                @{
+                                                                    decimal amount58 = 0;
+                                                                }
+                                                                @for (int i = 0; i < Model.TranPayments.Count; i++)
+                                                                {
+                                                                    if (Model.TranPayments[i].PaymentType == "CH")
+                                                                    {
+                                                                        amount58 += Model.TranPayments[i].ReceivedAmount;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        //เคสจ่ายเงิรแบบอื่นที่ไม่ใช่เงินสด ในอนาคต
+                                                                    }
+                                                                }
+                                                                <p class="mb-0 p-size">@Localizer["ชำระเงินสด"]</p>
+                                                                <p class="mb-0 p-size" id="txtpay58">@TableController.ConvertToCurrency(amount58)</p>
+                                                            </div>
+                                                            <div class="layout-flex-space-between">
+                                                                <p class="mb-0 p-size">ทอน</p>
+                                                                <p class="mb-0 p-size" id="txtton58">@TableController.ConvertToCurrency(Model.Change)</p>
+                                                            </div>
+                                                        </div>
+                                                        @if (!string.IsNullOrEmpty(Model.Comments))
+                                                        {
+                                                            <p class="mb-0 p-size">@Localizer["หมายเหตุ"] : @Model.Comments </p> @* หมายเหตุ จะเป็นหมายเหตุของฝั่งร้านค้า ไม่ใช่หมายเหตุของ tran *@
+                                                        }
+                                                        <div class="layout-text-center mb-4">
+                                                            <div>
+                                                                @if (string.IsNullOrEmpty(Model.ReceiptTextFooter))
+                                                                {
+                                                                    <p class="p-size mb-0"></p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p class="p-size mb-0">@Model.ReceiptTextFooter</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="layout-text-center mb-4">
+                                                            <div>
+                                                                <p class="p-size">@Localizer["Powered By SeniorSoft"]</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layout-text-center mb-4">
+                                                            <div>
+                                                                @if (!string.IsNullOrEmpty(Model.TaxID))
+                                                                {
+                                                                    <p class="p-size" id="txttaxid58" hidden>@Localizer["TAX ID"] : xxxxxxxx</p>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(Model.PosID))
+                                                                {
+                                                                    <p class="p-size" id="txtposid58" hidden>@Localizer["POS ID"] : xxxxxxx</p>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<form hidden id="EditExtra" asp-action="GenerateTaxInvoices">
+    <input name="tranDetailModel" id="ExtraModel" value="" />
+</form>
+<script>
+    var _role;
+    $(document).ready(function () {
+        _role = '@ViewBag.role';
+        _role = _role.toLowerCase();
+        if (_role == "editor" || _role == "officer" || _role == "cashier") {
+
+            //$("#fulltax").prop('disabled', true);
+        }
+
+        GetNOTSHOWZEROPRICE();
+    });
+
+    function GenerateTaxInvoice() {
+        var data = @Html.Raw(Json.Serialize(Model));
+        var test = JSON.stringify(data);
+        //console.log(test);
+        $("#ExtraModel").val(test);
+        $("#EditExtra").submit();
+    }
+
+    function Printrecript() {
+
+        var modelprintmanin = GetMainPrint();
+        var div = "";
+        if (modelprintmanin.papersize == 80) {
+            div = document.getElementById("divprint80mm");
+        } else {
+            div = document.getElementById("divprint58mm");
+        }
+        html2canvas(div, {
+            scale: 1,
+            useCORS: true, //เพิ่มเพื่อให้สามารถแสดงรูปภาพได้
+        }).then(canvas => {
+
+            Print(canvas);
+        });
+    }
+
+    function GetNOTSHOWZEROPRICE() {
+        $.ajax({
+            url: "@Url.Action("GetListMyQRCode", "Table")",
+            type: 'GET',
+            dataType: 'json',
+            success: function (responseData) {
+                const result = responseData.filter((x) => x.cfgKey == "NOTSHOWZEROPRICE");
+                var CheckNOTSHOWZEROPRICE = result[0].cfgInteger;
+                if (CheckNOTSHOWZEROPRICE == 1) {
+                    //ไม่แสดงราคา 0 บาท
+                    let elements1 = document.getElementsByClassName("pricezero");
+                    for (let i = 0; i < elements1.length; i++) {
+                        elements1[i].style.display = "none";
+                    }
+
+                    //แสดงจำนวน เฉพาะราคาที่มากกว่า 0
+                    var count = $('#ItemCountnotZero').val();
+                    $('#itemCount80').text(count);
+                    $('#itemCount58').text(count);
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+</script>

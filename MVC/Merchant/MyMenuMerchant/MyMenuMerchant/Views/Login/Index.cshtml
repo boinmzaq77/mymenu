@@ -1,0 +1,410 @@
+﻿@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" type="image/x-icon" href="/mymenumerchant/images/LogoMyMenu.png">
+    <title>MyMenuMerchant</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyMenuMerchant.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body id="Login">
+    <div class="header-logo">
+        <img class="logo-login" src="/mymenumerchant/images/LogomyMenuText.png" onclick="reloadpage()" />
+        <div class="menu-language" >
+            <div class="dropdown show" id="DropdownLanguage">
+                <button class="btn btn-secondary dropdown-toggle btn-language shadow-sm" type="button" id="DropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="set-item-language" id="listItemLanguage">
+                        <img class="img-language mr-2 language-TH" src="/mymenumerchant/images/TH.png" />
+                        ภาษาไทย
+                    </div>
+                    <img id="ImgDown" class="img-language" src="/mymenumerchant/images/DownGreen.png" />
+                </button>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-language mt-1 py-0 shadow-sm" aria-labelledby="DropdownMenuLanguage">
+                    <button class="dropdown-item item-language py-2 language-TH" id="btnTh" type="button" onclick="Chacklanguage('Th','TH.png')"><img class="img-language mr-1" src="/mymenumerchant/images/TH.png" /> ภาษาไทย</button>
+                    <button class="dropdown-item item-language py-2 language-EN" id = "btnEn" type="button" onclick="Chacklanguage('En','EN.png')"><img class="img-language mr-2" src="/mymenumerchant/images/EN.png" />English</button>
+                    <button hidden class="dropdown-item item-language py-2 language-LAO" id = "btnLao" type="button" onclick="Chacklanguage('Lao','LAO.png')"><img class="img-language mr-2" src="/mymenumerchant/images/LAO.png" />Lao</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-login-layout layout-dialog-centered">
+        <div class="background-img">
+            <img class="img-login" src="/mymenumerchant/images/LogInImg.png" />
+        </div>
+
+
+        <form class="form-login" asp-action="OTP" asp-controller="Login" id="formlogin" method="post" onkeyup="OnLogin();">
+            <div class="menu-pills">
+                <p class="text-h-login">@Localizer["Log in"]</p>
+                <input type="text" hidden name="type" id="type" />
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active " id="pills-owner-tab" data-toggle="pill" href="#pills-owner" role="tab" aria-controls="pills-owner" aria-selected="true" onclick="Owner();">@Localizer["Owner"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-employee-tab" data-toggle="pill" href="#pills-employee" role="tab" aria-controls="pills-employee" aria-selected="false" onclick="Employee();">@Localizer["Employee"]</a>
+                    </li>
+                </ul>
+                <div class="tab-content mb-2" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-owner" role="tabpanel" aria-labelledby="pills-owner-tab">
+                        <div class="form-group">
+                            <label for="MoblieNumber" class="label-text">@Localizer["Mobile Number"]</label>
+                            <input type="tel" class="form-control input-login" maxlength="12" minlength="12" id="MoblieNumber" name="MoblieNumber" placeholder="000-000-0000" autocomplete="off" onkeypress="return isNumeric(event)">
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-employee" role="tabpanel" aria-labelledby="pills-employee-tab">
+                        <div class="form-group mb-2">
+                            <label for="MerchantID" class="label-text">@Localizer["Merchant ID"]</label>
+                            <input type="text" class="form-control input-login no-spin" id="MerchantID" name="MerchantID" placeholder="@Localizer["Merchant ID"]" maxlength="8" oninput="MerchantInput()" autocomplete="off">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="Username" class="label-text">@Localizer["Username"]</label>
+                            <input type="text" class="form-control input-login" id="Username" name="Username" placeholder="@Localizer["Username"]" autocomplete="off">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="Password" class="label-text">@Localizer["Password"]</label>
+                            <input type="password" class="form-control input-login" id="Password" name="Password" placeholder="@Localizer["Password"]" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-login">
+                    <button class="btn-login" type="button" disabled="disabled" id="SubmitLogin" onclick="checkCheckSingUpOrLogin()">@Localizer["เข้าสู่ระบบ"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="footer-help">
+        <div class="row">
+            <div class="col-12">
+                <div class="img-padding">
+                    <img class="footer-img" src="/mymenumerchant/images/LogInPoweredBySNS.png" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="text-flex">
+                    <p class="text-footer me-2">&copy; 2022 </p>
+                    <p class="text-footer color-footer"> SeniorSoft Development</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModelInfoBonusCode" style="font-family: 'Kanit', sans-serif;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" style="color:#404040; text-align: center;">@Localizer["คุณยังไม่ได้ลงทะเบียนการใช้งาน ต้องการลงทะเบียนหรือไม่?"]</p>
+                    <p class="mb-0 mx-4" style="color:#7CBFA7; text-align: center;">@Localizer["*ทดลองใช้งานฟรี 7 วัน"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal">
+                        @Localizer["กลับ"]
+                    </button>
+                    <button class="btn btn-login" style="border-radius: 3px; background: #7CBFA7; border: 1px solid #7CBFA7;" onclick="Register()">
+                        @Localizer["ลงทะเบียน"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+</body>
+
+<form hidden id="ChangeLanguage" asp-action="ChangeLanguageMain" asp-controller="Login" method="post">
+    <input name="Languageid" id="Languageid" value="" />
+</form>
+
+@if (TempData["UserMessage"] != null)
+{
+    var message = (MessageViewModel)TempData["UserMessage"];
+    @if (message.Message.TrimEnd() == "แพ็กเกจของคุณหมดอายุ")
+    {
+        @await Html.PartialAsync("ErrorModels2")
+    }
+    else
+    {
+        @await Html.PartialAsync("ErrorModels")
+    }
+}
+
+<script>
+    // $("#ModelInfoBonusCode").modal('show');
+    $(document).ready(function () {
+        FirstCheckLanguage();
+        @if (TempData["UserMessage"] != null)
+        {
+            var message = (MessageViewModel)TempData["UserMessage"];
+            var not = "NotFound Tel Please contact Admin Invalid ReSendCode. ( ไม่พบเบอร์โทรนี้ในระบบ โปรดขอ OTP ใหม่ )";
+            var uncorrect = "";
+            if (message.Message.TrimEnd() == not.TrimEnd())
+            {
+                <text>
+                    ErrorShow('@Html.Raw(Json.Serialize(Localizer["ไม่พบหมายเลขโทรศัพท์ กรุณาลองใหม่อีกครั้ง"].Value))');
+                </text>
+            }
+            else
+            {
+                <text>
+                        ErrorShow('@Html.Raw(message.Message)');
+                </text>
+            }
+        }
+
+        localStorage.clear();
+    });
+    function FirstCheckLanguage() {
+
+        var DefaultLanguage = $.cookie("MyMenuLanguage");
+        if (DefaultLanguage == "Th") {
+            $("#btnTh").addClass("selected");
+            var showlist = document.getElementById("listItemLanguage");
+            showlist.innerHTML = '<img class="img-language mr-2" src="/mymenumerchant/images/TH.png" />' + "ภาษาไทย";
+        } else if (DefaultLanguage == "En") {
+            $("#btnEn").addClass("selected");
+            var showlist = document.getElementById("listItemLanguage");
+            showlist.innerHTML = '<img class="img-language mr-2" src="/mymenumerchant/images/EN.png" />' + "English";
+        } else {
+            $("#btnLao").addClass("selected");
+            var showlist = document.getElementById("listItemLanguage");
+            showlist.innerHTML = '<img class="img-language mr-2" src="/mymenumerchant/images/LAO.png" />' + "Lao";
+        }
+    }
+    function Chacklanguage(language, img) {
+        // var showlist = document.getElementById("listItemLanguage");
+        // showlist.innerHTML = '<img class="img-language mr-2" src="/mymenumerchant/images/' + img + '" />' + language;
+        $("#Languageid").val(language);
+        $("#ChangeLanguage").submit();
+    }
+    const phoneInput = document.getElementById('MoblieNumber');
+    phoneInput.addEventListener('input', () => {
+        const unformattedNumber = phoneInput.value.replace(/-/g, '');
+        const match = unformattedNumber.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        if (match) {
+            const formattedNumber = [match[1], match[2], match[3]].filter(Boolean).join('-');
+            phoneInput.value = formattedNumber;
+        }
+    });
+
+    function Owner() {
+        $('#pills-employee-tab,#pills-employee').removeClass('active');
+        $('#pills-employee-tab,#pills-employee').removeClass('show');
+        $('#pills-owner-tab,#pills-owner').addClass('active');
+        $('#pills-owner-tab,#pills-owner').addClass('show');
+        $('#pills-owner-tab').prop('aria-selected', true);
+        $('#pills-employee-tab').prop('aria-selected', false);
+        OwnersetTime();
+    }
+
+    function OwnersetTime() {
+        document.getElementById('MerchantID').value = "";
+        document.getElementById('Username').value = "";
+        document.getElementById('Password').value = "";
+        OnLogin()
+    }
+
+    function Employee() {
+        EmployeesetTime();
+        $('#pills-owner-tab,#pills-owner').removeClass('active');
+        $('#pills-owner-tab,#pills-owner').removeClass('show');
+        $('#pills-employee-tab,#pills-employee').addClass('active');
+        $('#pills-employee-tab,#pills-employee').addClass('show');
+        $('#pills-owner-tab').prop('aria-selected', false);
+        $('#pills-employee-tab').prop('aria-selected', true);
+
+    }
+    function EmployeesetTime() {
+        document.getElementById('MoblieNumber').value = "";
+        OnLogin()
+    }
+    function isNumeric(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    //$(document).ready(function () {
+    //    $('#pills-tab').on('click', function () {
+    //        $('#pills-owner-tab,#pills-employee-tab,#pills-employee,#pills-owner').toggleClass('active');
+    //        $('#pills-owner-tab,#pills-employee-tab,#pills-employee,#pills-owner').toggleClass('show');
+
+    //    });
+    //});
+
+
+    function OnLogin() {
+        var ChackClassOwner = $("#pills-owner-tab").hasClass("active");
+        var ChackClassEmployee = $("#pills-employee-tab").hasClass("active");
+        if (ChackClassOwner) {
+            var DataOwner = $('#pills-owner #MoblieNumber').val();
+            if (DataOwner != "") {
+                if (DataOwner.length == 12) {
+                    document.getElementById('SubmitLogin').disabled = false;
+
+                    //เพิ่มการเก็บชื่อผู้ใช้งาน
+                    $.cookie('username', "Owner");
+                } else {
+                    document.getElementById('SubmitLogin').disabled = true;
+                }
+            } else {
+                document.getElementById('SubmitLogin').disabled = true;
+            }
+        } else if (ChackClassEmployee) {
+            var DataEmployeeMerchantID = $('#pills-employee #MerchantID').val();
+            var DataEmployeeUsername = $('#pills-employee #Username').val();
+            var DataEmployeePassword = $('#pills-employee #Password').val();
+            if (DataEmployeeMerchantID != "" && DataEmployeeMerchantID != "" && DataEmployeePassword != "") {
+                document.getElementById('SubmitLogin').disabled = false;
+
+                //เพิ่มการเก็บชื่อผู้ใช้งาน
+                $.cookie('username', DataEmployeeUsername);
+            } else {
+                document.getElementById('SubmitLogin').disabled = true;
+            }
+        }
+    }
+
+    function cleartextinnumber(x) {
+        const reg = new RegExp('^[0-9.,]+$')
+        var aaaaa = reg.test(x);
+        if (!aaaaa) {
+            return x = x.slice(0, -1);
+        } else {
+            return x;
+        }
+    }
+
+    function MerchantInput() {
+        var x = $('#pills-employee #MerchantID').val();
+        var txt = cleartextinnumber(x);
+        $('#MerchantID').val(txt);
+    }
+
+    function checkCheckSingUpOrLogin() {
+        var MoblieNumber = $('#MoblieNumber').val();
+        if (MoblieNumber == '' || MoblieNumber == null) {
+
+            var LoginModel = {
+                MerchantID: $('#MerchantID').val(),
+                Username: $('#Username').val(),
+                Password: $('#Password').val(),
+            };
+            $("#formlogin").submit();
+            return;
+        }
+
+        $.ajax({
+            url: "@Url.Action("CheckSingUpOrLogin", "Login")",
+            type: 'POST',
+            async: false,
+            data: {
+                MoblieNumber: MoblieNumber,
+                CloudProductID: 10,
+            },
+            success: function (res) {
+                if (res.message == "NoContent") {
+                    $("#ModelInfoBonusCode").modal('show');
+                    $('#type').val('R');
+                    console.log(res);
+                } else {
+                    $('#type').val('L');
+                    $('#MerchantID').val(res.message);
+                    $("#formlogin").submit();
+                }
+            }, error: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function Register() {
+        $("#formlogin").submit();
+    }
+    function reloadpage() {
+            //window.chrome.webview.postMessage('Hi');
+            location.reload();
+            
+    }
+    // function Chacklanguage(language, img) {
+    //     var showlist = document.getElementById("listItemLanguage");
+    //     showlist.innerHTML = '<img class="img-language mr-2" src="/mymenumerchant/images/' + img + '" />' + language;
+
+    // }
+    function ChangeCurrentBranch() {
+        var _selectBranch = $("input[type='radio'][name='branchs']:checked").val();
+        $("#branchID").val(_selectBranch);
+        $("#ChangeBranch").submit();
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const elements = document.querySelectorAll('.item-language');
+        function changeColor(element) {
+            elements.forEach(function (el) {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+        elements.forEach(function (element) {
+            element.addEventListener('click', function () {
+                changeColor(element);
+            });
+        });
+       
+        const listItemLanguage = document.getElementById('listItemLanguage');
+
+       
+        if (listItemLanguage.classList.contains('language-TH')) {
+            console.log('Element has class language-TH');
+            // ทำสิ่งที่คุณต้องการเมื่อพบคลาส language-TH
+        } else if (listItemLanguage.classList.contains('language-EN')) {
+            console.log('Element has class language-EN');
+            // ทำสิ่งที่คุณต้องการเมื่อพบคลาส language-EN
+        } else {
+            console.log('Element does not have class language-TH or language-EN');
+            // ทำสิ่งที่คุณต้องการเมื่อไม่พบคลาสที่ต้องการ
+        }
+    });
+    $('#DropdownLanguage').on('show.bs.dropdown', function () {
+        document.getElementById("ImgDown").src = "/mymenumerchant/images/UpGreen.png";
+    });
+    $('#DropdownLanguage').on('hide.bs.dropdown', function () {
+        document.getElementById("ImgDown").src = "/mymenumerchant/images/DownGreen.png";
+    });
+</script>
+

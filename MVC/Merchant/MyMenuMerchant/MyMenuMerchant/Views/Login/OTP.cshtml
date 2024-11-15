@@ -1,0 +1,437 @@
+﻿@using MyMenuMerchant.Models;
+@model LoginModel;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "OTP";
+    Layout = null;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" type="image/x-icon" href="/mymenumerchant/images/LogoMyMenu.png">
+    <title>MyMenuMerchant</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@100&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyMenuMerchant.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body id="OTP">
+    <div class="header-logo">
+        <img class="logo-otp" src="/mymenumerchant/images/LogomyMenuText.png" />
+    </div>
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-12  mb-3 mt-3">
+                <div class="row ">
+                    <div class="col-auto">
+                        <a asp-controller="Login" asp-action="Index"><i class="i-wh fa fa-angle-left color-branch-p"></i></a>
+                    </div>
+                    <div class="col-10">
+                        <h2 class="menu-header">@Localizer["OTP"]</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="container-otp ">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="col-12 mb-3 flex-center-otp">
+                                <img class="img-otp" src="/mymenumerchant/images/Otp.png" />
+                            </div>
+                            <div class="col-12">
+                                <p class="p-otp">@Localizer["กรุณากรอกรหัส OTP ที่ส่งเข้าไปยังหมายเลข"]</p>
+                                <p class="p-otp"><samp class="color-samp-otp">@Model.MoblieNumber</samp>, Ref : <samp class="color-samp-otp">@Model.RefOTP</samp></p>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <form id="formotp" class="digit-group flex-input-otp" onkeyup="examineotp()">
+                                    <input class="input-row" type="tel" id="digit1" maxlength="1" autocomplete="off" />
+                                    <input class="input-row" type="tel" id="digit2" maxlength="1" autocomplete="off" />
+                                    <input class="input-row" type="tel" id="digit3" maxlength="1" autocomplete="off" />
+                                    <input class="input-row" type="tel" id="digit4" maxlength="1" autocomplete="off" />
+                                    <input class="input-row" type="tel" id="digit5" maxlength="1" autocomplete="off" />
+                                    <input class="input-row" type="tel" id="digit6" maxlength="1" autocomplete="off" />
+                                </form>
+                            </div>
+                            <div class="col-12">
+                                <a onclick="OnResendOTP()" style="cursor:pointer"><p class="p-resend"><u>@Localizer["ส่งรหัส OTP อีกครั้ง"]</u></p></a>
+                            </div>
+                            <div class="col-12">
+                                <div class="menu-login">
+                                    <button id="Submit" type="button" class="btn-login" disabled="disabled" onclick="Submit();">@Localizer["เข้าสู่ระบบ"]</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-help pt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="img-padding">
+                    <img class="footer-img" src="/mymenumerchant/images/LogInPoweredBySNS.png" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="text-flex">
+                    <p class="text-footer me-2">Version 1.1</p>
+                    @*<p class="text-footer me-2">&copy; 2022 </p>
+                    <p class="text-footer color-footer"> SeniorSoft Development</p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModelResendOTP">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="errortext" style="color:#404040; text-align: center;">@Localizer["ระบบได้ส่ง OTP อีกครั้ง ไปยังหมายเลขโทรศัพท์ของท่านเรียบร้อยแล้ว"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="ReloadOTP()">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="InfoErrorModel" style="font-family: 'Kanit', sans-serif;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                    @*<p class="modal-titl text-h-login" style="color:#7CC1A9;font-weight:400!important; ">Notification</p>*@
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:#404040; font-size:16px;">&times;</span>
+                    </button>*@
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="infoerrortext" style="color:#404040; text-align: center;"></p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-login" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*  Modal ModalOTPincorrectr*@
+    <div class="modal fade" id="ModalOTPincorrect" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body layout-model m-3 p-0 ">
+                    <div class="modal-m-text">
+                        <div class="modal-body label-text py-5 mt-2">
+                            <p class="mb-0 mx-4 " id="namedelete" style="color:#404040; text-align: center;">@Localizer["รหัส OTP ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"]</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="font-weight-bold btn button-modal-close" data-dismiss="modal" id="closemodel">@Localizer["กลับ"]</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @* ModelBonusCode *@
+    <div class="modal fade" id="ModelBonusCode" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex flex-row my-1">
+                        <div class="mr-2"> <button type="button" class="btn-close header-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="size-i-back fa fa-angle-left"></i></span></button></div>
+                        <div class=""><h5 class="text-branch-modal mb-0">@Localizer["myMenu Code"]</h5></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="myMenuCode">myMenu Code</label>
+                        <input type="text" class="form-control" id="myMenuCode" placeholder="@Localizer["myMenu Code"]" onkeyup="addcode()">
+                    </div>
+                    <a class="txtpackageexpire" href="https://cloud.seniorsoft.com/mymerchant">@Localizer["ต่ออายุที่ myMerchant"]</a>
+                </div>
+                <div class="modal-branch modal-footer modal-border-top">
+                    <button type="button" class="btn btn-save-bonus-code" id="SubmitBonusCode" data-dismiss="modal" onclick="PostmyMenuCode()" disabled="disabled">@Localizer["ตกลง"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModelNotBonusCode *@
+    <div class="modal fade" id="ModelNotBonusCode" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textNotBonusCode" style="color:#404040; text-align: center;">@Localizer["ขออภัย ไม่พบ Code นี้"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="Cleartext()">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModelBonusCodeExpire *@
+    <div class="modal fade" id="ModelBonusCodeExpire" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textExpire" style="color:#404040; text-align: center;">@Localizer["ขออภัย Code นี้หมดอายุ"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="Cleartext()">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModelNotBonusCodeActivated *@
+    <div class="modal fade" id="ModelNotBonusCodeActivated" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-0" style="border-bottom:0px solid #dee2e6;">
+                </div>
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" id="textNotActivated" style="color:#404040; text-align: center;">@Localizer["ขออภัย Code นี้ยังไม่เปิดให้ใช้งาน"]</p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #B2B2B2; border: 1px solid #B2B2B2;" data-dismiss="modal" onclick="Cleartext()">
+                        @Localizer["กลับ"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ModelBonusCodeSucceed *@
+    <div class="modal fade" id="ModelBonusCodeSucceed" tabindex="-1" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body label-text py-5 mt-2">
+                    <p class="mb-0 mx-4" style="color:#404040; text-align: center;">@Localizer["ลงทะเบียนสำเร็จ"]</p>
+                    <p class="mb-0 mx-4" id="textSuccess" style="color:#404040; text-align: center;"></p>
+                </div>
+                <div class="modal-footer pt-0 pb-4" style="border-top: 0px solid #dee2e6; justify-content: center;">
+                    <button type="button" class="btn btn-save-bonus-code" style="border-radius: 3px; background: #7CBFA7; border: 1px solid #7CBFA7;" data-dismiss="modal" onclick="Cleartext()">
+                        @Localizer["ตกลง"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery CDN & Bootstrap & jQuery Custom Scroller CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+<script>
+    $(document).ready(function () {
+        document.getElementById("digit1").focus();
+        //$('#ModelBonusCode').modal('show');
+    });
+    function examineotp() {
+        var digit1 = document.getElementById("digit1").value;
+        var digit2 = document.getElementById("digit2").value;
+        var digit3 = document.getElementById("digit3").value;
+        var digit4 = document.getElementById("digit4").value;
+        var digit5 = document.getElementById("digit5").value;
+        var digit6 = document.getElementById("digit6").value;
+        document.getElementById('Submit').disabled = true;
+        if (digit1 != "" && digit2 != "" && digit3 != "" && digit4 != "" && digit5 != "" && digit6 != "") {
+            document.getElementById('Submit').disabled = false;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        function OTPInput() {
+            const editor = document.getElementById('digit1');
+            editor.onpaste = pasteOTP;
+
+            const inputs = document.querySelectorAll('#formotp > *[id]');
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener('keydown', function (event) {
+                    if (event.key === "Backspace") {
+                        inputs[i].value = '';
+                        if (i !== 0)
+                            inputs[i - 1].focus();
+                    } else {
+                        if (i === inputs.length - 1 && inputs[i].value !== '') {
+                            return true;
+                        } else if (event.keyCode > 47 && event.keyCode < 58 || event.keyCode > 95 && event.keyCode < 106) {
+                            inputs[i].value = event.key;
+                            if (i !== inputs.length - 1)
+                                inputs[i + 1].focus();
+                            event.preventDefault();
+                        } else if (event.keyCode > 64 && event.keyCode < 91) {
+                            inputs[i].value = String.fromCharCode(event.keyCode);
+                            if (i !== inputs.length - 1)
+                                inputs[i + 1].focus();
+                            event.preventDefault();
+                        }
+                    }
+                });
+            }
+        }
+        OTPInput();
+    });
+
+    function pasteOTP(event) {
+        event.preventDefault();
+        let elm = event.target;
+        let pasteVal = event.clipboardData.getData('text').split("");
+        if (pasteVal.length > 0) {
+            while (elm) {
+                elm.value = pasteVal.shift();
+                elm = elm.nextSibling.nextSibling;
+            }
+        }
+    }
+
+    function Submit() {
+        var digit1 = document.getElementById("digit1").value;
+        var digit2 = document.getElementById("digit2").value;
+        var digit3 = document.getElementById("digit3").value;
+        var digit4 = document.getElementById("digit4").value;
+        var digit5 = document.getElementById("digit5").value;
+        var digit6 = document.getElementById("digit6").value;
+
+
+        if (digit1 != "" && digit2 != "" && digit3 != "" && digit4 != "" && digit5 != "" && digit6 != "") {
+            var ItemModelOTP =
+            {
+                OTP: digit1 + digit2 + digit3 + digit4 + digit5 + digit6,
+                RefOTP: '@Model.RefOTP',
+                OwnerID: '@Model.OwnerID',
+                Type: '@Model.Type',
+            }
+            $.ajax({
+
+                url: "@Url.Action("VerifyOTP", "Login")",
+                type: 'POST',
+                data: ItemModelOTP,
+                success: function (message) {
+                    window.location = "@Url.Action("LoginBranchs", "Login")";
+                }, error: function (message) {
+                    var resettext = '';
+                    var textresponse = document.createTextNode(message.responseText);
+                    if (message.responseText == "แพ็กเกจของคุณหมดอายุ") {
+                        $('#ModelBonusCode').modal('show');
+                    } else if (message.responseText == "Invalid User, password โปรดลองใหม่") {
+                        $('#ModalOTPincorrect').modal('show');
+                        $("#digit1").val("");
+                        $("#digit2").val("");
+                        $("#digit3").val("");
+                        $("#digit4").val("");
+                        $("#digit5").val("");
+                        $("#digit6").val("");
+                        examineotp();
+                    }
+                    else {
+                        var AddtextP = document.getElementById("infoerrortext");
+                        AddtextP.innerHTML = resettext;
+                        AddtextP.appendChild(textresponse);
+                        $('#InfoErrorModel').modal('show');
+                    }
+                }
+            });
+        } else {
+            return;
+        }
+    }
+
+    function OnResendOTP() {
+        $('#ModelResendOTP').modal('show')
+    }
+
+    function ReloadOTP() {
+        console.log("passs");
+        window.location.reload();
+    }
+
+    function PostmyMenuCode() {
+        var MerchantLicenceModel = {
+            MerchantID: '@Model.MerchantID',
+            PromotionCode: $('#myMenuCode').val(),
+            ProductName: 'MyMenu',
+        };
+        $.ajax({
+            url: "@Url.Action("PostPromotion", "Login")",
+            type: 'POST',
+            async: false,
+            data: MerchantLicenceModel,
+            success: function (res) {
+                if (res.status) {
+                    $('#ModelBonusCodeSucceed').modal('show');
+                    //console.log(res);
+                    $('#textSuccess').text(@Html.Raw(Json.Serialize(Localizer["วันหมดอายุการใช้งาน"].Value))+ " "  + res.message);
+                } else {
+                    if (res.message == '114') { //Bonus_code_expires
+                        $('#ModelBonusCodeExpire').modal('show');
+                    }
+                    else {
+                        $('#ModelNotBonusCode').modal('show');
+                    }
+                }
+            }, error: function (res) {
+                //console.log(res);
+                if (res.message == '114') { //Bonus_code_expires
+                    $('#ModelBonusCodeExpire').modal('show');
+                }
+                else {
+                    $('#ModelNotBonusCode').modal('show');
+                }
+            }
+        });
+    }
+
+    function addcode() {
+        var code = $('#myMenuCode').val();
+        if (!jQuery.isEmptyObject(code)) {
+            document.getElementById('SubmitBonusCode').disabled = false;
+        } else {
+            document.getElementById('SubmitBonusCode').disabled = true;
+        }
+    }
+
+    function Cleartext() {
+        $('#myMenuCode').val('');
+    }
+    
+</script>

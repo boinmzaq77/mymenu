@@ -1,0 +1,265 @@
+﻿@{
+    ViewData["Title"] = "TAXInvoiceHistory";
+}
+<style>
+    .font-receipthistory-bold {
+        font-weight: 500 !important;
+        color: #7CC1A9 !important;
+    }
+
+    .bg-receipthistory {
+        background: #ffffff url(/mymenumerchant/images/MenuHistoryC.png) 0px 17px no-repeat;
+        background-size: 24px 24px;
+    }
+</style>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<body id="TAXInvoiceHistory">
+    <div class="container">
+        <div class="form-row">
+            <div class="col-12">
+                <div class="row ">
+                    <div class="col-12 header-group mb-3">
+                        <h2 class="font-weight-bold menu-header">@Localizer["ประวัติใบกำกับภาษี"]</h2>
+                        <ul class="breadcrumb ">
+                            <li class="breadcrumb-item"><a class="color-a-breadcrumb" asp-controller="ReceiptHistory" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                            <li class="breadcrumb-item text-ellipsis-link-1"><a class="color-a-breadcrumb" asp-controller="ReceiptHistory" asp-action="Index">@Localizer["ประวัติใบเสร็จรับเงิน"]</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">@Localizer["ประวัติใบกำกับภาษี"]</li>
+                        </ul>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <div class="card border-0">
+                            <div class="card-body ">
+                                <div class="container px-2">
+                                    <div class="form-row">
+                                        <div class="col-12 search">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold" for="SearchTable">@Localizer["ค้นหาใบกำกับภาษี"]</label>
+                                                <input class="form-control input-lg main-input" type="search" id="SearchTable" placeholder="@Localizer["วันที่, เลขที่ใบกำกับภาษี, เลขที่ใบเสร็จ, ชื่อลูกค้า, ยอดชำระ"]" style="height: 45px;" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card border-0">
+                    <div class="card-body pb-0 mb-0">
+                        <div class="container">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="d-flex-head">
+                                        <div class="p-0 layout-text-head"><label class="font-weight-bold mb-4 font-size">@Localizer["รายการใบกำกับภาษี"] <small class="size-small font-weight-bold layout-all ms-2 " id="countReceipt"> @Localizer["จำนวนทั้งหมด"] </small></label>  </div>
+                                        <div class="ml-auto"><button type="button" class="btn btn-refresh" id="ButtonRefresh"> <img class="size-refresh" src="/mymenumerchant/images/Refresh.png" /></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 mb-0">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table mb-0" id="TableOrder" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="size-th-date">@Localizer["วันที่"]</th>
+                                                <th scope="col" class="size-th-type text-center">@Localizer["เลขที่ใบกำกับภาษี"]</th>
+                                                <th scope="col" class="size-th-type text-center">@Localizer["เลขที่ใบเสร็จ"]</th>
+                                                <th scope="col" class="size-th-type text-center">@Localizer["ชื่อลูกค้า"]</th>
+                                                <th scope="col" class="size-th-type text-right">@Localizer["ยอดชำระ"]</th>
+                                                <th scope="col" class="size-th-info"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<form hidden id="EditExtra" asp-action="Receipts">
+    <input name="tranDetailModel" id="ExtraModel" value="" />
+    <input name="Page" id="Page" value="" />
+</form>
+<script>
+    function sentdata(d) {
+        var data = $('#TableOrder').DataTable().row(d).data();
+        var test = JSON.stringify(data);
+        $("#ExtraModel").val(test);
+        $("#Page").val('TAXInvoice');
+        $("#EditExtra").submit();
+    }
+    function roundToTwo(num) {
+        return format('th-TH', 'THB', num);
+    }
+
+    function format(locale, currency, number) {
+        return new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency,
+            currencyDisplay: "code"
+        })
+            .format(number)
+            .replace(currency, "")
+            .trim();
+    }
+
+    $(document).ready(function () {
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false, // ให้ใช้รูปแบบ 24 ชั่วโมง
+        };
+        const stringToDate = function (dateString) {
+            const [dd, mm, yyyy] = dateString.split("-");
+            return new Date(`${yyyy}-${mm}-${dd}`);
+        };
+
+        var $mytable = $("#TableOrder");
+        var page = 1;
+        //initial number of rows
+        var max = 100; //max number of rows (just for demo)
+        var start = 0;
+        $(window).bind('scroll resize fetchmore', function () {
+            var viewportHeight = window.innerHeight;
+            var scrolltop = $(window).scrollTop();
+            var bottomOfTable = $mytable.offset().top + $mytable.outerHeight();
+            if ($(window).scrollTop() + viewportHeight >= bottomOfTable) {
+                if (count == max && start == 1) {
+                    max += 100;
+                    load_more();
+                    $(window).trigger("fetchmore"); //keep triggering this event until we've filled the viewport
+                }
+            }
+        });
+
+        function load_more() {
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("GetTAXInvoiceHistory", "ReceiptHistory")",
+                data: {
+                    offset: offset + 1
+                },
+                dataType: 'json',
+                success: function (message) {
+                    if (message && message.length > 0) {
+                        offset++;
+                        count += message.length
+                        message.forEach((item) => {
+                            var table = $('#TableOrder').DataTable();
+                            table.row.add({
+                                "tranDate": item.tranDate,
+                                "tranNo": item.tranNo,
+                                "refTranNo": item.refTranNo,
+                                "customerName": item.customerName,
+                                "grandTotal": item.grandTotal,
+                                "id": item.id,
+                            }).draw(false);
+                        });
+
+                        $('#countReceipt').text("@Localizer["จำนวนทั้งหมด"] " + table.rows().count());
+                    } else {
+                        console.log("No more data available.");
+                    }
+                }, error: function (message) {
+                }
+            });
+        }
+
+        var table = $('#TableOrder').DataTable({
+            ajax: {
+                url: "@Url.Action("GetTAXInvoiceHistory", "ReceiptHistory")",
+                dataSrc: ''
+            },
+            processing: false,
+            serverSide: false,
+            stateSave: false,
+            columns: [
+                { data: 'tranDate' },
+                { data: 'tranNo' },
+                { data: 'refTranNo' },
+                { data: 'customerName' },
+                { data: 'grandTotal' },
+                { data: 'id' },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function (data, type, full, meta) {
+                    const d = new Date(data);
+                    var text0 = "<p class='p-padding-table'>" + formatDatefullReceipt(d) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [1],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-center'>" + data + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [2],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-center'>" + data + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [3],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-center'>";
+                    if (jQuery.isEmptyObject(data) || data.trim().length === 0) {
+                        text0 += '-';
+                    }else {
+                        text0 += data;
+                    }
+                    text0 += "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [4],
+                render: function (data, type, full, meta) {
+                    var text0 = "<p class='p-padding-table text-right'>" + roundToTwo(data) + "</p>";
+                    return text0;
+                },
+            }, {
+                targets: [5],
+                render: function (data, type, full, meta) {
+                    var edit1 = '<div class="group-btn-table"><a class="btn btn-green-info" onclick="sentdata(' + meta.row + ')"><img class="img-detail size-img-list-menu" src = "/mymenumerchant/images/Detail20.png" /></a></div>';
+                    return edit1;
+                },
+            },
+            ],
+            "language": {
+                "emptyTable": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ยังไม่มีประวัติใบกำกับภาษี"]</p><br/><br/><br/><br/>",
+                "zeroRecords": "<p class='colot-no-data mt-5 mb-5'>@Localizer["ไม่พบข้อมูล"]</p><br/><br/><br/><br/>",
+                "loadingRecords": "<p class='colot-no-data mt-5 mb-5>@Localizer["Loading.."]</p><br/><br/><br/><br/>",
+            },
+            searching: true,
+            paging: false,
+            ordering: false,
+            info: false,
+            "initComplete": function (settings, json) {
+                $('#countReceipt').text("@Localizer["จำนวนทั้งหมด"] " + table.data().count());
+            },
+        });
+        var tables = $('#TableOrder').DataTable();
+        $('#SearchTable').on('keyup', function () {
+            tables.search(this.value).draw();
+        });
+
+        $('#ButtonRefresh').on('click', function () {
+            $('#TableOrder').DataTable().ajax.reload();
+        });
+    });
+
+</script>
